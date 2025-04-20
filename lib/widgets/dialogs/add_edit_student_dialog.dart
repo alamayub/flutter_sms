@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sms/providers/auth_providers.dart';
 
 import '../../config/constants.dart' show Strings;
 import '../../config/extensions.dart' show DialogText;
 import '../../config/theme.dart' show ColorConstants;
 import '../../modesl/student_model.dart';
+import '../../providers/auth_providers.dart' show authProvider;
 import '../buttons/dialog_action_button.dart';
 import '../input/date_input.dart';
 import '../input/name_input.dart';
@@ -57,30 +57,25 @@ class AddEditStudentDialog extends HookConsumerWidget {
                       controller: mName,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
+                  const SizedBox(width: 8),
                   Expanded(
                     child: NameInput(
                       labeltext: 'Last Name*',
                       controller: lName,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
                   Expanded(
                     child: DateInput(
                       controller: dob,
                       onTap: (x) => dob.text = x ?? '',
                     ),
                   ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-              Row(
-                children: [
+                  const SizedBox(width: 8),
                   Expanded(
                     child: SelectWidget(
                       value: grade.value,
@@ -136,7 +131,8 @@ class AddEditStudentDialog extends HookConsumerWidget {
                       ..section = section.value ?? ''
                       ..rollNo = rollNo.text.trim()
                       ..address = address.text.trim()
-                      ..createdBy = student == null ? auth!.id : student!.createdBy
+                      ..createdBy =
+                          student == null ? auth!.id : student!.createdBy
                       ..createdAt =
                           student == null
                               ? DateTime.now().toIso8601String()

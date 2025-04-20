@@ -16,10 +16,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
     _loadStaffs();
   }
 
-  void updateSearch(String? val) {
-    state = state.copyWith(search: val);
-  }
-
   Future<void> _loadStaffs() async {
     try {
       state = state.copyWith(loading: true);

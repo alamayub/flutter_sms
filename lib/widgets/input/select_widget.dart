@@ -41,7 +41,10 @@ class SelectWidget extends StatelessWidget {
           color: ColorConstants.textColor,
         ),
         iconSize: 16,
-        decoration: InputDecoration(labelText: labelText),
+        decoration: InputDecoration(
+          labelText: labelText,
+          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        ),
         validator: (x) => x == null ? '' : null,
       ),
     );

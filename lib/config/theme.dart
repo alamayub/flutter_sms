@@ -95,8 +95,8 @@ class Themes {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        fixedSize: Size(double.infinity, 40),
         padding: EdgeInsets.all(12.0),
+        fixedSize: Size(double.infinity, 26),
         backgroundColor: ColorConstants.primary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
         textStyle: typoConfig.textStyle.smallCaptionSubtitle2.copyWith(

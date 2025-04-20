@@ -25,10 +25,9 @@ class TextInput extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         keyboardType: TextInputType.name,
-        textCapitalization: TextCapitalization.words,
         style: textDecorationTextStyle(ColorConstants.textColor),
-        decoration: InputDecoration(labelText: labelText, hintText: 'title'),
-        validator: (val) => val == null || val.isEmpty ? '' : null,
+        decoration: InputDecoration(labelText: labelText),
+        validator: (x) => x == null || x.isEmpty ? '' : null,
       ),
     );
   }

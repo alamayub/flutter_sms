@@ -7,13 +7,11 @@ class StaffState {
   final bool loading;
   final String? error;
   final List<StaffModel> staffs;
-  final String? search;
 
   const StaffState({
     this.loading = false,
     this.error,
     this.staffs = const [],
-    this.search,
 
   });
 
@@ -21,13 +19,10 @@ class StaffState {
     bool? loading,
     String? error,
     List<StaffModel>? staffs,
-    String? search,
-    String? grade,
   }) => StaffState(
     loading: loading ?? this.loading,
     error: error ?? this.error,
     staffs: staffs ?? this.staffs,
-    search: search ?? this.search,
   );
 
   @override
@@ -35,9 +30,8 @@ class StaffState {
       identical(this, other) ||
       (loading == other.loading &&
           error == other.error &&
-          listEquals(staffs, other.staffs) &&
-          search == other.search );
+          listEquals(staffs, other.staffs));
 
   @override
-  int get hashCode => Object.hash(loading, error, staffs, search);
+  int get hashCode => Object.hash(loading, error, staffs);
 }
