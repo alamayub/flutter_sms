@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'student_model.dart';
+part of 'staff_model.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'student_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetStudentModelCollection on Isar {
-  IsarCollection<StudentModel> get studentModels => this.collection();
+extension GetStaffModelCollection on Isar {
+  IsarCollection<StaffModel> get staffModels => this.collection();
 }
 
-const StudentModelSchema = CollectionSchema(
-  name: r'StudentModel',
-  id: -1023695268111720628,
+const StaffModelSchema = CollectionSchema(
+  name: r'StaffModel',
+  id: 6290165181063554770,
   properties: {
     r'address': PropertySchema(
       id: 0,
@@ -32,77 +32,74 @@ const StudentModelSchema = CollectionSchema(
       name: r'createdBy',
       type: IsarType.long,
     ),
-    r'dob': PropertySchema(
-      id: 3,
-      name: r'dob',
-      type: IsarType.string,
-    ),
     r'firstName': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'firstName',
       type: IsarType.string,
     ),
-    r'grade': PropertySchema(
-      id: 5,
-      name: r'grade',
-      type: IsarType.string,
-    ),
     r'lastName': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'lastName',
       type: IsarType.string,
     ),
     r'middleName': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'middleName',
       type: IsarType.string,
     ),
-    r'rollNo': PropertySchema(
-      id: 8,
-      name: r'rollNo',
-      type: IsarType.string,
-    ),
-    r'section': PropertySchema(
-      id: 9,
-      name: r'section',
+    r'phoneNumber': PropertySchema(
+      id: 6,
+      name: r'phoneNumber',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 10,
+      id: 7,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'updatedBy': PropertySchema(
-      id: 11,
+      id: 8,
       name: r'updatedBy',
       type: IsarType.long,
     )
   },
-  estimateSize: _studentModelEstimateSize,
-  serialize: _studentModelSerialize,
-  deserialize: _studentModelDeserialize,
-  deserializeProp: _studentModelDeserializeProp,
+  estimateSize: _staffModelEstimateSize,
+  serialize: _staffModelSerialize,
+  deserialize: _staffModelDeserialize,
+  deserializeProp: _staffModelDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'phoneNumber': IndexSchema(
+      id: 5414128966131364535,
+      name: r'phoneNumber',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'phoneNumber',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
-  getId: _studentModelGetId,
-  getLinks: _studentModelGetLinks,
-  attach: _studentModelAttach,
+  getId: _staffModelGetId,
+  getLinks: _staffModelGetLinks,
+  attach: _staffModelAttach,
   version: '3.1.0+1',
 );
 
-int _studentModelEstimateSize(
-  StudentModel object,
+int _staffModelEstimateSize(
+  StaffModel object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.address.length * 3;
   bytesCount += 3 + object.createdAt.length * 3;
-  bytesCount += 3 + object.dob.length * 3;
   bytesCount += 3 + object.firstName.length * 3;
-  bytesCount += 3 + object.grade.length * 3;
   bytesCount += 3 + object.lastName.length * 3;
   {
     final value = object.middleName;
@@ -110,8 +107,7 @@ int _studentModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.rollNo.length * 3;
-  bytesCount += 3 + object.section.length * 3;
+  bytesCount += 3 + object.phoneNumber.length * 3;
   {
     final value = object.updatedAt;
     if (value != null) {
@@ -121,8 +117,8 @@ int _studentModelEstimateSize(
   return bytesCount;
 }
 
-void _studentModelSerialize(
-  StudentModel object,
+void _staffModelSerialize(
+  StaffModel object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -130,41 +126,35 @@ void _studentModelSerialize(
   writer.writeString(offsets[0], object.address);
   writer.writeString(offsets[1], object.createdAt);
   writer.writeLong(offsets[2], object.createdBy);
-  writer.writeString(offsets[3], object.dob);
-  writer.writeString(offsets[4], object.firstName);
-  writer.writeString(offsets[5], object.grade);
-  writer.writeString(offsets[6], object.lastName);
-  writer.writeString(offsets[7], object.middleName);
-  writer.writeString(offsets[8], object.rollNo);
-  writer.writeString(offsets[9], object.section);
-  writer.writeString(offsets[10], object.updatedAt);
-  writer.writeLong(offsets[11], object.updatedBy);
+  writer.writeString(offsets[3], object.firstName);
+  writer.writeString(offsets[4], object.lastName);
+  writer.writeString(offsets[5], object.middleName);
+  writer.writeString(offsets[6], object.phoneNumber);
+  writer.writeString(offsets[7], object.updatedAt);
+  writer.writeLong(offsets[8], object.updatedBy);
 }
 
-StudentModel _studentModelDeserialize(
+StaffModel _staffModelDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = StudentModel();
+  final object = StaffModel();
   object.address = reader.readString(offsets[0]);
   object.createdAt = reader.readString(offsets[1]);
   object.createdBy = reader.readLong(offsets[2]);
-  object.dob = reader.readString(offsets[3]);
-  object.firstName = reader.readString(offsets[4]);
-  object.grade = reader.readString(offsets[5]);
+  object.firstName = reader.readString(offsets[3]);
   object.id = id;
-  object.lastName = reader.readString(offsets[6]);
-  object.middleName = reader.readStringOrNull(offsets[7]);
-  object.rollNo = reader.readString(offsets[8]);
-  object.section = reader.readString(offsets[9]);
-  object.updatedAt = reader.readStringOrNull(offsets[10]);
-  object.updatedBy = reader.readLongOrNull(offsets[11]);
+  object.lastName = reader.readString(offsets[4]);
+  object.middleName = reader.readStringOrNull(offsets[5]);
+  object.phoneNumber = reader.readString(offsets[6]);
+  object.updatedAt = reader.readStringOrNull(offsets[7]);
+  object.updatedBy = reader.readLongOrNull(offsets[8]);
   return object;
 }
 
-P _studentModelDeserializeProp<P>(
+P _staffModelDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -182,49 +172,98 @@ P _studentModelDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
-    case 9:
-      return (reader.readString(offset)) as P;
-    case 10:
-      return (reader.readStringOrNull(offset)) as P;
-    case 11:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _studentModelGetId(StudentModel object) {
+Id _staffModelGetId(StaffModel object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _studentModelGetLinks(StudentModel object) {
+List<IsarLinkBase<dynamic>> _staffModelGetLinks(StaffModel object) {
   return [];
 }
 
-void _studentModelAttach(
-    IsarCollection<dynamic> col, Id id, StudentModel object) {
+void _staffModelAttach(IsarCollection<dynamic> col, Id id, StaffModel object) {
   object.id = id;
 }
 
-extension StudentModelQueryWhereSort
-    on QueryBuilder<StudentModel, StudentModel, QWhere> {
-  QueryBuilder<StudentModel, StudentModel, QAfterWhere> anyId() {
+extension StaffModelByIndex on IsarCollection<StaffModel> {
+  Future<StaffModel?> getByPhoneNumber(String phoneNumber) {
+    return getByIndex(r'phoneNumber', [phoneNumber]);
+  }
+
+  StaffModel? getByPhoneNumberSync(String phoneNumber) {
+    return getByIndexSync(r'phoneNumber', [phoneNumber]);
+  }
+
+  Future<bool> deleteByPhoneNumber(String phoneNumber) {
+    return deleteByIndex(r'phoneNumber', [phoneNumber]);
+  }
+
+  bool deleteByPhoneNumberSync(String phoneNumber) {
+    return deleteByIndexSync(r'phoneNumber', [phoneNumber]);
+  }
+
+  Future<List<StaffModel?>> getAllByPhoneNumber(
+      List<String> phoneNumberValues) {
+    final values = phoneNumberValues.map((e) => [e]).toList();
+    return getAllByIndex(r'phoneNumber', values);
+  }
+
+  List<StaffModel?> getAllByPhoneNumberSync(List<String> phoneNumberValues) {
+    final values = phoneNumberValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'phoneNumber', values);
+  }
+
+  Future<int> deleteAllByPhoneNumber(List<String> phoneNumberValues) {
+    final values = phoneNumberValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'phoneNumber', values);
+  }
+
+  int deleteAllByPhoneNumberSync(List<String> phoneNumberValues) {
+    final values = phoneNumberValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'phoneNumber', values);
+  }
+
+  Future<Id> putByPhoneNumber(StaffModel object) {
+    return putByIndex(r'phoneNumber', object);
+  }
+
+  Id putByPhoneNumberSync(StaffModel object, {bool saveLinks = true}) {
+    return putByIndexSync(r'phoneNumber', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByPhoneNumber(List<StaffModel> objects) {
+    return putAllByIndex(r'phoneNumber', objects);
+  }
+
+  List<Id> putAllByPhoneNumberSync(List<StaffModel> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'phoneNumber', objects, saveLinks: saveLinks);
+  }
+}
+
+extension StaffModelQueryWhereSort
+    on QueryBuilder<StaffModel, StaffModel, QWhere> {
+  QueryBuilder<StaffModel, StaffModel, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension StudentModelQueryWhere
-    on QueryBuilder<StudentModel, StudentModel, QWhereClause> {
-  QueryBuilder<StudentModel, StudentModel, QAfterWhereClause> idEqualTo(Id id) {
+extension StaffModelQueryWhere
+    on QueryBuilder<StaffModel, StaffModel, QWhereClause> {
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -233,8 +272,7 @@ extension StudentModelQueryWhere
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -256,8 +294,7 @@ extension StudentModelQueryWhere
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterWhereClause> idGreaterThan(
-      Id id,
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -266,7 +303,7 @@ extension StudentModelQueryWhere
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -275,7 +312,7 @@ extension StudentModelQueryWhere
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterWhereClause> idBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -290,12 +327,56 @@ extension StudentModelQueryWhere
       ));
     });
   }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> phoneNumberEqualTo(
+      String phoneNumber) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'phoneNumber',
+        value: [phoneNumber],
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterWhereClause> phoneNumberNotEqualTo(
+      String phoneNumber) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'phoneNumber',
+              lower: [],
+              upper: [phoneNumber],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'phoneNumber',
+              lower: [phoneNumber],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'phoneNumber',
+              lower: [phoneNumber],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'phoneNumber',
+              lower: [],
+              upper: [phoneNumber],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
 }
 
-extension StudentModelQueryFilter
-    on QueryBuilder<StudentModel, StudentModel, QFilterCondition> {
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressEqualTo(
+extension StaffModelQueryFilter
+    on QueryBuilder<StaffModel, StaffModel, QFilterCondition> {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -308,7 +389,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       addressGreaterThan(
     String value, {
     bool include = false,
@@ -324,8 +405,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -340,8 +420,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -360,8 +439,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressStartsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -374,8 +452,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressEndsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -388,8 +465,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'address',
@@ -399,8 +477,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'address',
@@ -410,8 +489,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      addressIsEmpty() {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> addressIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'address',
@@ -420,7 +498,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       addressIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -430,8 +508,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdAtEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdAtEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -444,7 +521,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       createdAtGreaterThan(
     String value, {
     bool include = false,
@@ -460,8 +537,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdAtLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdAtLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -476,8 +552,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdAtBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdAtBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -496,7 +571,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       createdAtStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -510,8 +585,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdAtEndsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdAtEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -524,8 +598,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdAtContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdAtContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'createdAt',
@@ -535,8 +610,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdAtMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdAtMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'createdAt',
@@ -546,7 +622,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       createdAtIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -556,7 +632,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       createdAtIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -566,8 +642,8 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdByEqualTo(int value) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdByEqualTo(
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'createdBy',
@@ -576,7 +652,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       createdByGreaterThan(
     int value, {
     bool include = false,
@@ -590,8 +666,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdByLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdByLessThan(
     int value, {
     bool include = false,
   }) {
@@ -604,8 +679,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      createdByBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> createdByBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -622,140 +696,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dob',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      dobGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'dob',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'dob',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'dob',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'dob',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'dob',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'dob',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'dob',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> dobIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dob',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      dobIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'dob',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      firstNameEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> firstNameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -768,7 +709,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       firstNameGreaterThan(
     String value, {
     bool include = false,
@@ -784,8 +725,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      firstNameLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> firstNameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -800,8 +740,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      firstNameBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> firstNameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -820,7 +759,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       firstNameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -834,8 +773,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      firstNameEndsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> firstNameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -848,8 +786,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      firstNameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> firstNameContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'firstName',
@@ -859,8 +798,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      firstNameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> firstNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'firstName',
@@ -870,7 +810,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       firstNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -880,7 +820,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       firstNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -890,141 +830,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> gradeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      gradeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> gradeLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> gradeBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'grade',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      gradeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> gradeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> gradeContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> gradeMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'grade',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      gradeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'grade',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      gradeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'grade',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> idEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1034,7 +840,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -1047,7 +853,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> idLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -1060,7 +866,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> idBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -1077,8 +883,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      lastNameEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1091,7 +896,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       lastNameGreaterThan(
     String value, {
     bool include = false,
@@ -1107,8 +912,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      lastNameLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1123,8 +927,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      lastNameBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -1143,7 +946,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       lastNameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1157,8 +960,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      lastNameEndsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1171,8 +973,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      lastNameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'lastName',
@@ -1182,8 +985,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      lastNameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'lastName',
@@ -1193,7 +997,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       lastNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1203,7 +1007,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       lastNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1213,7 +1017,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1222,7 +1026,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -1231,8 +1035,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      middleNameEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> middleNameEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1245,7 +1048,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameGreaterThan(
     String? value, {
     bool include = false,
@@ -1261,7 +1064,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameLessThan(
     String? value, {
     bool include = false,
@@ -1277,8 +1080,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      middleNameBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> middleNameBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1297,7 +1099,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1311,7 +1113,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -1325,7 +1127,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1336,8 +1138,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      middleNameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> middleNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'middleName',
@@ -1347,7 +1150,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1357,7 +1160,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       middleNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1367,21 +1170,22 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> rollNoEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoGreaterThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1389,15 +1193,15 @@ extension StudentModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1405,14 +1209,15 @@ extension StudentModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> rollNoBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -1421,7 +1226,7 @@ extension StudentModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'rollNo',
+        property: r'phoneNumber',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1431,214 +1236,77 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoStartsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoEndsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> rollNoMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'rollNo',
+        property: r'phoneNumber',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoIsEmpty() {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      rollNoIsNotEmpty() {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      phoneNumberIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'rollNo',
+        property: r'phoneNumber',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'section',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'section',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'section',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'section',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'section',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'section',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'section',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'section',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'section',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      sectionIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'section',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1647,7 +1315,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -1656,8 +1324,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedAtEqualTo(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedAtEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1670,7 +1337,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtGreaterThan(
     String? value, {
     bool include = false,
@@ -1686,8 +1353,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedAtLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedAtLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1702,8 +1368,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedAtBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedAtBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1722,7 +1387,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -1736,8 +1401,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedAtEndsWith(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedAtEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1750,8 +1414,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedAtContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedAtContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'updatedAt',
@@ -1761,8 +1426,9 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedAtMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedAtMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'updatedAt',
@@ -1772,7 +1438,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1782,7 +1448,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1792,7 +1458,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedByIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1801,7 +1467,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedByIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -1810,8 +1476,8 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedByEqualTo(int? value) {
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedByEqualTo(
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'updatedBy',
@@ -1820,7 +1486,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedByGreaterThan(
     int? value, {
     bool include = false,
@@ -1834,8 +1500,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedByLessThan(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedByLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -1848,8 +1513,7 @@ extension StudentModelQueryFilter
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
-      updatedByBetween(
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> updatedByBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -1867,480 +1531,367 @@ extension StudentModelQueryFilter
   }
 }
 
-extension StudentModelQueryObject
-    on QueryBuilder<StudentModel, StudentModel, QFilterCondition> {}
+extension StaffModelQueryObject
+    on QueryBuilder<StaffModel, StaffModel, QFilterCondition> {}
 
-extension StudentModelQueryLinks
-    on QueryBuilder<StudentModel, StudentModel, QFilterCondition> {}
+extension StaffModelQueryLinks
+    on QueryBuilder<StaffModel, StaffModel, QFilterCondition> {}
 
-extension StudentModelQuerySortBy
-    on QueryBuilder<StudentModel, StudentModel, QSortBy> {
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByAddress() {
+extension StaffModelQuerySortBy
+    on QueryBuilder<StaffModel, StaffModel, QSortBy> {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByAddressDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByCreatedAt() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByCreatedAtDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByCreatedBy() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByCreatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByCreatedByDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByCreatedByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByDob() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dob', Sort.asc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByDobDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dob', Sort.desc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByFirstName() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByFirstName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByFirstNameDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByFirstNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByGrade() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'grade', Sort.asc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByGradeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'grade', Sort.desc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByLastName() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByLastNameDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByLastNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByMiddleName() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByMiddleName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'middleName', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy>
-      sortByMiddleNameDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByMiddleNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'middleName', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByRollNo() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rollNo', Sort.asc);
+      return query.addSortBy(r'phoneNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByRollNoDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rollNo', Sort.desc);
+      return query.addSortBy(r'phoneNumber', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortBySection() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'section', Sort.asc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortBySectionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'section', Sort.desc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByUpdatedAt() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByUpdatedAtDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByUpdatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByUpdatedBy() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByUpdatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedBy', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByUpdatedByDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByUpdatedByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedBy', Sort.desc);
     });
   }
 }
 
-extension StudentModelQuerySortThenBy
-    on QueryBuilder<StudentModel, StudentModel, QSortThenBy> {
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByAddress() {
+extension StaffModelQuerySortThenBy
+    on QueryBuilder<StaffModel, StaffModel, QSortThenBy> {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByAddressDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByCreatedAt() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByCreatedAtDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByCreatedBy() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByCreatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByCreatedByDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByCreatedByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByDob() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dob', Sort.asc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByDobDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dob', Sort.desc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByFirstName() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByFirstName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByFirstNameDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByFirstNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByGrade() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'grade', Sort.asc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByGradeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'grade', Sort.desc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenById() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByLastName() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByLastNameDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByLastNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByMiddleName() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByMiddleName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'middleName', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy>
-      thenByMiddleNameDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByMiddleNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'middleName', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByRollNo() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rollNo', Sort.asc);
+      return query.addSortBy(r'phoneNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByRollNoDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'rollNo', Sort.desc);
+      return query.addSortBy(r'phoneNumber', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenBySection() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'section', Sort.asc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenBySectionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'section', Sort.desc);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByUpdatedAt() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByUpdatedAtDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByUpdatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByUpdatedBy() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByUpdatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedBy', Sort.asc);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByUpdatedByDesc() {
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByUpdatedByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedBy', Sort.desc);
     });
   }
 }
 
-extension StudentModelQueryWhereDistinct
-    on QueryBuilder<StudentModel, StudentModel, QDistinct> {
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByAddress(
+extension StaffModelQueryWhereDistinct
+    on QueryBuilder<StaffModel, StaffModel, QDistinct> {
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByAddress(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'address', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByCreatedAt(
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByCreatedAt(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdAt', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByCreatedBy() {
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByCreatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdBy');
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByDob(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dob', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByFirstName(
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByFirstName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'firstName', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByGrade(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'grade', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByLastName(
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByLastName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lastName', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByMiddleName(
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByMiddleName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'middleName', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByRollNo(
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByPhoneNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'rollNo', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'phoneNumber', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctBySection(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'section', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByUpdatedAt(
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByUpdatedAt(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedAt', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByUpdatedBy() {
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByUpdatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedBy');
     });
   }
 }
 
-extension StudentModelQueryProperty
-    on QueryBuilder<StudentModel, StudentModel, QQueryProperty> {
-  QueryBuilder<StudentModel, int, QQueryOperations> idProperty() {
+extension StaffModelQueryProperty
+    on QueryBuilder<StaffModel, StaffModel, QQueryProperty> {
+  QueryBuilder<StaffModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<StudentModel, String, QQueryOperations> addressProperty() {
+  QueryBuilder<StaffModel, String, QQueryOperations> addressProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'address');
     });
   }
 
-  QueryBuilder<StudentModel, String, QQueryOperations> createdAtProperty() {
+  QueryBuilder<StaffModel, String, QQueryOperations> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
     });
   }
 
-  QueryBuilder<StudentModel, int, QQueryOperations> createdByProperty() {
+  QueryBuilder<StaffModel, int, QQueryOperations> createdByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdBy');
     });
   }
 
-  QueryBuilder<StudentModel, String, QQueryOperations> dobProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dob');
-    });
-  }
-
-  QueryBuilder<StudentModel, String, QQueryOperations> firstNameProperty() {
+  QueryBuilder<StaffModel, String, QQueryOperations> firstNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'firstName');
     });
   }
 
-  QueryBuilder<StudentModel, String, QQueryOperations> gradeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'grade');
-    });
-  }
-
-  QueryBuilder<StudentModel, String, QQueryOperations> lastNameProperty() {
+  QueryBuilder<StaffModel, String, QQueryOperations> lastNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastName');
     });
   }
 
-  QueryBuilder<StudentModel, String?, QQueryOperations> middleNameProperty() {
+  QueryBuilder<StaffModel, String?, QQueryOperations> middleNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'middleName');
     });
   }
 
-  QueryBuilder<StudentModel, String, QQueryOperations> rollNoProperty() {
+  QueryBuilder<StaffModel, String, QQueryOperations> phoneNumberProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'rollNo');
+      return query.addPropertyName(r'phoneNumber');
     });
   }
 
-  QueryBuilder<StudentModel, String, QQueryOperations> sectionProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'section');
-    });
-  }
-
-  QueryBuilder<StudentModel, String?, QQueryOperations> updatedAtProperty() {
+  QueryBuilder<StaffModel, String?, QQueryOperations> updatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'updatedAt');
     });
   }
 
-  QueryBuilder<StudentModel, int?, QQueryOperations> updatedByProperty() {
+  QueryBuilder<StaffModel, int?, QQueryOperations> updatedByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'updatedBy');
     });

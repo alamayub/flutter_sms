@@ -1,8 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart' show Provider;
 import 'package:isar/isar.dart' show Isar;
-import 'package:path_provider/path_provider.dart'
-    show getApplicationDocumentsDirectory;
+import 'package:path_provider/path_provider.dart';
 
+import '../modesl/school_model.dart';
+import '../modesl/staff_model.dart';
 import '../modesl/student_model.dart';
 
 class IsarService {
@@ -10,9 +11,12 @@ class IsarService {
 
   Future<void> init() async {
     try {
-      await Future.delayed(const Duration(seconds: 2));
       final dir = await getApplicationDocumentsDirectory();
-      isar = await Isar.open([StudentModelSchema], directory: dir.path);
+      isar = await Isar.open([
+        SchoolModelSchema,
+        StudentModelSchema,
+        StaffModelSchema,
+      ], directory: dir.path);
     } catch (e) {
       throw e.toString();
     }

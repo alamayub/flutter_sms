@@ -20,6 +20,10 @@ class StudentNotifier extends StateNotifier<StudentState> {
     _loadStudents();
   }
 
+  void updateSearch(String? val) {
+    state = state.copyWith(search: val);
+  }
+
   Future<void> _loadStudents() async {
     try {
       state = state.copyWith(loading: true);

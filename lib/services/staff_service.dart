@@ -2,51 +2,51 @@ import 'package:flutter/foundation.dart' show immutable;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show Provider;
 import 'package:isar/isar.dart' show Isar, QueryExecute;
 
-import '../modesl/student_model.dart';
+import '../modesl/staff_model.dart';
 import 'isar_service.dart' show isarServiceProvider;
 
 @immutable
-class StudentService {
+class StaffService {
   final Isar isar;
-  const StudentService(this.isar);
+  const StaffService(this.isar);
 
-  // get all students
-  Future<List<StudentModel>> getAllStudents() async {
+  // get all staffs
+  Future<List<StaffModel>> getAllStaffs() async {
     try {
-      final students = await isar.studentModels.where().findAll();
-      return students;
+      final staffs = await isar.staffModels.where().findAll();
+      return staffs;
     } catch (e) {
       throw e.toString();
     }
   }
 
-  // add student
-  Future<void> addStudent(StudentModel student) async {
+  // add staff
+  Future<void> addStaff(StaffModel staff) async {
     try {
       await isar.writeTxn(() async {
-        await isar.studentModels.put(student);
+        await isar.staffModels.put(staff);
       });
     } catch (e) {
       throw e.toString();
     }
   }
 
-  // update student
-  Future<void> updateStudent(StudentModel student) async {
+  // update staff
+  Future<void> updateStaff(StaffModel staff) async {
     try {
       await isar.writeTxn(() async {
-        await isar.studentModels.put(student);
+        await isar.staffModels.put(staff);
       });
     } catch (e) {
       throw e.toString();
     }
   }
 
-  // delete students
-  Future<void> deleteStudent(StudentModel student) async {
+  // delete staffs
+  Future<void> deleteStaff(StaffModel staff) async {
     try {
       await isar.writeTxn(() async {
-        await isar.studentModels.delete(student.id);
+        await isar.staffModels.delete(staff.id);
       });
     } catch (e) {
       throw e.toString();
@@ -54,7 +54,7 @@ class StudentService {
   }
 }
 
-final studentServiceProvider = Provider((ref) {
+final staffServiceProvider = Provider((ref) {
   final isar = ref.read(isarServiceProvider).instance;
-  return StudentService(isar);
+  return StaffService(isar);
 });

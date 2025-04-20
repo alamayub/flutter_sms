@@ -1,7 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show Ref, StateNotifier, StateNotifierProvider;
+import 'package:sms/modesl/school_model.dart';
 
-import '../config/enums.dart' show AuthAction;
+import '../config/enums.dart' show AuthAction, MessageType;
 import '../services/auth_service.dart' show authServiceProvider;
 import '../states/auth_state.dart';
 import 'global_provider.dart' show globalProvider;
@@ -20,7 +21,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final globalNotifier = ref.read(globalProvider.notifier);
     try {
       globalNotifier.setLoading(true);
-      await ref.read(authServiceProvider).login(username, password);
+      var res = await ref.read(authServiceProvider).login(username, password);
+      state = state.copyWith(school: res);
+    } catch (e) {
+      globalNotifier.setMessage(e.toString());
+    } finally {
+      globalNotifier.setLoading(false);
+    }
+  }
+
+  // register school
+  Future<void> register(SchoolModel school) async {
+    final globalNotifier = ref.read(globalProvider.notifier);
+    try {
+      globalNotifier.setLoading(true);
+      await ref.read(authServiceProvider).registerSchool(school);
+      globalNotifier.setMessage(
+        'School registered successfully. Please login using username & password!',
+        type: MessageType.success,
+      );
+      state = state.copyWith(state: AuthAction.login);
     } catch (e) {
       globalNotifier.setMessage(e.toString());
     } finally {
@@ -33,7 +53,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final globalNotifier = ref.read(globalProvider.notifier);
     try {
       globalNotifier.setLoading(true);
-      await Future.delayed(const Duration(seconds: 2));
+      state = const AuthState();
     } catch (e) {
       globalNotifier.setMessage(e.toString());
     } finally {

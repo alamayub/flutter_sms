@@ -37,7 +37,6 @@ class Wrapper extends HookConsumerWidget {
       }
     });
     var user = ref.watch(authProvider);
-    // return user.user != null ? const RootScreen() : const AuthScreen();
-    return const RootScreen();
+    return user.school != null ? const RootScreen() : const AuthScreen();
   }
 }

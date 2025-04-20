@@ -1,39 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sms/providers/auth_providers.dart';
 
 import '../../config/constants.dart' show Strings;
 import '../../config/extensions.dart' show DialogText;
 import '../../config/theme.dart' show ColorConstants;
-import '../../modesl/student_model.dart';
+import '../../modesl/staff_model.dart';
+import '../../providers/auth_providers.dart';
 import '../buttons/dialog_action_button.dart';
-import '../input/date_input.dart';
 import '../input/name_input.dart';
-import '../input/number_input.dart';
-import '../input/select_widget.dart';
 import '../input/text_input.dart';
 
-class AddEditStudentDialog extends HookConsumerWidget {
-  final StudentModel? student;
+class AddEditStaffDialog extends HookConsumerWidget {
+  final StaffModel? staff;
 
-  const AddEditStudentDialog({super.key, this.student});
+  const AddEditStaffDialog({super.key, this.staff});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider.select((state) => state.school));
     var formKey = useMemoized(() => GlobalKey<FormState>());
-    final fname = useTextEditingController(text: student?.firstName ?? '');
-    final mName = useTextEditingController(text: student?.middleName ?? '');
-    final lName = useTextEditingController(text: student?.lastName ?? '');
-    final dob = useTextEditingController(text: student?.dob ?? '');
-    final grade = useState<String?>(student?.grade);
-    final section = useState<String?>(student?.section);
-    final rollNo = useTextEditingController(text: student?.rollNo ?? '');
-    final address = useTextEditingController(text: student?.address ?? '');
+    final fname = useTextEditingController(text: staff?.firstName ?? '');
+    final mName = useTextEditingController(text: staff?.middleName ?? '');
+    final lName = useTextEditingController(text: staff?.lastName ?? '');
+    final phoneNumber = useTextEditingController(
+      text: staff?.phoneNumber ?? '',
+    );
+    final address = useTextEditingController(text: staff?.address ?? '');
 
     return AlertDialog(
-      title: (student == null ? "Add Student" : "Edit Student").dialogTitle,
+      title: (staff == null ? "Add Staff" : "Edit Staff").dialogTitle,
       content: Form(
         key: formKey,
         child: SizedBox(
@@ -70,39 +66,9 @@ class AddEditStudentDialog extends HookConsumerWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: DateInput(
-                      controller: dob,
-                      onTap: (x) => dob.text = x ?? '',
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: SelectWidget(
-                      value: grade.value,
-                      onChanged: (x) => grade.value = x,
-                      labelText: 'Grade*',
-                      lists: List.generate(10, (i) => (i + 1).toString()),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: SelectWidget(
-                      value: section.value,
-                      onChanged: (x) => section.value = x,
-                      labelText: 'Section*',
-                      lists: ['A', 'B', 'C', 'D', 'E'],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: NumberInput(
-                      controller: rollNo,
-                      labelText: 'Roll No.*',
+                    child: TextInput(
+                      controller: phoneNumber,
+                      labelText: 'Phone Number*',
                     ),
                   ),
                 ],
@@ -126,29 +92,25 @@ class AddEditStudentDialog extends HookConsumerWidget {
             try {
               if (formKey.currentState!.validate()) {
                 FocusScope.of(context).unfocus();
-                final newStudent =
-                    StudentModel()
+                final newStaff =
+                    StaffModel()
                       ..firstName = fname.text.trim()
                       ..middleName = mName.text.trim()
                       ..lastName = lName.text.trim()
-                      ..dob = dob.text.trim()
-                      ..grade = grade.value ?? ''
-                      ..section = section.value ?? ''
-                      ..rollNo = rollNo.text.trim()
                       ..address = address.text.trim()
-                      ..createdBy = student == null ? auth!.id : student!.createdBy
+                      ..createdBy = staff == null ? auth!.id : staff!.createdBy
                       ..createdAt =
-                          student == null
+                          staff == null
                               ? DateTime.now().toIso8601String()
-                              : student!.createdAt
-                      ..updatedBy = student != null ? auth!.id : null
+                              : staff!.createdAt
+                      ..updatedBy = staff != null ? auth!.id : null
                       ..updatedAt =
-                          student != null
+                          staff != null
                               ? DateTime.now().toIso8601String()
                               : null;
 
-                if (student != null) newStudent.id = student!.id;
-                Navigator.pop(context, newStudent);
+                if (staff != null) newStaff.id = staff!.id;
+                Navigator.pop(context, newStaff);
               }
             } catch (_) {}
           },

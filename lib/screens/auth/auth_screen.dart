@@ -18,45 +18,48 @@ class AuthScreen extends ConsumerWidget {
     final state = ref.watch(authProvider.select((state) => state.state));
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child:
-                  state == AuthAction.login
-                      ? const LoginWidget()
-                      : const RegisterWidget(),
-            ),
-            RichText(
-              text: TextSpan(
-                text:
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Expanded(
+                child:
                     state == AuthAction.login
-                        ? 'Don\'t have an account? '
-                        : 'Already have ',
-                style: typoConfig.textStyle.smallCaptionSubtitle2.copyWith(
-                  color: ColorConstants.textColor,
-                ),
-                children: [
-                  TextSpan(
-                    text: state == AuthAction.login ? 'Create One' : 'Login',
-                    style: typoConfig.textStyle.smallCaptionSubtitle1.copyWith(
-                      color: ColorConstants.primary,
-                    ),
-                    recognizer:
-                        TapGestureRecognizer()
-                          ..onTap = () {
-                            ref
-                                .read(authProvider.notifier)
-                                .changeState(
-                                  state == AuthAction.login
-                                      ? AuthAction.register
-                                      : AuthAction.login,
-                                );
-                          },
-                  ),
-                ],
+                        ? const LoginWidget()
+                        : const RegisterWidget(),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              RichText(
+                text: TextSpan(
+                  text:
+                      state == AuthAction.login
+                          ? 'Don\'t have an account? '
+                          : 'Already have ',
+                  style: typoConfig.textStyle.smallCaptionSubtitle2.copyWith(
+                    color: ColorConstants.textColor,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: state == AuthAction.login ? 'Create One' : 'Login',
+                      style: typoConfig.textStyle.smallCaptionSubtitle1
+                          .copyWith(color: ColorConstants.primary),
+                      recognizer:
+                          TapGestureRecognizer()
+                            ..onTap = () {
+                              ref
+                                  .read(authProvider.notifier)
+                                  .changeState(
+                                    state == AuthAction.login
+                                        ? AuthAction.register
+                                        : AuthAction.login,
+                                  );
+                            },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
