@@ -73,12 +73,9 @@ class TableWidget<T> extends HookConsumerWidget {
                 ),
               ],
               columns: [
-                const DataColumn(label: Text('SN')),
+                const DataColumn(label: Text('SN'), numeric: true),
                 ...columns.map((c) => DataColumn(label: Text(c.label))),
-                const DataColumn(
-                  label: Text('Actions'),
-                  columnWidth: FixedColumnWidth(48),
-                ),
+                const DataColumn(label: Text('Actions')),
               ],
               columnSpacing: 12,
               horizontalMargin: 16,

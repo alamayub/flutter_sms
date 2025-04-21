@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart'
-    show
-        AsyncValueX,
-        ConsumerWidget,
-        HookConsumerWidget,
-        ProviderScope,
-        WidgetRef;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'config/navigator_observer.dart';
 import 'config/theme.dart' show Themes;
@@ -30,21 +24,6 @@ class AppStartupWidget extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: Themes.light,
       home: const MyApp(),
-      // builder: (context, child) {
-      //   final MediaQueryData data = MediaQuery.of(context);
-      //   return MediaQuery(
-      //     data: data.copyWith(
-      //       textScaler: TextScaler.linear(
-      //         data.size.width > 680
-      //             ? 1.15
-      //             : data.size.width < 380
-      //             ? 0.9
-      //             : 1.01,
-      //       ),
-      //     ),
-      //     child: child!,
-      //   );
-      // },
       navigatorObservers: [navigatorObserver],
     );
   }
@@ -70,3 +49,20 @@ class MyApp extends HookConsumerWidget {
 
 // dart run build_runner build
 // dart run build_runner build --delete-conflicting-outputs
+
+
+// builder: (context, child) {
+//         final MediaQueryData data = MediaQuery.of(context);
+//         return MediaQuery(
+//           data: data.copyWith(
+//             textScaler: TextScaler.linear(
+//               data.size.width > 680
+//                   ? 1.15
+//                   : data.size.width < 380
+//                   ? 0.9
+//                   : 1.01,
+//             ),
+//           ),
+//           child: child!,
+//         );
+//       },

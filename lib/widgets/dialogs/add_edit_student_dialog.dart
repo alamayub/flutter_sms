@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../config/constants.dart' show Strings;
-import '../../config/extensions.dart' show DialogText;
-import '../../config/theme.dart' show ColorConstants;
 import '../../modesl/student_model.dart';
-import '../../providers/auth_providers.dart' show authProvider;
-import '../buttons/dialog_action_button.dart';
+import '../../providers/auth_providers.dart';
 import '../input/date_input.dart';
 import '../input/name_input.dart';
 import '../input/number_input.dart';
 import '../input/select_widget.dart';
 import '../input/text_input.dart';
+import 'form_dialog.dart';
 
 class AddEditStudentDialog extends HookConsumerWidget {
   final StudentModel? student;
@@ -32,8 +29,8 @@ class AddEditStudentDialog extends HookConsumerWidget {
     final rollNo = useTextEditingController(text: student?.rollNo ?? '');
     final address = useTextEditingController(text: student?.address ?? '');
 
-    return AlertDialog(
-      title: (student == null ? "Add Student" : "Edit Student").dialogTitle,
+    return FormDialog(
+      title: student == null ? "Add Student" : "Edit Student",
       content: Form(
         key: formKey,
         child: SizedBox(
@@ -108,48 +105,34 @@ class AddEditStudentDialog extends HookConsumerWidget {
           ),
         ),
       ),
-      actions: [
-        DialogActionButton(
-          color: Colors.redAccent,
-          title: Strings.cancle,
-          onPressed: () => Navigator.pop(context),
-        ),
-        DialogActionButton(
-          color: ColorConstants.primary,
-          title: Strings.submit,
-          onPressed: () {
-            try {
-              if (formKey.currentState!.validate()) {
-                FocusScope.of(context).unfocus();
-                final newStudent =
-                    StudentModel()
-                      ..firstName = fname.text.trim()
-                      ..middleName = mName.text.trim()
-                      ..lastName = lName.text.trim()
-                      ..dob = dob.text.trim()
-                      ..grade = grade.value ?? ''
-                      ..section = section.value ?? ''
-                      ..rollNo = rollNo.text.trim()
-                      ..address = address.text.trim()
-                      ..createdBy =
-                          student == null ? auth!.id : student!.createdBy
-                      ..createdAt =
-                          student == null
-                              ? DateTime.now().toIso8601String()
-                              : student!.createdAt
-                      ..updatedBy = student != null ? auth!.id : null
-                      ..updatedAt =
-                          student != null
-                              ? DateTime.now().toIso8601String()
-                              : null;
+      onPressed: () {
+        try {
+          if (formKey.currentState!.validate()) {
+            FocusScope.of(context).unfocus();
+            final newStudent =
+                StudentModel()
+                  ..firstName = fname.text.trim()
+                  ..middleName = mName.text.trim()
+                  ..lastName = lName.text.trim()
+                  ..dob = dob.text.trim()
+                  ..grade = grade.value ?? ''
+                  ..section = section.value ?? ''
+                  ..rollNo = rollNo.text.trim()
+                  ..address = address.text.trim()
+                  ..createdBy = student == null ? auth!.id : student!.createdBy
+                  ..createdAt =
+                      student == null
+                          ? DateTime.now().toIso8601String()
+                          : student!.createdAt
+                  ..updatedBy = student != null ? auth!.id : null
+                  ..updatedAt =
+                      student != null ? DateTime.now().toIso8601String() : null;
 
-                if (student != null) newStudent.id = student!.id;
-                Navigator.pop(context, newStudent);
-              }
-            } catch (_) {}
-          },
-        ),
-      ],
+            if (student != null) newStudent.id = student!.id;
+            Navigator.pop(context, newStudent);
+          }
+        } catch (_) {}
+      },
     );
   }
 }

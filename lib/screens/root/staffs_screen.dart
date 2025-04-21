@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart'
+    show HookConsumerWidget, WidgetRef;
 
 import '../../config/constants.dart' show Strings;
 import '../../config/theme.dart' show ColorConstants;
 import '../../modesl/staff_model.dart';
-import '../../providers/staffs_provider.dart';
+import '../../providers/staffs_provider.dart' show staffProvider;
 import '../../widgets/buttons/table_action_widget.dart';
 import '../../widgets/dialogs/alert_dialog_model.dart';
 import '../../widgets/dialogs/staff_add_edit_dialog.dart';
@@ -55,7 +56,6 @@ class StaffsScreen extends HookConsumerWidget {
           label: 'Full Name',
           cellBuilder: (s) => s.fullName,
         ),
-
         TableColumnDefinition(
           label: 'Phone Number',
           cellBuilder: (s) => s.phoneNumber,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/constants.dart' show Strings;
-import '../../config/theme.dart';
+import '../../config/theme.dart' show ColorConstants;
 import '../../modesl/student_model.dart';
 import '../../providers/student_provider.dart' show studentProvider;
 import '../../widgets/buttons/table_action_widget.dart';
