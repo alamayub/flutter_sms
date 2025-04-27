@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 
-import '../modesl/school_model.dart';
+import '../models/school_model.dart';
 import '../config/enums.dart' show AuthAction;
 
 @immutable

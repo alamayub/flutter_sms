@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable, listEquals;
 
-import '../modesl/staff_model.dart';
+import '../models/staff_model.dart';
 
 @immutable
 class StaffState {

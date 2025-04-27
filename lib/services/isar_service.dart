@@ -2,9 +2,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart' show Provider;
 import 'package:isar/isar.dart' show Isar;
 import 'package:path_provider/path_provider.dart';
 
-import '../modesl/school_model.dart';
-import '../modesl/staff_model.dart';
-import '../modesl/student_model.dart';
+import '../models/school_model.dart';
+import '../models/staff_model.dart';
+import '../models/student_model.dart';
 
 class IsarService {
   late Isar isar;

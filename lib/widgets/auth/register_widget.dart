@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart'
     show useMemoized, useTextEditingController;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../modesl/school_model.dart';
+import '../../models/school_model.dart';
 import '../../providers/auth_providers.dart' show authProvider;
 import '../../config/typo_config.dart';
 import '../input/text_input.dart';

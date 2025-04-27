@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show Ref, StateNotifier, StateNotifierProvider;
 
-import '../modesl/staff_model.dart';
+import '../models/staff_model.dart';
 import '../services/staff_service.dart';
 import '../states/staff_state.dart';
 

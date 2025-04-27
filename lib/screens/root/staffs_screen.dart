@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show HookConsumerWidget, WidgetRef;
 
 import '../../config/constants.dart' show Strings;
 import '../../config/theme.dart' show ColorConstants;
-import '../../modesl/staff_model.dart';
+import '../../models/staff_model.dart';
 import '../../providers/staffs_provider.dart' show staffProvider;
 import '../../widgets/buttons/table_action_widget.dart';
 import '../../widgets/dialogs/alert_dialog_model.dart';
@@ -27,12 +29,15 @@ class StaffsScreen extends HookConsumerWidget {
         context: context,
         builder: (_) => AddEditStaffDialog(staff: staff),
       );
-
+      log('RESULT ${result.toString()}');
       if (result != null) {
+        log('here34');
         final notifier = ref.read(staffProvider.notifier);
         if (staff == null) {
+          log('here37');
           await notifier.addStaff(result);
         } else {
+          log('here40');
           await notifier.updateStaff(result);
         }
       }
@@ -60,6 +65,19 @@ class StaffsScreen extends HookConsumerWidget {
           label: 'Phone Number',
           cellBuilder: (s) => s.phoneNumber,
         ),
+        TableColumnDefinition(
+          label: 'Joining Date',
+          cellBuilder: (s) => s.joiningDate,
+        ),
+        TableColumnDefinition(
+          label: 'Salary',
+          cellBuilder: (s) => 'रु${s.salary}',
+        ),
+        TableColumnDefinition(
+          label: 'Phone Number',
+          cellBuilder: (s) => s.phoneNumber,
+        ),
+
         TableColumnDefinition(label: 'Address', cellBuilder: (s) => s.address),
       ],
       actionBuilder:
@@ -69,6 +87,7 @@ class StaffsScreen extends HookConsumerWidget {
               color: ColorConstants.primary,
               onPressed: () => addOrEditStaff(context, ref, s),
             ),
+            const SizedBox(width: 4),
             TableActionWidget(
               icon: Icons.delete_rounded,
               color: Colors.red,

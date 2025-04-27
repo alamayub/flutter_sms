@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show Ref, StateNotifier, StateNotifierProvider, StateProvider;
 
-import '../modesl/student_model.dart';
+import '../models/student_model.dart';
 import '../services/student_service.dart' show studentServiceProvider;
 import '../states/student_state.dart';
 

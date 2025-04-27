@@ -17,7 +17,7 @@ class TableActionWidget extends StatelessWidget {
       width: 24,
       height: 24,
       child: IconButton(
-        icon: Icon(Icons.edit, size: 14, color: color),
+        icon: Icon(icon, size: 14, color: color),
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
           backgroundColor: color.withAlpha(40),

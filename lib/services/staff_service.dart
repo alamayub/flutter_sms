@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart' show immutable;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show Provider;
 import 'package:isar/isar.dart' show Isar, QueryExecute;
 
-import '../modesl/staff_model.dart';
+import '../models/staff_model.dart';
 import 'isar_service.dart' show isarServiceProvider;
 
 @immutable

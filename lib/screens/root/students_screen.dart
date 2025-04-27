@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/constants.dart' show Strings;
 import '../../config/theme.dart' show ColorConstants;
-import '../../modesl/student_model.dart';
+import '../../models/student_model.dart';
 import '../../providers/student_provider.dart' show studentProvider;
 import '../../widgets/buttons/table_action_widget.dart';
 import '../../widgets/dialogs/add_edit_student_dialog.dart';
@@ -71,6 +71,7 @@ class StudentsScreen extends HookConsumerWidget {
               color: ColorConstants.primary,
               onPressed: () => addOrEditStudent(context, ref, s),
             ),
+            const SizedBox(width: 4),
             TableActionWidget(
               icon: Icons.delete_rounded,
               color: Colors.red,

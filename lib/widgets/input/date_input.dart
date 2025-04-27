@@ -25,8 +25,8 @@ class DateInput extends HookWidget {
         controller: controller,
         style: textDecorationTextStyle(ColorConstants.textColor),
         decoration: InputDecoration(
-          labelText: '04/04/1999',
-          hintText: hintText,
+          labelText: hintText,
+          hintText: '04/04/1999',
         ),
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,

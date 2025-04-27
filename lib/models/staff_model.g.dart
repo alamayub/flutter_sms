@@ -37,28 +37,38 @@ const StaffModelSchema = CollectionSchema(
       name: r'firstName',
       type: IsarType.string,
     ),
-    r'lastName': PropertySchema(
+    r'joiningDate': PropertySchema(
       id: 4,
+      name: r'joiningDate',
+      type: IsarType.string,
+    ),
+    r'lastName': PropertySchema(
+      id: 5,
       name: r'lastName',
       type: IsarType.string,
     ),
     r'middleName': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'middleName',
       type: IsarType.string,
     ),
     r'phoneNumber': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'phoneNumber',
       type: IsarType.string,
     ),
+    r'salary': PropertySchema(
+      id: 8,
+      name: r'salary',
+      type: IsarType.double,
+    ),
     r'updatedAt': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'updatedBy': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'updatedBy',
       type: IsarType.long,
     )
@@ -100,6 +110,7 @@ int _staffModelEstimateSize(
   bytesCount += 3 + object.address.length * 3;
   bytesCount += 3 + object.createdAt.length * 3;
   bytesCount += 3 + object.firstName.length * 3;
+  bytesCount += 3 + object.joiningDate.length * 3;
   bytesCount += 3 + object.lastName.length * 3;
   {
     final value = object.middleName;
@@ -127,11 +138,13 @@ void _staffModelSerialize(
   writer.writeString(offsets[1], object.createdAt);
   writer.writeLong(offsets[2], object.createdBy);
   writer.writeString(offsets[3], object.firstName);
-  writer.writeString(offsets[4], object.lastName);
-  writer.writeString(offsets[5], object.middleName);
-  writer.writeString(offsets[6], object.phoneNumber);
-  writer.writeString(offsets[7], object.updatedAt);
-  writer.writeLong(offsets[8], object.updatedBy);
+  writer.writeString(offsets[4], object.joiningDate);
+  writer.writeString(offsets[5], object.lastName);
+  writer.writeString(offsets[6], object.middleName);
+  writer.writeString(offsets[7], object.phoneNumber);
+  writer.writeDouble(offsets[8], object.salary);
+  writer.writeString(offsets[9], object.updatedAt);
+  writer.writeLong(offsets[10], object.updatedBy);
 }
 
 StaffModel _staffModelDeserialize(
@@ -146,11 +159,13 @@ StaffModel _staffModelDeserialize(
   object.createdBy = reader.readLong(offsets[2]);
   object.firstName = reader.readString(offsets[3]);
   object.id = id;
-  object.lastName = reader.readString(offsets[4]);
-  object.middleName = reader.readStringOrNull(offsets[5]);
-  object.phoneNumber = reader.readString(offsets[6]);
-  object.updatedAt = reader.readStringOrNull(offsets[7]);
-  object.updatedBy = reader.readLongOrNull(offsets[8]);
+  object.joiningDate = reader.readString(offsets[4]);
+  object.lastName = reader.readString(offsets[5]);
+  object.middleName = reader.readStringOrNull(offsets[6]);
+  object.phoneNumber = reader.readString(offsets[7]);
+  object.salary = reader.readDouble(offsets[8]);
+  object.updatedAt = reader.readStringOrNull(offsets[9]);
+  object.updatedBy = reader.readLongOrNull(offsets[10]);
   return object;
 }
 
@@ -172,12 +187,16 @@ P _staffModelDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
-    case 6:
       return (reader.readString(offset)) as P;
-    case 7:
+    case 6:
       return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readDouble(offset)) as P;
+    case 9:
+      return (reader.readStringOrNull(offset)) as P;
+    case 10:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -883,6 +902,142 @@ extension StaffModelQueryFilter
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'joiningDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'joiningDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'joiningDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'joiningDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'joiningDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'joiningDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'joiningDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'joiningDate',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'joiningDate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      joiningDateIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'joiningDate',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> lastNameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1306,6 +1461,68 @@ extension StaffModelQueryFilter
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> salaryEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'salary',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> salaryGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'salary',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> salaryLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'salary',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition> salaryBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'salary',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
       updatedAtIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -1587,6 +1804,18 @@ extension StaffModelQuerySortBy
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByJoiningDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'joiningDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByJoiningDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'joiningDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
@@ -1620,6 +1849,18 @@ extension StaffModelQuerySortBy
   QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortBySalary() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'salary', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortBySalaryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'salary', Sort.desc);
     });
   }
 
@@ -1710,6 +1951,18 @@ extension StaffModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByJoiningDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'joiningDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByJoiningDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'joiningDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
@@ -1743,6 +1996,18 @@ extension StaffModelQuerySortThenBy
   QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenBySalary() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'salary', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenBySalaryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'salary', Sort.desc);
     });
   }
 
@@ -1800,6 +2065,13 @@ extension StaffModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByJoiningDate(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'joiningDate', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByLastName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1818,6 +2090,12 @@ extension StaffModelQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'phoneNumber', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctBySalary() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'salary');
     });
   }
 
@@ -1867,6 +2145,12 @@ extension StaffModelQueryProperty
     });
   }
 
+  QueryBuilder<StaffModel, String, QQueryOperations> joiningDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'joiningDate');
+    });
+  }
+
   QueryBuilder<StaffModel, String, QQueryOperations> lastNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastName');
@@ -1882,6 +2166,12 @@ extension StaffModelQueryProperty
   QueryBuilder<StaffModel, String, QQueryOperations> phoneNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'phoneNumber');
+    });
+  }
+
+  QueryBuilder<StaffModel, double, QQueryOperations> salaryProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'salary');
     });
   }
 

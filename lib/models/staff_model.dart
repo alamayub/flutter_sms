@@ -14,6 +14,8 @@ class StaffModel {
   late String phoneNumber;
 
   late String address;
+  late String joiningDate;
+  late double salary;
 
   late int createdBy;
   late String createdAt;

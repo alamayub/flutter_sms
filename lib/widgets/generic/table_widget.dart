@@ -42,13 +42,6 @@ class TableWidget<T> extends HookConsumerWidget {
       return null;
     }, [data]);
 
-    useEffect(() {
-      search.addListener(() {
-        filteredData.value = data;
-      });
-      return null;
-    }, [search, data]);
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
@@ -57,7 +50,13 @@ class TableWidget<T> extends HookConsumerWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: PaginatedDataTable(
-              header: TextInput(controller: search, labelText: 'Search...'),
+              header: TextInput(
+                controller: search,
+                labelText: 'Search...',
+                onChanged: (val) {
+                  if (val != null && val.isNotEmpty) {}
+                },
+              ),
               actions: [
                 SizedBox(
                   height: 36,
@@ -73,9 +72,21 @@ class TableWidget<T> extends HookConsumerWidget {
                 ),
               ],
               columns: [
-                const DataColumn(label: Text('SN'), numeric: true),
-                ...columns.map((c) => DataColumn(label: Text(c.label))),
-                const DataColumn(label: Text('Actions')),
+                const DataColumn(
+                  label: Text('SN'),
+                  numeric: true,
+                  columnWidth: FixedColumnWidth(40),
+                ),
+                ...columns.map(
+                  (c) => DataColumn(
+                    label: Text(c.label),
+                    columnWidth: FlexColumnWidth(),
+                  ),
+                ),
+                const DataColumn(
+                  label: Text('Actions'),
+                  columnWidth: FixedColumnWidth(74),
+                ),
               ],
               columnSpacing: 12,
               horizontalMargin: 16,

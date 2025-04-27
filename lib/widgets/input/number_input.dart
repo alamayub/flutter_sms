@@ -8,12 +8,14 @@ class NumberInput extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final bool enabled;
+  final int maxLength;
 
   const NumberInput({
     super.key,
     required this.controller,
     required this.labelText,
     this.enabled = true,
+    required this.maxLength,
   });
 
   @override
@@ -23,6 +25,7 @@ class NumberInput extends StatelessWidget {
       child: TextFormField(
         enabled: enabled,
         controller: controller,
+        maxLength: maxLength,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         style: textDecorationTextStyle(ColorConstants.textColor),

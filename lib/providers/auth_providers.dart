@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show Ref, StateNotifier, StateNotifierProvider;
-import 'package:sms/modesl/school_model.dart';
+import 'package:sms/models/school_model.dart';
 
 import '../config/enums.dart' show AuthAction, MessageType;
 import '../services/auth_service.dart' show authServiceProvider;

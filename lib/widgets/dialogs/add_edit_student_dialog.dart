@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../modesl/student_model.dart';
+import '../../models/student_model.dart';
 import '../../providers/auth_providers.dart';
 import '../input/date_input.dart';
 import '../input/name_input.dart';
@@ -95,6 +95,7 @@ class AddEditStudentDialog extends HookConsumerWidget {
                     child: NumberInput(
                       controller: rollNo,
                       labelText: 'Roll No.*',
+                      maxLength: 2,
                     ),
                   ),
                 ],
