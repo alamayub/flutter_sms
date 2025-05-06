@@ -13,6 +13,7 @@ class StaffModel {
   @Index(unique: true)
   late String phoneNumber;
 
+  late String designation;
   late String address;
   late String joiningDate;
   late double salary;

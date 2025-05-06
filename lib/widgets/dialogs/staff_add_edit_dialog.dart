@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sms/config/enums.dart';
 import 'package:sms/widgets/input/number_input.dart';
 
 import '../../models/staff_model.dart';
 import '../../providers/auth_providers.dart';
 import '../input/date_input.dart';
 import '../input/name_input.dart';
+import '../input/select_widget.dart';
 import '../input/text_input.dart';
 import 'form_dialog.dart';
 
@@ -30,6 +32,7 @@ class AddEditStaffDialog extends HookConsumerWidget {
       text: staff?.salary.toString() ?? '',
     );
     final address = useTextEditingController(text: staff?.address ?? '');
+    final designation = useState<String?>(staff?.designation);
 
     return FormDialog(
       title: staff == null ? 'Add Staff' : 'Edit Staff',
@@ -69,6 +72,20 @@ class AddEditStaffDialog extends HookConsumerWidget {
               Row(
                 children: [
                   Expanded(
+                    child: SelectWidget(
+                      lists:
+                          StaffDesignation.values.map((e) => e.name).toList(),
+                      labelText: 'Designation*',
+                      value: designation.value,
+                      onChanged: (val) {
+                        if (val != null) {
+                          designation.value = val;
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
                     child: NumberInput(
                       controller: phoneNumber,
                       labelText: 'Phone Number*',
@@ -79,7 +96,7 @@ class AddEditStaffDialog extends HookConsumerWidget {
                   Expanded(
                     child: DateInput(
                       controller: dob,
-                      hintText: 'Date of Joining',
+                      hintText: 'Date of Joining*',
                       onTap: (x) => dob.text = x ?? '',
                     ),
                   ),
@@ -87,7 +104,7 @@ class AddEditStaffDialog extends HookConsumerWidget {
                   Expanded(
                     child: NumberInput(
                       controller: salary,
-                      labelText: 'Salary*',
+                      labelText: 'रुSalary*',
                       maxLength: 6,
                     ),
                   ),
@@ -109,6 +126,7 @@ class AddEditStaffDialog extends HookConsumerWidget {
                   ..middleName = mName.text.trim()
                   ..lastName = lName.text.trim()
                   ..joiningDate = dob.text.trim()
+                  ..designation = designation.value!
                   ..phoneNumber = phoneNumber.text.trim()
                   ..salary = double.tryParse(salary.text.trim()) ?? 0.0
                   ..address = address.text.trim()

@@ -1,66 +1,56 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart'
-    show Ref, StateNotifier, StateNotifierProvider;
-
+    show FutureProvider, Ref, StateNotifier, StateNotifierProvider;
+    
+import 'global_provider.dart' show globalProvider;
 import '../models/staff_model.dart';
 import '../services/staff_service.dart';
-import '../states/staff_state.dart';
 
-final staffProvider = StateNotifierProvider<StaffNotifier, StaffState>((ref) {
+final staffListProvider = FutureProvider<List<StaffModel>>((ref) {
+  return ref.read(staffServiceProvider).getAllStaffs();
+});
+
+final staffProvider = StateNotifierProvider<StaffNotifier, void>((ref) {
   return StaffNotifier(ref);
 });
 
-class StaffNotifier extends StateNotifier<StaffState> {
+class StaffNotifier extends StateNotifier<void> {
   final Ref ref;
 
-  StaffNotifier(this.ref) : super(const StaffState()) {
-    _loadStaffs();
-  }
-
-  Future<void> _loadStaffs() async {
-    try {
-      state = state.copyWith(loading: true);
-      final students = await ref.read(staffServiceProvider).getAllStaffs();
-      state = state.copyWith(staffs: students);
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    } finally {
-      state = state.copyWith(loading: false);
-    }
-  }
+  StaffNotifier(this.ref) : super(null) ;
 
   Future<void> addStaff(StaffModel staff) async {
     try {
-      state = state.copyWith(loading: true);
+      ref.read(globalProvider.notifier).setLoading(true);
       await ref.read(staffServiceProvider).addStaff(staff);
-      _loadStaffs();
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      ref.read(globalProvider.notifier).setMessage(e.toString());
     } finally {
-      state = state.copyWith(loading: false);
+      ref.read(globalProvider.notifier).setLoading(false);
+      ref.invalidate(staffListProvider);
     }
   }
 
   Future<void> updateStaff(StaffModel staff) async {
     try {
-      state = state.copyWith(loading: true);
+      ref.read(globalProvider.notifier).setLoading(true);
       await ref.read(staffServiceProvider).updateStaff(staff);
-      _loadStaffs();
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      ref.read(globalProvider.notifier).setMessage(e.toString());
     } finally {
-      state = state.copyWith(loading: false);
+      ref.read(globalProvider.notifier).setLoading(false);
+      ref.invalidate(staffListProvider);
     }
   }
 
   Future<void> deleteStaff(StaffModel staff) async {
     try {
-      state = state.copyWith(loading: true);
+      ref.read(globalProvider.notifier).setLoading(true);
       await ref.read(staffServiceProvider).deleteStaff(staff);
-      _loadStaffs();
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      ref.read(globalProvider.notifier).setMessage(e.toString());
     } finally {
-      state = state.copyWith(loading: false);
+      ref.read(globalProvider.notifier).setLoading(false);
+      ref.invalidate(staffListProvider);
     }
   }
 }

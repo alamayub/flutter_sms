@@ -10,6 +10,7 @@ class StudentModel {
   String? middleName;
   late String lastName;
   late String dob;
+  late double fee;
   late String grade;
   late String section;
   late String rollNo;

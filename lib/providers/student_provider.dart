@@ -1,70 +1,56 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart'
-    show Ref, StateNotifier, StateNotifierProvider, StateProvider;
+    show FutureProvider, Ref, StateNotifier, StateNotifierProvider;
 
 import '../models/student_model.dart';
 import '../services/student_service.dart' show studentServiceProvider;
-import '../states/student_state.dart';
+import 'global_provider.dart' show globalProvider;
 
-final searchQueryProvider = StateProvider<String>((ref) => '');
+final studentListProvider = FutureProvider<List<StudentModel>>((ref) {
+  return ref.read(studentServiceProvider).getAllStudents();
+});
 
-final studentProvider = StateNotifierProvider<StudentNotifier, StudentState>((
-  ref,
-) {
+final studentProvider = StateNotifierProvider<StudentNotifier, void>((ref) {
   return StudentNotifier(ref);
 });
 
-class StudentNotifier extends StateNotifier<StudentState> {
+class StudentNotifier extends StateNotifier<void> {
   final Ref ref;
 
-  StudentNotifier(this.ref) : super(const StudentState()) {
-    _loadStudents();
-  }
-
-  Future<void> _loadStudents() async {
-    try {
-      state = state.copyWith(loading: true);
-      final students = await ref.read(studentServiceProvider).getAllStudents();
-      state = state.copyWith(students: students);
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-    } finally {
-      state = state.copyWith(loading: false);
-    }
-  }
+  StudentNotifier(this.ref) : super(null);
 
   Future<void> addStudent(StudentModel student) async {
     try {
-      state = state.copyWith(loading: true);
+      ref.read(globalProvider.notifier).setLoading(true);
       await ref.read(studentServiceProvider).addStudent(student);
-      _loadStudents();
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      ref.read(globalProvider.notifier).setMessage(e.toString());
     } finally {
-      state = state.copyWith(loading: false);
+      ref.read(globalProvider.notifier).setLoading(false);
+      ref.invalidate(studentListProvider);
     }
   }
 
   Future<void> updateStudent(StudentModel student) async {
     try {
-      state = state.copyWith(loading: true);
+      ref.read(globalProvider.notifier).setLoading(true);
       await ref.read(studentServiceProvider).updateStudent(student);
-      _loadStudents();
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      ref.read(globalProvider.notifier).setMessage(e.toString());
     } finally {
-      state = state.copyWith(loading: false);
+      ref.read(globalProvider.notifier).setLoading(false);
+      ref.invalidate(studentListProvider);
     }
   }
 
   Future<void> deleteStudent(StudentModel student) async {
     try {
-      state = state.copyWith(loading: true);
+      ref.read(globalProvider.notifier).setLoading(true);
       await ref.read(studentServiceProvider).deleteStudent(student);
-      _loadStudents();
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      ref.read(globalProvider.notifier).setMessage(e.toString());
     } finally {
-      state = state.copyWith(loading: false);
+      ref.read(globalProvider.notifier).setLoading(false);
+      ref.invalidate(studentListProvider);
     }
   }
 }

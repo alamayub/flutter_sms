@@ -32,7 +32,6 @@ class NumberInput extends StatelessWidget {
         decoration: InputDecoration(
           isDense: true,
           counterText: '',
-          hintText: '000',
           labelText: labelText,
         ),
         validator: (x) => x != null && x.isNotEmpty ? null : '',

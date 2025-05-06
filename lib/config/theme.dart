@@ -119,6 +119,9 @@ class Themes {
         iconSize: 18,
       ),
     ),
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
   );
   const Themes._();
 }

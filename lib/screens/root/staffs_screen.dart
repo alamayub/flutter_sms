@@ -1,16 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart'
-    show HookConsumerWidget, WidgetRef;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/constants.dart' show Strings;
 import '../../config/theme.dart' show ColorConstants;
 import '../../models/staff_model.dart';
-import '../../providers/staffs_provider.dart' show staffProvider;
+import '../../providers/staffs_provider.dart';
 import '../../widgets/buttons/table_action_widget.dart';
 import '../../widgets/dialogs/alert_dialog_model.dart';
 import '../../widgets/dialogs/staff_add_edit_dialog.dart';
+import '../../widgets/generic/error_retry_widget.dart';
+import '../../widgets/generic/loader_widget.dart';
 import '../../widgets/generic/table_widget.dart';
 
 class StaffsScreen extends HookConsumerWidget {
@@ -18,8 +17,6 @@ class StaffsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final staffs = ref.watch(staffProvider.select((state) => state.staffs));
-
     void addOrEditStaff(
       BuildContext context,
       WidgetRef ref, [
@@ -29,15 +26,11 @@ class StaffsScreen extends HookConsumerWidget {
         context: context,
         builder: (_) => AddEditStaffDialog(staff: staff),
       );
-      log('RESULT ${result.toString()}');
       if (result != null) {
-        log('here34');
         final notifier = ref.read(staffProvider.notifier);
         if (staff == null) {
-          log('here37');
           await notifier.addStaff(result);
         } else {
-          log('here40');
           await notifier.updateStaff(result);
         }
       }
@@ -52,48 +45,61 @@ class StaffsScreen extends HookConsumerWidget {
       }
     }
 
-    return TableWidget<StaffModel>(
-      title: 'Add Staff',
-      onAddPressed: () => addOrEditStaff(context, ref),
-      data: staffs,
-      columns: [
-        TableColumnDefinition(
-          label: 'Full Name',
-          cellBuilder: (s) => s.fullName,
-        ),
-        TableColumnDefinition(
-          label: 'Phone Number',
-          cellBuilder: (s) => s.phoneNumber,
-        ),
-        TableColumnDefinition(
-          label: 'Joining Date',
-          cellBuilder: (s) => s.joiningDate,
-        ),
-        TableColumnDefinition(
-          label: 'Salary',
-          cellBuilder: (s) => 'रु${s.salary}',
-        ),
-        TableColumnDefinition(
-          label: 'Phone Number',
-          cellBuilder: (s) => s.phoneNumber,
-        ),
-
-        TableColumnDefinition(label: 'Address', cellBuilder: (s) => s.address),
-      ],
-      actionBuilder:
-          (s, i) => [
-            TableActionWidget(
-              icon: Icons.edit_rounded,
-              color: ColorConstants.primary,
-              onPressed: () => addOrEditStaff(context, ref, s),
-            ),
-            const SizedBox(width: 4),
-            TableActionWidget(
-              icon: Icons.delete_rounded,
-              color: Colors.red,
-              onPressed: () => deleteStaff(s),
-            ),
-          ],
-    );
+    return ref
+        .watch(staffListProvider)
+        .when(
+          data:
+              (staffs) => TableWidget<StaffModel>(
+                title: 'Add Staff',
+                onAddPressed: () => addOrEditStaff(context, ref),
+                data: staffs,
+                columns: [
+                  TableColumnDefinition(
+                    label: 'Name',
+                    cellBuilder: (s) => s.fullName,
+                  ),
+                  TableColumnDefinition(
+                    label: 'Phone',
+                    cellBuilder: (s) => s.phoneNumber,
+                  ),
+                  TableColumnDefinition(
+                    label: 'Dsignation',
+                    cellBuilder: (s) => s.designation.toUpperCase(),
+                  ),
+                  TableColumnDefinition(
+                    label: 'Joining Date',
+                    cellBuilder: (s) => s.joiningDate,
+                  ),
+                  TableColumnDefinition(
+                    label: 'Salary',
+                    cellBuilder: (s) => 'रु${s.salary}',
+                  ),
+                  TableColumnDefinition(
+                    label: 'Address',
+                    cellBuilder: (s) => s.address,
+                  ),
+                ],
+                actionBuilder:
+                    (s, i) => [
+                      TableActionWidget(
+                        icon: Icons.edit_rounded,
+                        color: ColorConstants.primary,
+                        onPressed: () => addOrEditStaff(context, ref, s),
+                      ),
+                      const SizedBox(width: 4),
+                      TableActionWidget(
+                        icon: Icons.delete_rounded,
+                        color: Colors.red,
+                        onPressed: () => deleteStaff(s),
+                      ),
+                    ],
+              ),
+          error:
+              (error, stackTrace) => ErrorRetryWidget(
+                message: error.toString(),
+                onRetry: () => ref.refresh(staffListProvider),
+              ),
+          loading: () => const LoaderWidget(),
+        );
   }
 }

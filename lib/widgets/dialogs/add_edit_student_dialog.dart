@@ -23,6 +23,7 @@ class AddEditStudentDialog extends HookConsumerWidget {
     final fname = useTextEditingController(text: student?.firstName ?? '');
     final mName = useTextEditingController(text: student?.middleName ?? '');
     final lName = useTextEditingController(text: student?.lastName ?? '');
+    final fee = useTextEditingController(text: student?.fee.toString() ?? '');
     final dob = useTextEditingController(text: student?.dob ?? '');
     final grade = useState<String?>(student?.grade);
     final section = useState<String?>(student?.section);
@@ -66,6 +67,14 @@ class AddEditStudentDialog extends HookConsumerWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
+                  Expanded(
+                    child: NumberInput(
+                      controller: fee,
+                      labelText: 'रुFee*',
+                      maxLength: 5,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: DateInput(
                       controller: dob,
@@ -116,6 +125,7 @@ class AddEditStudentDialog extends HookConsumerWidget {
                   ..middleName = mName.text.trim()
                   ..lastName = lName.text.trim()
                   ..dob = dob.text.trim()
+                  ..fee = double.tryParse(fee.text.trim()) ?? 0
                   ..grade = grade.value ?? ''
                   ..section = section.value ?? ''
                   ..rollNo = rollNo.text.trim()

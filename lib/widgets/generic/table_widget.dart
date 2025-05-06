@@ -79,7 +79,11 @@ class TableWidget<T> extends HookConsumerWidget {
                 ),
                 ...columns.map(
                   (c) => DataColumn(
-                    label: Text(c.label),
+                    label: Text(
+                      c.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     columnWidth: FlexColumnWidth(),
                   ),
                 ),

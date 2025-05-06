@@ -37,43 +37,48 @@ const StudentModelSchema = CollectionSchema(
       name: r'dob',
       type: IsarType.string,
     ),
-    r'firstName': PropertySchema(
+    r'fee': PropertySchema(
       id: 4,
+      name: r'fee',
+      type: IsarType.double,
+    ),
+    r'firstName': PropertySchema(
+      id: 5,
       name: r'firstName',
       type: IsarType.string,
     ),
     r'grade': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'grade',
       type: IsarType.string,
     ),
     r'lastName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'lastName',
       type: IsarType.string,
     ),
     r'middleName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'middleName',
       type: IsarType.string,
     ),
     r'rollNo': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'rollNo',
       type: IsarType.string,
     ),
     r'section': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'section',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'updatedBy': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'updatedBy',
       type: IsarType.long,
     )
@@ -131,14 +136,15 @@ void _studentModelSerialize(
   writer.writeString(offsets[1], object.createdAt);
   writer.writeLong(offsets[2], object.createdBy);
   writer.writeString(offsets[3], object.dob);
-  writer.writeString(offsets[4], object.firstName);
-  writer.writeString(offsets[5], object.grade);
-  writer.writeString(offsets[6], object.lastName);
-  writer.writeString(offsets[7], object.middleName);
-  writer.writeString(offsets[8], object.rollNo);
-  writer.writeString(offsets[9], object.section);
-  writer.writeString(offsets[10], object.updatedAt);
-  writer.writeLong(offsets[11], object.updatedBy);
+  writer.writeDouble(offsets[4], object.fee);
+  writer.writeString(offsets[5], object.firstName);
+  writer.writeString(offsets[6], object.grade);
+  writer.writeString(offsets[7], object.lastName);
+  writer.writeString(offsets[8], object.middleName);
+  writer.writeString(offsets[9], object.rollNo);
+  writer.writeString(offsets[10], object.section);
+  writer.writeString(offsets[11], object.updatedAt);
+  writer.writeLong(offsets[12], object.updatedBy);
 }
 
 StudentModel _studentModelDeserialize(
@@ -152,15 +158,16 @@ StudentModel _studentModelDeserialize(
   object.createdAt = reader.readString(offsets[1]);
   object.createdBy = reader.readLong(offsets[2]);
   object.dob = reader.readString(offsets[3]);
-  object.firstName = reader.readString(offsets[4]);
-  object.grade = reader.readString(offsets[5]);
+  object.fee = reader.readDouble(offsets[4]);
+  object.firstName = reader.readString(offsets[5]);
+  object.grade = reader.readString(offsets[6]);
   object.id = id;
-  object.lastName = reader.readString(offsets[6]);
-  object.middleName = reader.readStringOrNull(offsets[7]);
-  object.rollNo = reader.readString(offsets[8]);
-  object.section = reader.readString(offsets[9]);
-  object.updatedAt = reader.readStringOrNull(offsets[10]);
-  object.updatedBy = reader.readLongOrNull(offsets[11]);
+  object.lastName = reader.readString(offsets[7]);
+  object.middleName = reader.readStringOrNull(offsets[8]);
+  object.rollNo = reader.readString(offsets[9]);
+  object.section = reader.readString(offsets[10]);
+  object.updatedAt = reader.readStringOrNull(offsets[11]);
+  object.updatedBy = reader.readLongOrNull(offsets[12]);
   return object;
 }
 
@@ -180,20 +187,22 @@ P _studentModelDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
       return (reader.readString(offset)) as P;
+    case 8:
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -750,6 +759,69 @@ extension StudentModelQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'dob',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> feeEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fee',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition>
+      feeGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fee',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> feeLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fee',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<StudentModel, StudentModel, QAfterFilterCondition> feeBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fee',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -1923,6 +1995,18 @@ extension StudentModelQuerySortBy
     });
   }
 
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByFee() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fee', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByFeeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fee', Sort.desc);
+    });
+  }
+
   QueryBuilder<StudentModel, StudentModel, QAfterSortBy> sortByFirstName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.asc);
@@ -2071,6 +2155,18 @@ extension StudentModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByFee() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fee', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByFeeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fee', Sort.desc);
+    });
+  }
+
   QueryBuilder<StudentModel, StudentModel, QAfterSortBy> thenByFirstName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.asc);
@@ -2210,6 +2306,12 @@ extension StudentModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByFee() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fee');
+    });
+  }
+
   QueryBuilder<StudentModel, StudentModel, QDistinct> distinctByFirstName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2295,6 +2397,12 @@ extension StudentModelQueryProperty
   QueryBuilder<StudentModel, String, QQueryOperations> dobProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dob');
+    });
+  }
+
+  QueryBuilder<StudentModel, double, QQueryOperations> feeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fee');
     });
   }
 

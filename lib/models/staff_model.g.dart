@@ -32,43 +32,48 @@ const StaffModelSchema = CollectionSchema(
       name: r'createdBy',
       type: IsarType.long,
     ),
-    r'firstName': PropertySchema(
+    r'designation': PropertySchema(
       id: 3,
+      name: r'designation',
+      type: IsarType.string,
+    ),
+    r'firstName': PropertySchema(
+      id: 4,
       name: r'firstName',
       type: IsarType.string,
     ),
     r'joiningDate': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'joiningDate',
       type: IsarType.string,
     ),
     r'lastName': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'lastName',
       type: IsarType.string,
     ),
     r'middleName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'middleName',
       type: IsarType.string,
     ),
     r'phoneNumber': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'phoneNumber',
       type: IsarType.string,
     ),
     r'salary': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'salary',
       type: IsarType.double,
     ),
     r'updatedAt': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'updatedAt',
       type: IsarType.string,
     ),
     r'updatedBy': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'updatedBy',
       type: IsarType.long,
     )
@@ -109,6 +114,7 @@ int _staffModelEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.address.length * 3;
   bytesCount += 3 + object.createdAt.length * 3;
+  bytesCount += 3 + object.designation.length * 3;
   bytesCount += 3 + object.firstName.length * 3;
   bytesCount += 3 + object.joiningDate.length * 3;
   bytesCount += 3 + object.lastName.length * 3;
@@ -137,14 +143,15 @@ void _staffModelSerialize(
   writer.writeString(offsets[0], object.address);
   writer.writeString(offsets[1], object.createdAt);
   writer.writeLong(offsets[2], object.createdBy);
-  writer.writeString(offsets[3], object.firstName);
-  writer.writeString(offsets[4], object.joiningDate);
-  writer.writeString(offsets[5], object.lastName);
-  writer.writeString(offsets[6], object.middleName);
-  writer.writeString(offsets[7], object.phoneNumber);
-  writer.writeDouble(offsets[8], object.salary);
-  writer.writeString(offsets[9], object.updatedAt);
-  writer.writeLong(offsets[10], object.updatedBy);
+  writer.writeString(offsets[3], object.designation);
+  writer.writeString(offsets[4], object.firstName);
+  writer.writeString(offsets[5], object.joiningDate);
+  writer.writeString(offsets[6], object.lastName);
+  writer.writeString(offsets[7], object.middleName);
+  writer.writeString(offsets[8], object.phoneNumber);
+  writer.writeDouble(offsets[9], object.salary);
+  writer.writeString(offsets[10], object.updatedAt);
+  writer.writeLong(offsets[11], object.updatedBy);
 }
 
 StaffModel _staffModelDeserialize(
@@ -157,15 +164,16 @@ StaffModel _staffModelDeserialize(
   object.address = reader.readString(offsets[0]);
   object.createdAt = reader.readString(offsets[1]);
   object.createdBy = reader.readLong(offsets[2]);
-  object.firstName = reader.readString(offsets[3]);
+  object.designation = reader.readString(offsets[3]);
+  object.firstName = reader.readString(offsets[4]);
   object.id = id;
-  object.joiningDate = reader.readString(offsets[4]);
-  object.lastName = reader.readString(offsets[5]);
-  object.middleName = reader.readStringOrNull(offsets[6]);
-  object.phoneNumber = reader.readString(offsets[7]);
-  object.salary = reader.readDouble(offsets[8]);
-  object.updatedAt = reader.readStringOrNull(offsets[9]);
-  object.updatedBy = reader.readLongOrNull(offsets[10]);
+  object.joiningDate = reader.readString(offsets[5]);
+  object.lastName = reader.readString(offsets[6]);
+  object.middleName = reader.readStringOrNull(offsets[7]);
+  object.phoneNumber = reader.readString(offsets[8]);
+  object.salary = reader.readDouble(offsets[9]);
+  object.updatedAt = reader.readStringOrNull(offsets[10]);
+  object.updatedBy = reader.readLongOrNull(offsets[11]);
   return object;
 }
 
@@ -189,14 +197,16 @@ P _staffModelDeserializeProp<P>(
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readStringOrNull(offset)) as P;
-    case 7:
       return (reader.readString(offset)) as P;
-    case 8:
-      return (reader.readDouble(offset)) as P;
-    case 9:
+    case 7:
       return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
+      return (reader.readDouble(offset)) as P;
     case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -711,6 +721,142 @@ extension StaffModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'designation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'designation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'designation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'designation',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'designation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'designation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'designation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'designation',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'designation',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterFilterCondition>
+      designationIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'designation',
+        value: '',
       ));
     });
   }
@@ -1792,6 +1938,18 @@ extension StaffModelQuerySortBy
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByDesignation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'designation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByDesignationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'designation', Sort.desc);
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QAfterSortBy> sortByFirstName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.asc);
@@ -1927,6 +2085,18 @@ extension StaffModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByDesignation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'designation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByDesignationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'designation', Sort.desc);
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QAfterSortBy> thenByFirstName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'firstName', Sort.asc);
@@ -2058,6 +2228,13 @@ extension StaffModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByDesignation(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'designation', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<StaffModel, StaffModel, QDistinct> distinctByFirstName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2136,6 +2313,12 @@ extension StaffModelQueryProperty
   QueryBuilder<StaffModel, int, QQueryOperations> createdByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdBy');
+    });
+  }
+
+  QueryBuilder<StaffModel, String, QQueryOperations> designationProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'designation');
     });
   }
 
