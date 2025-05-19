@@ -18,9 +18,9 @@ class OverlayWidget extends StatelessWidget {
       child: Center(
         child: Container(
           constraints: BoxConstraints(
-            maxWidth: size.width * 0.8,
+            maxWidth: 500,
+            minWidth: 100,
             maxHeight: size.height * 0.8,
-            minWidth: size.width * 0.2,
           ),
           decoration: BoxDecoration(
             color: Colors.white,

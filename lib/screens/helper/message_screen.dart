@@ -83,7 +83,9 @@ class MessageScreen {
                 },
                 child: Text(
                   Strings.dismiss,
-                  style: typoConfig.textStyle.smallCaptionSubtitle1,
+                  // style: typoConfig.textStyle.smallCaptionSubtitle1.copyWith(
+                  //   color: typoConfig.color.surfaceWhite,
+                  // ),
                 ),
               ),
             ),

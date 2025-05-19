@@ -47,6 +47,22 @@ class AuthService {
       throw e.toString();
     }
   }
+
+  // update school
+  Future<SchoolModel> updateSchool(SchoolModel school) async {
+    try {
+      await isar.writeTxn(() async {
+        final id = await isar.schoolModels.put(school);
+        school.id = id;
+      });
+      return school;
+    } catch (e) {
+      if (e.toString().contains("duplicate")) {
+        throw "Username already exist. Use another one!";
+      }
+      throw e.toString();
+    }
+  }
 }
 
 final authServiceProvider = Provider((ref) {

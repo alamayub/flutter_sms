@@ -48,6 +48,23 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  // register school
+  Future<void> update(SchoolModel school) async {
+    final globalNotifier = ref.read(globalProvider.notifier);
+    try {
+      globalNotifier.setLoading(true);
+      await ref.read(authServiceProvider).updateSchool(school);
+      globalNotifier.setMessage(
+        'Info updated successfully!',
+        type: MessageType.success,
+      );
+    } catch (e) {
+      globalNotifier.setMessage(e.toString());
+    } finally {
+      globalNotifier.setLoading(false);
+    }
+  }
+
   // logout
   Future<void> logout() async {
     final globalNotifier = ref.read(globalProvider.notifier);
