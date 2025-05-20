@@ -17,18 +17,20 @@ class TableColumnDefinition<T> {
 
 class TableWidget<T> extends HookConsumerWidget {
   final String title;
-  final Function() onAddPressed;
+  final Function()? onAddPressed;
   final List<T> data;
   final List<TableColumnDefinition<T>> columns;
   final ActionBuilder<T> actionBuilder;
+  final bool isSearchable;
 
   const TableWidget({
     super.key,
     required this.title,
-    required this.onAddPressed,
+    this.onAddPressed,
     required this.data,
     required this.columns,
     required this.actionBuilder,
+    this.isSearchable = true,
   });
 
   @override
@@ -50,27 +52,36 @@ class TableWidget<T> extends HookConsumerWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: PaginatedDataTable(
-              header: TextInput(
-                controller: search,
-                labelText: 'Search...',
-                onChanged: (val) {
-                  if (val != null && val.isNotEmpty) {}
-                },
-              ),
-              actions: [
-                SizedBox(
-                  height: 36,
-                  child: TextButton.icon(
-                    onPressed: onAddPressed,
-                    icon: const Icon(Icons.add_rounded, color: Colors.white),
-                    label: Text(
-                      title,
-                      style: typoConfig.textStyle.smallCaptionSubtitle2
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
+              header:
+                  isSearchable
+                      ? TextInput(
+                        controller: search,
+                        labelText: 'Search...',
+                        onChanged: (val) {
+                          if (val != null && val.isNotEmpty) {}
+                        },
+                      )
+                      : null,
+              actions:
+                  onAddPressed != null
+                      ? [
+                        SizedBox(
+                          height: 36,
+                          child: TextButton.icon(
+                            onPressed: onAddPressed,
+                            icon: const Icon(
+                              Icons.add_rounded,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              title,
+                              style: typoConfig.textStyle.smallCaptionSubtitle2
+                                  .copyWith(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ]
+                      : null,
               columns: [
                 const DataColumn(
                   label: Text('SN'),
@@ -87,10 +98,7 @@ class TableWidget<T> extends HookConsumerWidget {
                     columnWidth: FlexColumnWidth(),
                   ),
                 ),
-                const DataColumn(
-                  label: Text('Actions'),
-                  columnWidth: FixedColumnWidth(74),
-                ),
+                const DataColumn(label: Text('Actions')),
               ],
               columnSpacing: 12,
               horizontalMargin: 16,
