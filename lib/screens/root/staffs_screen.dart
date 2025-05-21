@@ -82,12 +82,14 @@ class StaffsScreen extends HookConsumerWidget {
                 actionBuilder:
                     (s, i) => [
                       TableActionWidget(
+                        tooltip: 'Edit',
                         icon: Icons.edit_rounded,
                         color: ColorConstants.primary,
                         onPressed: () => addOrEditStaff(context, ref, s),
                       ),
                       const SizedBox(width: 4),
                       TableActionWidget(
+                        tooltip: 'Delete',
                         icon: Icons.delete_rounded,
                         color: Colors.red,
                         onPressed: () => deleteStaff(s),

@@ -68,11 +68,13 @@ class SalaryManagementScreen extends ConsumerWidget {
                       cellBuilder: (s) => s.phoneNumber,
                     ),
                     TableColumnDefinition(
+                      numeric: true,
                       label: 'Salary',
-                      cellBuilder: (s) => s.salary.toString(),
+                      cellBuilder: (s) => 'रु${s.salary.toStringAsFixed(2)}',
                     ),
                     TableColumnDefinition(
-                      label: 'Data',
+                      numeric: true,
+                      label: 'Date',
                       cellBuilder:
                           (s) =>
                               s.paymentDate != null

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../config/theme.dart' show ColorConstants;
 import '../../config/typo_config.dart';
 import '../input/text_input.dart';
 
@@ -9,10 +10,15 @@ typedef CellBuilder<T> = String Function(T item);
 typedef ActionBuilder<T> = List<Widget> Function(T item, int index);
 
 class TableColumnDefinition<T> {
+  final bool numeric;
   final String label;
   final CellBuilder<T> cellBuilder;
 
-  TableColumnDefinition({required this.label, required this.cellBuilder});
+  TableColumnDefinition({
+    this.numeric = false,
+    required this.label,
+    required this.cellBuilder,
+  });
 }
 
 class TableWidget<T> extends HookConsumerWidget {
@@ -35,7 +41,6 @@ class TableWidget<T> extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final rowsPerPage = useState<int>(10);
     final search = useTextEditingController();
     final filteredData = useState<List<T>>(data);
 
@@ -46,104 +51,105 @@ class TableWidget<T> extends HookConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return SizedBox(
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: PaginatedDataTable(
-              header:
-                  isSearchable
-                      ? TextInput(
-                        controller: search,
-                        labelText: 'Search...',
-                        onChanged: (val) {
-                          if (val != null && val.isNotEmpty) {}
-                        },
-                      )
-                      : null,
-              actions:
-                  onAddPressed != null
-                      ? [
-                        SizedBox(
-                          height: 36,
-                          child: TextButton.icon(
-                            onPressed: onAddPressed,
-                            icon: const Icon(
-                              Icons.add_rounded,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              title,
-                              style: typoConfig.textStyle.smallCaptionSubtitle2
-                                  .copyWith(color: Colors.white),
-                            ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            if (isSearchable && onAddPressed != null) ...[
+              Container(
+                width: constraints.maxWidth,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    if (isSearchable)
+                      Expanded(
+                        child: SizedBox(
+                          width: 300,
+                          child: TextInput(
+                            controller: search,
+                            labelText: 'Search...',
+                            onChanged: (val) {
+                              if (val != null && val.isNotEmpty) {
+                              } else {
+                                filteredData.value = data;
+                              }
+                            },
                           ),
                         ),
-                      ]
-                      : null,
-              columns: [
-                const DataColumn(
-                  label: Text('SN'),
-                  numeric: true,
-                  columnWidth: FixedColumnWidth(40),
+                      ),
+                    const SizedBox(width: 12),
+                    if (onAddPressed != null)
+                      TextButton.icon(
+                        onPressed: onAddPressed,
+                        icon: const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          title,
+                          style: typoConfig.textStyle.smallCaptionSubtitle2
+                              .copyWith(color: Colors.white),
+                        ),
+                        style: TextButton.styleFrom(
+                          backgroundColor: ColorConstants.primary,
+                        ),
+                      ),
+                  ],
                 ),
-                ...columns.map(
-                  (c) => DataColumn(
-                    label: Text(
-                      c.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 12),
+            ],
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minWidth: constraints.maxWidth - 32,
                     ),
-                    columnWidth: FlexColumnWidth(),
+                    child: DataTable(
+                      columnSpacing: 16,
+                      headingRowHeight: 30,
+                      dataRowMinHeight: 30,
+                      columns: [
+                        const DataColumn(label: Text('SN'), numeric: true),
+                        ...columns.map(
+                          (c) => DataColumn(
+                            label: Text(
+                              c.label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            numeric: c.numeric,
+                          ),
+                        ),
+                        const DataColumn(label: Text('Actions')),
+                      ],
+                      rows: List<DataRow>.generate(filteredData.value.length, (
+                        index,
+                      ) {
+                        final item = filteredData.value[index];
+                        return DataRow(
+                          cells: [
+                            DataCell(Text('${index + 1}')),
+                            ...columns.map(
+                              (c) => DataCell(Text(c.cellBuilder(item))),
+                            ),
+                            DataCell(Row(children: actionBuilder(item, index))),
+                          ],
+                        );
+                      }),
+                    ),
                   ),
                 ),
-                const DataColumn(label: Text('Actions')),
-              ],
-              columnSpacing: 12,
-              horizontalMargin: 16,
-              headingRowHeight: 30,
-              source: _GenericDataSource<T>(
-                filteredData.value,
-                columns,
-                actionBuilder,
               ),
-              rowsPerPage: rowsPerPage.value,
-              availableRowsPerPage: const [10, 20, 50],
-              onRowsPerPageChanged: (value) => rowsPerPage.value = value ?? 10,
             ),
-          ),
+            const SizedBox(height: 20),
+          ],
         );
       },
     );
   }
-}
-
-class _GenericDataSource<T> extends DataTableSource {
-  final List<T> data;
-  final List<TableColumnDefinition<T>> columns;
-  final ActionBuilder<T> actionBuilder;
-
-  _GenericDataSource(this.data, this.columns, this.actionBuilder);
-
-  @override
-  DataRow getRow(int index) {
-    final item = data[index];
-    return DataRow(
-      cells: [
-        DataCell(Text('${index + 1}')),
-        ...columns.map((c) => DataCell(Text(c.cellBuilder(item)))),
-        DataCell(Row(children: actionBuilder(item, index))),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
