@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import '../../config/theme.dart' show ColorConstants, textDecorationTextStyle;
 
 class TextInput extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String labelText;
   final bool enabled;
   final Function(String?)? onChanged;
+  final Function(String?)? onFieldSubmitted;
 
   const TextInput({
     super.key,
-    required this.controller,
+    this.controller,
     required this.labelText,
     this.enabled = true,
     this.onChanged,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -28,6 +30,7 @@ class TextInput extends StatelessWidget {
         style: textDecorationTextStyle(ColorConstants.textColor),
         decoration: InputDecoration(labelText: labelText),
         validator: (x) => x == null || x.isEmpty ? '' : null,
+        onFieldSubmitted: onFieldSubmitted,
       ),
     );
   }

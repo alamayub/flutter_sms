@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
+import '../../config/extensions.dart' show ContextExtensions;
 import '../../config/theme.dart' show ColorConstants;
 import '../../models/salary_status.dart';
 import '../../providers/salary_provider.dart';
@@ -87,10 +88,16 @@ class SalaryManagementScreen extends ConsumerWidget {
                   actionBuilder:
                       (s, i) => [
                         GestureDetector(
-                          onTap:
-                              () => ref
+                          onTap: () async {
+                            try {
+                              await ref
                                   .read(salaryProvider.notifier)
-                                  .updateSalaryStatus(s),
+                                  .updateSalaryStatus(s);
+                              context.showSnackbar(
+                                'Salary paid to ${s.fullName}',
+                              );
+                            } catch (_) {}
+                          },
                           child: Tooltip(
                             message: s.isPaid ? 'Paid' : 'Click to Pay',
                             child: Row(
