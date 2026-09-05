@@ -33,7 +33,7 @@ class Themes {
       unselectedItemColor: Colors.grey,
       backgroundColor: Colors.white,
     ),
-    bottomAppBarTheme: const BottomAppBarTheme(
+    bottomAppBarTheme: const BottomAppBarThemeData(
       height: 64,
       color: Colors.white,
       padding: EdgeInsets.zero,
@@ -58,7 +58,7 @@ class Themes {
       contentPadding: EdgeInsets.all(12.0),
       errorStyle: TextStyle(height: 1, fontSize: 0),
     ),
-    tabBarTheme: TabBarTheme(
+    tabBarTheme: TabBarThemeData(
       dividerHeight: 0,
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: const UnderlineTabIndicator(
@@ -119,7 +119,7 @@ class Themes {
         iconSize: 18,
       ),
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
   );

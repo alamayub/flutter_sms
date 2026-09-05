@@ -93,9 +93,11 @@ class SalaryManagementScreen extends ConsumerWidget {
                               await ref
                                   .read(salaryProvider.notifier)
                                   .updateSalaryStatus(s);
-                              context.showSnackbar(
-                                'Salary paid to ${s.fullName}',
-                              );
+                              if (context.mounted) {
+                                context.showSnackbar(
+                                  'Salary paid to ${s.fullName}',
+                                );
+                              }
                             } catch (_) {}
                           },
                           child: Tooltip(

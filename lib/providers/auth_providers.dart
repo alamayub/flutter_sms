@@ -12,7 +12,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   AuthNotifier(this.ref) : super(const AuthState());
 
-  changeState(AuthAction val) {
+  void changeState(AuthAction val) {
     state = state.copyWith(state: val);
   }
 

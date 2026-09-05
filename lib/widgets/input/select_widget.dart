@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../../config/extensions.dart' show StringExtensions;
@@ -22,11 +20,10 @@ class SelectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('VALUE ${value}, $lists');
     return SizedBox(
       height: 36,
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         items:
             lists
                 .map(
