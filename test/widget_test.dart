@@ -1,30 +1,35 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+// test/widget_test.dart
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sms/core/database/app_database.dart';
+import 'package:sms/core/database/database_service.dart';
 import 'package:sms/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets(
+    'SchoolManagementApp boots up and displays Welcome on fresh launch',
+    (WidgetTester tester) async {
+      final db = AppDatabase(NativeDatabase.memory());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: const SchoolManagementApp(),
+        ),
+      );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+      // Verify Welcome / First launch UI rendered
+      expect(
+        find.textContaining('School Management System'),
+        findsAtLeastNWidgets(1),
+      );
+      expect(find.text('Create New School'), findsOneWidget);
+      expect(find.text('Import Existing Database (.sdb)'), findsOneWidget);
+
+      await db.close();
+    },
+  );
 }
