@@ -83,11 +83,9 @@ class ResponsiveScaffoldWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxContentWidth),
-        child: child,
-      ),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: maxContentWidth),
+      child: child,
     );
   }
 }
