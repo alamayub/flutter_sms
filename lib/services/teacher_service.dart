@@ -6,21 +6,21 @@ class TeacherService {
 
   TeacherService(AppDatabase db) : _employeeService = EmployeeService(db);
 
-  Stream<List<Teacher>> watchAllTeachers() {
+  Stream<List<Employee>> watchAllTeachers() {
     return _employeeService.watchEmployees(
       type: EmployeeType.teacher,
       isActive: true,
     );
   }
 
-  Future<List<Teacher>> getAllTeachers() {
+  Future<List<Employee>> getAllTeachers() {
     return _employeeService.getAllEmployees(
       type: EmployeeType.teacher,
       isActive: true,
     );
   }
 
-  Future<Teacher?> getTeacherById(int id) =>
+  Future<Employee?> getTeacherById(int id) =>
       _employeeService.getEmployeeById(id);
 
   Future<int> createTeacher({

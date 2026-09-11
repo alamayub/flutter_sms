@@ -328,49 +328,43 @@ enum EmployeeType { teacher, staff }
 @DataClassName('Employee')
 class Employees extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get employeeCode =>
-      text().nullable()(); // e.g. "EMP-2026-001", "TCH-001"
+  // e.g. "EMP-2026-001", "TCH-001"
+  TextColumn get employeeCode => text().nullable()();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  TextColumn get employeeType =>
-      textEnum<EmployeeType>()(); // 'teacher' or 'staff'
-  TextColumn get designation =>
-      text().withLength(
-        min: 1,
-        max: 100,
-      )(); // 'Teacher', 'Peon', 'Accountant', etc.
+  // 'teacher' or 'staff'
+  TextColumn get employeeType => textEnum<EmployeeType>()();
+  // 'Teacher', 'Peon', 'Accountant', etc.
+  TextColumn get designation => text().withLength(min: 1, max: 100)();
   TextColumn get email => text().nullable()();
   TextColumn get phone => text().nullable()();
-  TextColumn get photoPath =>
-      text().nullable()(); // Local image path or avatar URI
-
+  // Local image path or avatar URI
+  TextColumn get photoPath => text().nullable()();
   // Emergency Contact Details
   TextColumn get emergencyContactName => text().nullable()();
   TextColumn get emergencyContactPhone => text().nullable()();
-  TextColumn get emergencyContactRelation =>
-      text().nullable()(); // Spouse, Parent, Sibling, Relative, etc.
+  // Spouse, Parent, Sibling, Relative, etc.
+  TextColumn get emergencyContactRelation => text().nullable()();
 
   // Optional biographical & personal information
-  DateTimeColumn get dateOfBirth =>
-      dateTime().nullable()(); // AD date only, converted to BS for display
+  // AD date only, converted to BS for display
+  DateTimeColumn get dateOfBirth => dateTime().nullable()();
   TextColumn get gender => text().nullable()(); // 'Male', 'Female', 'Other'
   TextColumn get bloodGroup => text().nullable()(); // 'A+', 'B+', 'O+', etc.
-  TextColumn get maritalStatus =>
-      text().nullable()(); // 'Single', 'Married', etc.
+  // 'Single', 'Married', etc.
+  TextColumn get maritalStatus => text().nullable()();
   TextColumn get address => text().nullable()();
 
   // Optional professional details
-  TextColumn get qualification =>
-      text().nullable()(); // e.g. 'M.Sc. B.Ed', 'B.B.S', 'Under SLC'
-  TextColumn get department =>
-      text().nullable()(); // e.g. 'Mathematics', 'Accounts', 'Administration'
+  // e.g. 'M.Sc. B.Ed', 'B.B.S', 'Under SLC'
+  TextColumn get qualification => text().nullable()();
+  // e.g. 'Mathematics', 'Accounts', 'Administration'
+  TextColumn get department => text().nullable()();
   DateTimeColumn get joiningDate => dateTime().nullable()();
   RealColumn get basicSalary => real().nullable()();
 
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
-
-typedef Teacher = Employee;
 
 @DataClassName('PeriodEntry')
 class PeriodEntries extends Table {
@@ -385,8 +379,8 @@ class PeriodEntries extends Table {
         #id,
         onDelete: KeyAction.cascade,
       )();
-  TextColumn get dayOfWeek =>
-      text()(); // 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
+  TextColumn get dayOfWeek => text()();
+  // 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
   IntColumn get periodNumber => integer().withDefault(const Constant(1))();
   TextColumn get startTime => text()(); // e.g. "10:15"
   TextColumn get endTime => text()(); // e.g. "11:00"
@@ -475,19 +469,16 @@ enum ContactSourceType {
 @DataClassName('Contact')
 class Contacts extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get sourceType =>
-      textEnum<ContactSourceType>()(); // 'student', 'employee', 'other'
-  IntColumn get sourceId =>
-      integer()
-          .nullable()(); // Student ID or Employee ID (or null for general/other contacts)
-  TextColumn get sourceName =>
-      text()
-          .nullable()(); // Denormalized name of the student/employee for fast display & search
+  // 'student', 'employee', 'other'
+  TextColumn get sourceType => textEnum<ContactSourceType>()();
+  // Student ID or Employee ID (or null for general/other contacts)
+  IntColumn get sourceId => integer().nullable()();
+  // Denormalized name of the student/employee for fast display & search
+  TextColumn get sourceName => text().nullable()();
   TextColumn get name => text().withLength(min: 1, max: 100)();
   TextColumn get phone => text().withLength(min: 1, max: 25)();
-  TextColumn get relation =>
-      text()
-          .nullable()(); // 'Father', 'Mother', 'Guardian', 'Spouse', 'Sibling', 'Doctor', etc.
+  // 'Father', 'Mother', 'Guardian', 'Spouse', 'Sibling', 'Doctor', etc.
+  TextColumn get relation => text().nullable()();
   TextColumn get email => text().nullable()();
   TextColumn get address => text().nullable()();
   TextColumn get occupation => text().nullable()();
@@ -520,17 +511,15 @@ class Expenses extends Table {
       )();
   RealColumn get amount => real()();
   DateTimeColumn get expenseDate => dateTime()();
-  TextColumn get paymentMethod =>
-      text().withDefault(
-        const Constant('Cash'),
-      )(); // 'Cash', 'Bank Transfer', 'Cheque', 'eSewa', 'Khalti', 'Other'
-  TextColumn get referenceNumber =>
-      text().nullable()(); // Voucher / Bill / Receipt / Txn ID
-  TextColumn get paidTo =>
-      text().nullable()(); // Vendor / Payee / Landlord / Person
+  // 'Cash', 'Bank Transfer', 'Cheque', 'eSewa', 'Khalti', 'Other'
+  TextColumn get paymentMethod => text().withDefault(const Constant('Cash'))();
+  // Voucher / Bill / Receipt / Txn ID
+  TextColumn get referenceNumber => text().nullable()();
+  // Vendor / Payee / Landlord / Person
+  TextColumn get paidTo => text().nullable()();
   TextColumn get notes => text().nullable()();
-  TextColumn get receiptPath =>
-      text().nullable()(); // Local image receipt photo path
+  // Local image receipt photo path
+  TextColumn get receiptPath => text().nullable()();
   IntColumn get academicYearId =>
       integer().nullable().references(
         AcademicYears,
@@ -585,10 +574,8 @@ class SalaryAdvances extends Table {
         #id,
         onDelete: KeyAction.setNull,
       )();
-  TextColumn get status =>
-      text().withDefault(
-        const Constant('pending'),
-      )(); // 'pending', 'partially_adjusted', 'settled'
+  // 'pending', 'partially_adjusted', 'settled'
+  TextColumn get status => text().withDefault(const Constant('pending'))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
@@ -618,8 +605,8 @@ class SalaryPayments extends Table {
   TextColumn get paymentMethod =>
       text().withDefault(const Constant('Bank Transfer'))();
   TextColumn get referenceNumber => text().nullable()();
-  TextColumn get status =>
-      text().withDefault(const Constant('paid'))(); // 'paid', 'pending'
+  // 'paid', 'pending'
+  TextColumn get status => text().withDefault(const Constant('paid'))();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -639,12 +626,10 @@ class SalaryAdvanceAdjustments extends Table {
 @DataClassName('FeeCategory')
 class FeeCategories extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get name =>
-      text()(); // e.g. "Monthly Tuition Fee", "Uniform & Dress", "Admission Fee", "Exam Fee"
-  TextColumn get frequency =>
-      text().withDefault(
-        const Constant('monthly'),
-      )(); // 'one_time', 'monthly', 'quarterly', 'half_yearly', 'yearly', 'term_wise'
+  // e.g. "Monthly Tuition Fee", "Uniform & Dress", "Admission Fee", "Exam Fee"
+  TextColumn get name => text()();
+  // 'one_time', 'monthly', 'quarterly', 'half_yearly', 'yearly', 'term_wise'
+  TextColumn get frequency => text().withDefault(const Constant('monthly'))();
   RealColumn get defaultAmount => real().withDefault(const Constant(0.0))();
   TextColumn get description => text().nullable()();
   BoolColumn get isSystem => boolean().withDefault(const Constant(false))();
@@ -664,17 +649,18 @@ class StudentFees extends Table {
       )();
   IntColumn get feeCategoryId =>
       integer().references(FeeCategories, #id, onDelete: KeyAction.cascade)();
-  TextColumn get title => text()();
   // e.g. "Baishakh Tuition Fee", "Grade 8 Uniform & Dress", "1st Term Exam Fee"
+  TextColumn get title => text()();
+
   RealColumn get totalAmount => real()();
   RealColumn get discountAmount => real().withDefault(const Constant(0.0))();
   RealColumn get paidAmount => real().withDefault(const Constant(0.0))();
   DateTimeColumn get dueDate => dateTime().nullable()();
-  TextColumn get status => text().withDefault(const Constant('pending'))();
   // 'pending', 'partial', 'paid'
+  TextColumn get status => text().withDefault(const Constant('pending'))();
   IntColumn get academicMonth => integer().nullable()(); // 1-12
-  TextColumn get academicTerm =>
-      text().nullable()(); // 'Term 1', 'Term 2', 'Final Term'
+  // 'Term 1', 'Term 2', 'Final Term'
+  TextColumn get academicTerm => text().nullable()();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -697,10 +683,8 @@ class FeePayments extends Table {
   RealColumn get amount => real()();
   DateTimeColumn get paymentDate =>
       dateTime().withDefault(currentDateAndTime)();
-  TextColumn get paymentMethod =>
-      text().withDefault(
-        const Constant('Cash'),
-      )(); // 'Cash', 'Bank Transfer', 'eSewa', 'Khalti', 'Cheque', 'Online'
+  // 'Cash', 'Bank Transfer', 'eSewa', 'Khalti', 'Cheque', 'Online'
+  TextColumn get paymentMethod => text().withDefault(const Constant('Cash'))();
   TextColumn get referenceNumber => text().nullable()();
   TextColumn get remarks => text().nullable()();
   TextColumn get receivedBy => text().nullable()();
@@ -902,23 +886,22 @@ class Certificates extends Table {
         #id,
         onDelete: KeyAction.setNull,
       )();
-  TextColumn get certificateType => text()();
   // 'tc', 'cc', 'bonafide', 'marksheet', 'custom'
-  TextColumn get title => text().withLength(min: 1, max: 150)();
+  TextColumn get certificateType => text()();
   // e.g. "Transfer Certificate", "Character Certificate"
+  TextColumn get title => text().withLength(min: 1, max: 150)();
   DateTimeColumn get issueDate => dateTime()();
-  TextColumn get status => text().withDefault(const Constant('issued'))();
   // 'issued', 'draft', 'revoked'
-  TextColumn get reason =>
-      text().nullable()(); // e.g. Reason for leaving, purpose of bonafide
-  TextColumn get conduct =>
-      text().nullable()(); // e.g. "Good", "Exemplary", "Very Good"
+  TextColumn get status => text().withDefault(const Constant('issued'))();
+  // e.g. Reason for leaving, purpose of bonafide
+  TextColumn get reason => text().nullable()();
+  // e.g. "Good", "Exemplary", "Very Good"
+  TextColumn get conduct => text().nullable()();
   BoolColumn get duesCleared => boolean().withDefault(const Constant(true))();
   TextColumn get remarks => text().nullable()();
   TextColumn get issuedBy => text().nullable()();
-  TextColumn get dataJson =>
-      text()
-          .nullable()(); // JSON payload for Mark Sheet / TC / CC / Bonafide / Custom specifics
+  // JSON payload for Mark Sheet / TC / CC / Bonafide / Custom specifics
+  TextColumn get dataJson => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 

@@ -306,7 +306,7 @@ class TestDataSeeder {
     }
 
     // Helper to find teacher by name keyword
-    Teacher? findTea(String keyword) {
+    Employee? findTea(String keyword) {
       return teachers.firstWhere(
         (t) => t.name.toLowerCase().contains(keyword.toLowerCase()),
         orElse: () => teachers.first,
