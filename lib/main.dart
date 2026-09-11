@@ -49,3 +49,6 @@ class SchoolManagementApp extends ConsumerWidget {
     );
   }
 }
+
+// flutter build macos --release
+// flutter build windows --release
