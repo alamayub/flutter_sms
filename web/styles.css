@@ -1,0 +1,249 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Global cursor pointer rules for interactive elements */
+button,
+select,
+a,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"] {
+  cursor: pointer;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+label[for],
+summary {
+  cursor: pointer;
+}
+
+/* Disabled states indicator */
+button:disabled,
+select:disabled,
+input:disabled,
+[disabled],
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+@layer base {
+  body {
+    user-select: none;
+    -webkit-user-drag: none;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  button,
+  select,
+  a,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [type="reset"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled,
+  [disabled],
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  /* Remove scroll indicator thumb and hide scrollbars */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    display: none;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    display: none;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb:hover,
+  ::-webkit-scrollbar-thumb:hover {
+    display: none;
+    background: transparent;
+  }
+}
+
+/* Smooth Theme Transitions */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    fill 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-delay: 0s !important;
+}
+
+/* Subtle default ease on background surfaces */
+html,
+body,
+#root {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+/* Professional Print Formatting & Page Break Handling */
+@page {
+  size: auto;
+  margin: 15mm 15mm 15mm 15mm;
+}
+
+@media print {
+  @page {
+    size: auto;
+    margin: 12mm 15mm 15mm 15mm;
+  }
+
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  aside,
+  header,
+  nav,
+  .DesktopTitleBar,
+  .no-print,
+  button:not(.allow-print) {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  #root {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Printable container styling */
+  .printable-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  .certificate-document {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Page Break Control Classes */
+  .print-avoid-break,
+  .avoid-page-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-page-break-before,
+  .page-break-before {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  .print-page-break-after,
+  .page-break-after {
+    break-after: page !important;
+    page-break-after: always !important;
+  }
+
+  /* Table repeating headers & row break protection */
+  thead {
+    display: table-header-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Ensure links don't display their URLs in print */
+  a[href]::after {
+    content: none !important;
+  }
+
+  /* Student ID Badge Print Sheet */
+  .id-card-print-sheet {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    padding: 12px !important;
+    width: 100% !important;
+  }
+
+  .id-card-badge {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+  }
+
+  /* Timetable Print Layout */
+  .timetable-print-sheet {
+    width: 100% !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+  }
+
+  .timetable-print-sheet th,
+  .timetable-print-sheet td {
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+}

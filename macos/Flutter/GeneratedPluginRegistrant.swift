@@ -5,10 +5,12 @@
 import FlutterMacOS
 import Foundation
 
-import printing
-import sqlite3_flutter_libs
+import file_picker_darwin
+import file_selector_macos
+import shared_preferences_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  PrintingPlugin.register(with: registry.registrar(forPlugin: "PrintingPlugin"))
-  Sqlite3FlutterLibsPlugin.register(with: registry.registrar(forPlugin: "Sqlite3FlutterLibsPlugin"))
+  FilePickerPlugin.register(with: registry.registrar(forPlugin: "FilePickerPlugin"))
+  FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
+  SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
 }
