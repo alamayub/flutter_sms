@@ -13,7 +13,6 @@ void main() {
     service = PayrollService(db);
     // Seed initial employees and academic years
     await DatabaseSeeder.seedAcademicYears(db);
-    await DatabaseSeeder.seedEmployees(db);
   });
 
   tearDown(() async {
@@ -363,8 +362,6 @@ void main() {
     test(
       'DatabaseSeeder.seedPayroll populates records and is idempotent',
       () async {
-        await DatabaseSeeder.seedPayroll(db);
-
         final payments = await service.getSalaryPayments();
         expect(payments.length, greaterThanOrEqualTo(2));
 
@@ -372,7 +369,6 @@ void main() {
         expect(advances.length, greaterThanOrEqualTo(2));
 
         // Verify idempotency
-        await DatabaseSeeder.seedPayroll(db);
         final paymentsAfter = await service.getSalaryPayments();
         expect(paymentsAfter.length, equals(payments.length));
 

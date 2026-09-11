@@ -1420,17 +1420,6 @@ class AppDatabase extends _$AppDatabase {
       await DatabaseSeeder.seedAcademicYears(this);
       await DatabaseSeeder.seedClassesAndSections(this);
       await DatabaseSeeder.seedSubjects(this);
-      await DatabaseSeeder.seedEmployees(this);
-      await DatabaseSeeder.seedTimetable(this);
-      await DatabaseSeeder.seedStudents(this);
-      await DatabaseSeeder.seedContacts(this);
-      await DatabaseSeeder.seedExpenseCategories(this);
-      await DatabaseSeeder.seedExpenses(this);
-      await DatabaseSeeder.seedPayroll(this);
-      await DatabaseSeeder.seedFees(this);
-      await DatabaseSeeder.seedExams(this);
-      await DatabaseSeeder.seedExamResults(this);
-      await DatabaseSeeder.seedAttendance(this);
     },
     onUpgrade: (Migrator m, int from, int to) async {
       if (from < 2) {
@@ -1447,8 +1436,6 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 5) {
         await m.createTable(employees);
-        await DatabaseSeeder.seedEmployees(this);
-        await DatabaseSeeder.seedTimetable(this);
       }
       if (from < 6) {
         await m.addColumn(employees, employees.employeeCode);
@@ -1461,49 +1448,39 @@ class AppDatabase extends _$AppDatabase {
       if (from < 7) {
         await m.drop(periodEntries);
         await m.createTable(periodEntries);
-        await DatabaseSeeder.seedTimetable(this);
       }
       if (from < 8) {
         await m.drop(periodEntries);
         await m.drop(employees);
         await m.createTable(employees);
         await m.createTable(periodEntries);
-        await DatabaseSeeder.seedEmployees(this);
-        await DatabaseSeeder.seedTimetable(this);
       }
       if (from < 9) {
         await m.createTable(students);
         await m.createTable(contacts);
-        await DatabaseSeeder.seedContacts(this);
       }
       if (from < 10) {
         await m.drop(periodEntries);
         await m.createTable(periodEntries);
-        await DatabaseSeeder.seedTimetable(this);
       }
       if (from < 11) {
         await m.drop(students);
         await m.createTable(students);
         await m.createTable(studentAcademicHistories);
-        await DatabaseSeeder.seedStudents(this);
       }
       if (from < 12) {
         await m.createTable(expenseCategories);
         await m.createTable(expenses);
-        await DatabaseSeeder.seedExpenseCategories(this);
-        await DatabaseSeeder.seedExpenses(this);
       }
       if (from < 13) {
         await m.createTable(salaryAdvances);
         await m.createTable(salaryPayments);
         await m.createTable(salaryAdvanceAdjustments);
-        await DatabaseSeeder.seedPayroll(this);
       }
       if (from < 14) {
         await m.createTable(feeCategories);
         await m.createTable(studentFees);
         await m.createTable(feePayments);
-        await DatabaseSeeder.seedFees(this);
       }
       if (from < 15) {
         try {
@@ -1525,21 +1502,18 @@ class AppDatabase extends _$AppDatabase {
         try {
           await m.createTable(exams);
           await m.createTable(examSchedules);
-          await DatabaseSeeder.seedExams(this);
         } catch (_) {}
       }
       if (from < 18) {
         try {
           await m.createTable(examResults);
           await m.createTable(examResultSummaries);
-          await DatabaseSeeder.seedExamResults(this);
         } catch (_) {}
       }
       if (from < 19) {
         try {
           await m.createTable(studentAttendances);
           await m.createTable(employeeAttendances);
-          await DatabaseSeeder.seedAttendance(this);
         } catch (_) {}
       }
     },

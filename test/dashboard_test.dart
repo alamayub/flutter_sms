@@ -10,6 +10,7 @@ import 'package:sms/data/database_seeder.dart';
 import 'package:sms/pages/dashboard_screen.dart';
 import 'package:sms/providers/dashboard_provider.dart';
 import 'package:sms/providers/database_provider.dart';
+import 'helpers/test_data_seeder.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +22,8 @@ void main() {
     db = AppDatabase(NativeDatabase.memory());
     await DatabaseSeeder.seedAcademicYears(db);
     await DatabaseSeeder.seedClassesAndSections(db);
-    await DatabaseSeeder.seedStudents(db);
-    await DatabaseSeeder.seedEmployees(db);
+    await TestDataSeeder.seedStudents(db);
+    await TestDataSeeder.seedEmployees(db);
   });
 
   tearDown(() async {

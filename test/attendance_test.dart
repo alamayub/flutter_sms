@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
 import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/attendance_service.dart';
+import 'helpers/test_data_seeder.dart';
 
 void main() {
   late AppDatabase db;
@@ -14,8 +15,8 @@ void main() {
     // Seed prerequisite data
     await DatabaseSeeder.seedAcademicYears(db);
     await DatabaseSeeder.seedClassesAndSections(db);
-    await DatabaseSeeder.seedStudents(db);
-    await DatabaseSeeder.seedEmployees(db);
+    await TestDataSeeder.seedStudents(db);
+    await TestDataSeeder.seedEmployees(db);
   });
 
   tearDown(() async {
@@ -383,7 +384,7 @@ void main() {
     test(
       'seedAttendance populates multiple days of student and staff attendance',
       () async {
-        await DatabaseSeeder.seedAttendance(db);
+        await TestDataSeeder.seedAttendance(db);
 
         final allStudents = await db.getAllStudents();
         expect(allStudents.isNotEmpty, isTrue);

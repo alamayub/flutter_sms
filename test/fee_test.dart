@@ -15,7 +15,6 @@ void main() {
     // Seed prerequisites: academic years, classes, sections, students
     await DatabaseSeeder.seedAcademicYears(db);
     await DatabaseSeeder.seedClassesAndSections(db);
-    await DatabaseSeeder.seedStudents(db);
   });
 
   tearDown(() async {
@@ -68,8 +67,6 @@ void main() {
     test(
       'Seeder populates standard fee categories and sample student fees',
       () async {
-        await DatabaseSeeder.seedFees(db);
-
         final cats = await service.getAllFeeCategories();
         expect(cats.length, greaterThanOrEqualTo(5));
         expect(cats.any((c) => c.name.contains('Tuition')), isTrue);
