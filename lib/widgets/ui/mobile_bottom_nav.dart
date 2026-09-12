@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../config/extensions.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
 import '../../providers/locale_provider.dart';
@@ -182,7 +183,7 @@ class MobileBottomNav extends ConsumerWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
                       onTap: () {
-                        Navigator.of(context).pop();
+                        context.pop();
                         ref
                             .read(selectedMenuIndexProvider.notifier)
                             .selectById(flatItems, item.id);

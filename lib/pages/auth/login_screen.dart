@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/loader_widget.dart';
 
 class LoginScreen extends HookConsumerWidget {
   final Function(String?) onErrorUpdate;
@@ -14,8 +15,8 @@ class LoginScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final formKey = useMemoized(() => GlobalKey<FormState>());
     final authState = ref.watch(authStateProvider);
-    final loginUsernameCtrl = useTextEditingController();
-    final loginPasswordCtrl = useTextEditingController();
+    final loginUsernameCtrl = useTextEditingController(text: 'admin');
+    final loginPasswordCtrl = useTextEditingController(text: '1234');
     final obscurePassword = useState<bool>(true);
 
     void submitLogin() async {
@@ -89,10 +90,7 @@ class LoginScreen extends HookConsumerWidget {
                     ? const SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
+                      child: LoaderWidget(),
                     )
                     : const Text(
                       'Sign In to SMS',

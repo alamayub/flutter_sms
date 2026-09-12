@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -2994,7 +2995,7 @@ class _SubjectMarksPreviewDialogState
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(false),
+                    onPressed: () => context.pop(false),
                   ),
                 ],
               ),
@@ -3428,7 +3429,7 @@ class _SubjectMarksPreviewDialogState
                       OutlinedButton.icon(
                         icon: const Icon(Icons.arrow_back, size: 16),
                         label: const Text('Back to Edit'),
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () => context.pop(false),
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
@@ -3443,9 +3444,7 @@ class _SubjectMarksPreviewDialogState
                         icon: const Icon(Icons.check_circle_outline, size: 18),
                         label: const Text('Confirm & Save Marks'),
                         onPressed:
-                            invalidCount > 0
-                                ? null
-                                : () => Navigator.of(context).pop(true),
+                            invalidCount > 0 ? null : () => context.pop(true),
                       ),
                     ],
                   ),
@@ -3642,7 +3641,7 @@ class _StudentMarksheetPreviewDialog extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(false),
+                    onPressed: () => context.pop(false),
                   ),
                 ],
               ),
@@ -4032,7 +4031,7 @@ class _StudentMarksheetPreviewDialog extends StatelessWidget {
                       OutlinedButton.icon(
                         icon: const Icon(Icons.arrow_back, size: 16),
                         label: const Text('Back to Edit'),
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () => context.pop(false),
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
@@ -4047,9 +4046,7 @@ class _StudentMarksheetPreviewDialog extends StatelessWidget {
                         icon: const Icon(Icons.check_circle_outline, size: 18),
                         label: const Text('Confirm & Save Marksheet'),
                         onPressed:
-                            invalidCount > 0
-                                ? null
-                                : () => Navigator.of(context).pop(true),
+                            invalidCount > 0 ? null : () => context.pop(true),
                       ),
                     ],
                   ),

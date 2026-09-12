@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -562,7 +563,7 @@ class _QuickAddSectionDialogState
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', langCode)),
         ),
         ElevatedButton(
@@ -607,7 +608,7 @@ class _QuickAddSectionDialogState
           .read(classSectionControllerProvider.notifier)
           .addSection(classId: widget.classItem.id, name: text);
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         UiHelpers.showSnackBar(
           context,
           'Section "$text" added to ${widget.classItem.name}',
@@ -865,7 +866,7 @@ class _ClassFormDialogState extends ConsumerState<_ClassFormDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', langCode)),
         ),
         ElevatedButton(
@@ -921,7 +922,7 @@ class _ClassFormDialogState extends ConsumerState<_ClassFormDialog> {
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         UiHelpers.showSnackBar(
           context,
           isEditing

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../config/enums.dart';
+import '../config/extensions.dart';
 import '../config/translations.dart';
 import '../data/app_database.dart';
 import '../providers/employee_provider.dart';
@@ -665,7 +666,6 @@ class _WeeklyTimetableEditorDialogState
 
   Future<void> _saveWeeklyTimetable() async {
     final messenger = ScaffoldMessenger.of(context);
-    final nav = Navigator.of(context);
     final errorColor = Theme.of(context).colorScheme.error;
 
     // Build the full list of inputs across the week
@@ -725,7 +725,8 @@ class _WeeklyTimetableEditorDialogState
         ),
       );
 
-      nav.pop();
+      // ignore: use_build_context_synchronously
+      context.pop();
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(

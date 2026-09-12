@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/translations.dart';
 import '../../data/app_database.dart';
@@ -697,17 +698,12 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
                   } else if (val == 'edit') {
                     _showAdmissionDialog(context, existingStudent: item);
                   } else if (val == 'certificates') {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder:
-                            (_) => Scaffold(
-                              appBar: AppBar(
-                                title: Text('Certificates - ${item.name}'),
-                              ),
-                              body: CertificatesScreen(
-                                preselectedStudentId: item.id,
-                              ),
-                            ),
+                    context.push(
+                      Scaffold(
+                        appBar: AppBar(
+                          title: Text('Certificates - ${item.name}'),
+                        ),
+                        body: CertificatesScreen(preselectedStudentId: item.id),
                       ),
                     );
                   } else if (val == 'delete') {
@@ -843,13 +839,13 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
                 child: Text(AppTranslations.text('cancel', lang)),
               ),
               FilledButton(
                 style: FilledButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () async {
-                  Navigator.of(context).pop();
+                  context.pop();
                   final success = await ref
                       .read(studentControllerProvider.notifier)
                       .deleteStudent(student.id);
@@ -1693,7 +1689,7 @@ class _StudentAdmissionDialogState
       ),
       actions: [
         TextButton(
-          onPressed: _isSaving ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSaving ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', lang)),
         ),
         FilledButton(
@@ -1763,7 +1759,7 @@ class _StudentAdmissionDialogState
       if (mounted) {
         setState(() => _isSaving = false);
         if (id != null) {
-          Navigator.of(context).pop();
+          context.pop();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Student admitted successfully!')),
           );
@@ -1808,7 +1804,7 @@ class _StudentAdmissionDialogState
       if (mounted) {
         setState(() => _isSaving = false);
         if (success) {
-          Navigator.of(context).pop();
+          context.pop();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Student profile updated!')),
           );
@@ -2448,7 +2444,7 @@ class _StudentPromotionDialogState
       ),
       actions: [
         TextButton(
-          onPressed: _isPromoting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isPromoting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', lang)),
         ),
         FilledButton.icon(
@@ -2511,7 +2507,7 @@ class _StudentPromotionDialogState
     if (mounted) {
       setState(() => _isPromoting = false);
       if (success) {
-        Navigator.of(context).pop();
+        context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Students promoted successfully!')),
         );
@@ -2775,17 +2771,14 @@ class StudentProfileDialog extends ConsumerWidget {
                       visualDensity: VisualDensity.compact,
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (_) => Scaffold(
-                                appBar: AppBar(
-                                  title: Text('Certificates - ${student.name}'),
-                                ),
-                                body: CertificatesScreen(
-                                  preselectedStudentId: student.id,
-                                ),
-                              ),
+                      context.push(
+                        Scaffold(
+                          appBar: AppBar(
+                            title: Text('Certificates - ${student.name}'),
+                          ),
+                          body: CertificatesScreen(
+                            preselectedStudentId: student.id,
+                          ),
                         ),
                       );
                     },
@@ -2793,7 +2786,7 @@ class StudentProfileDialog extends ConsumerWidget {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                   ),
                 ],
               ),

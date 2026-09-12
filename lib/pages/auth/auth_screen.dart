@@ -199,7 +199,7 @@ class AuthScreen extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      const Divider(height: 24),
+                      const SizedBox(height: 24),
 
                       // Database Import Option
                       const ImportDBScreen(),

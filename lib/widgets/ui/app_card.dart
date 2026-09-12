@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../config/theme.dart';
 
 /// Premium interactive tactile card widget adhering to modern 3D design tokens.
-class AppCard extends StatefulWidget {
+class AppCard extends HookWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -33,48 +34,42 @@ class AppCard extends StatefulWidget {
   });
 
   @override
-  State<AppCard> createState() => _AppCardState();
-}
-
-class _AppCardState extends State<AppCard> {
-  bool _isHovered = false;
-  bool _isPressed = false;
-
-  @override
   Widget build(BuildContext context) {
+    final isHovered = useState<bool>(false);
+    final isPressed = useState<bool>(false);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final reduceMotion = MediaQuery.of(context).disableAnimations;
 
-    final radius = widget.borderRadius ?? AppRadius.roundedXl;
+    final radius = borderRadius ?? AppRadius.roundedXl;
     final surfaceBg =
-        widget.backgroundColor ??
+        backgroundColor ??
         (isDark ? theme.colorScheme.surface : theme.colorScheme.surface);
 
     final borderColor =
         isDark
-            ? (_isHovered && widget.accentColor != null
-                ? widget.accentColor!.withAlpha(120)
+            ? (isHovered.value && accentColor != null
+                ? accentColor!.withAlpha(120)
                 : theme.colorScheme.outlineVariant.withAlpha(90))
-            : (_isHovered && widget.accentColor != null
-                ? widget.accentColor!.withAlpha(100)
+            : (isHovered.value && accentColor != null
+                ? accentColor!.withAlpha(100)
                 : theme.colorScheme.outlineVariant.withAlpha(120));
 
     final shadows =
-        widget.depth3d
+        depth3d
             ? AppShadows.depth3d(isDark)
-            : (_isHovered && widget.isHoverable && widget.onTap != null
+            : (isHovered.value && isHoverable && onTap != null
                 ? (isDark ? AppShadows.hoverDark : AppShadows.hoverLight)
                 : (isDark ? AppShadows.cardDark : AppShadows.cardLight));
 
     Widget cardBox = Container(
-      width: widget.width,
-      height: widget.height,
-      margin: widget.margin,
+      width: width,
+      height: height,
+      margin: margin,
       decoration: BoxDecoration(
         color: surfaceBg,
         borderRadius: radius,
-        border: widget.border ?? Border.all(color: borderColor, width: 1),
+        border: border ?? Border.all(color: borderColor, width: 1),
         boxShadow: shadows,
       ),
       child: ClipRRect(
@@ -82,7 +77,7 @@ class _AppCardState extends State<AppCard> {
         child: Stack(
           children: [
             // Top specular highlight bevel
-            if (widget.depth3d || widget.accentColor == null)
+            if (depth3d || accentColor == null)
               Positioned(
                 top: 0,
                 left: 1,
@@ -96,7 +91,7 @@ class _AppCardState extends State<AppCard> {
               ),
 
             // Optional top accent gradient line
-            if (widget.accentColor != null)
+            if (accentColor != null)
               Positioned(
                 top: 0,
                 left: 0,
@@ -104,29 +99,26 @@ class _AppCardState extends State<AppCard> {
                 height: 3,
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: AppGradients.topAccentBar(widget.accentColor!),
+                    gradient: AppGradients.topAccentBar(accentColor!),
                   ),
                 ),
               ),
 
             // Card body
-            Padding(
-              padding: widget.padding ?? const EdgeInsets.all(16),
-              child: widget.child,
-            ),
+            Padding(padding: padding ?? const EdgeInsets.all(16), child: child),
 
             // Inkwell ripple when clickable
-            if (widget.onTap != null)
+            if (onTap != null)
               Positioned.fill(
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: radius,
                     mouseCursor: SystemMouseCursors.click,
-                    onTap: widget.onTap,
+                    onTap: onTap,
                     onHighlightChanged: (highlighted) {
-                      if (!reduceMotion && mounted) {
-                        setState(() => _isPressed = highlighted);
+                      if (!reduceMotion && context.mounted) {
+                        isPressed.value = highlighted;
                       }
                     },
                   ),
@@ -137,25 +129,25 @@ class _AppCardState extends State<AppCard> {
       ),
     );
 
-    if (widget.onTap != null) {
+    if (onTap != null) {
       cardBox = MouseRegion(
         cursor: SystemMouseCursors.click,
         onEnter: (_) {
-          if (!reduceMotion && mounted && widget.isHoverable) {
-            setState(() => _isHovered = true);
+          if (!reduceMotion && context.mounted && isHoverable) {
+            isHovered.value = true;
           }
         },
         onExit: (_) {
-          if (!reduceMotion && mounted && widget.isHoverable) {
-            setState(() => _isHovered = false);
+          if (!reduceMotion && context.mounted && isHoverable) {
+            isHovered.value = false;
           }
         },
         child: AnimatedScale(
           scale:
               !reduceMotion
-                  ? (_isPressed
+                  ? (isPressed.value
                       ? 0.985
-                      : (_isHovered && widget.isHoverable ? 1.008 : 1.0))
+                      : (isHovered.value && isHoverable ? 1.008 : 1.0))
                   : 1.0,
           duration: AppMotion.snappy,
           curve: AppMotion.snappyCurve,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../config/extensions.dart';
 import '../config/theme.dart';
 import '../config/translations.dart';
 import '../providers/calendar_provider.dart';
@@ -250,8 +251,8 @@ class SidebarWidget extends ConsumerWidget {
                           ref
                               .read(selectedMenuIndexProvider.notifier)
                               .setIndex(itemFlatIndex);
-                          if (!isPermanent && Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
+                          if (!isPermanent && context.canPop) {
+                            context.pop();
                           }
                         },
                       );
@@ -271,8 +272,8 @@ class SidebarWidget extends ConsumerWidget {
             ref
                 .read(selectedMenuIndexProvider.notifier)
                 .selectById(flatItems, 'school_profile');
-            if (!isPermanent && Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
+            if (!isPermanent && context.canPop) {
+              context.pop();
             }
           },
           child: Container(

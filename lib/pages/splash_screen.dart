@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:sms/config/extensions.dart';
+
 import '../config/theme.dart';
+import '../widgets/loader_widget.dart';
 import '../widgets/ui/app_vector_graphics.dart';
 import 'wrapper.dart';
 
@@ -51,15 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigateToNext() {
     if (!mounted) return;
     final target = widget.nextScreen ?? const Wrapper();
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => target,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: const Duration(milliseconds: 400),
-      ),
-    );
+    context.pushReplacementFade(target);
   }
 
   @override
@@ -152,11 +147,9 @@ class _SplashScreenState extends State<SplashScreen>
         SizedBox(
           width: 38,
           height: 38,
-          child: CircularProgressIndicator(
+          child: LoaderWidget(
             strokeWidth: 2.5,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              theme.colorScheme.primary,
-            ),
+            valueColor: theme.colorScheme.primary,
           ),
         ),
       ],

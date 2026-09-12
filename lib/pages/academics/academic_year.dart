@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -876,7 +877,7 @@ class _AcademicYearFormDialogState
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', langCode)),
         ),
         ElevatedButton(
@@ -937,7 +938,7 @@ class _AcademicYearFormDialogState
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         UiHelpers.showSnackBar(
           context,
           isEditing ? 'Academic session updated' : 'Academic session created',

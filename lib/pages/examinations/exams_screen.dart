@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -2045,7 +2046,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
           );
 
       if (mounted) {
-        Navigator.of(context).pop();
+        (context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -2130,7 +2131,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                     icon: const Icon(Icons.close),
                   ),
                 ],
@@ -3446,10 +3447,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
                   Row(
                     children: [
                       TextButton(
-                        onPressed:
-                            _isSubmitting
-                                ? null
-                                : () => Navigator.of(context).pop(),
+                        onPressed: _isSubmitting ? null : () => context.pop(),
                         child: const Text('Cancel'),
                       ),
                       const SizedBox(width: 10),

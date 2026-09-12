@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/translations.dart';
 import '../../data/app_database.dart';
@@ -1138,7 +1139,7 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => context.pop(),
                     ),
                   ],
                 ),
@@ -1809,7 +1810,7 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => context.pop(),
                       child: Text(AppTranslations.text('cancel', langCode)),
                     ),
                     const SizedBox(width: 8),
@@ -1831,7 +1832,6 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
     if (!_formKey.currentState!.validate()) return;
 
     final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
     final isEditing = widget.employee != null;
     final langCode = widget.langCode;
     final errorColor = Theme.of(context).colorScheme.error;
@@ -1937,7 +1937,8 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
             );
       }
 
-      navigator.pop();
+      // ignore: use_build_context_synchronously
+      context.pop();
       messenger.showSnackBar(
         SnackBar(
           content: Text(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/translations.dart';
 import '../../data/app_database.dart';
@@ -1133,7 +1134,7 @@ class _ContactDetailsModal extends StatelessWidget {
         FilledButton.tonal(
           onPressed: () {
             Clipboard.setData(ClipboardData(text: contact.phone));
-            Navigator.of(context).pop();
+            context.pop();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Copied ${contact.phone} to clipboard')),
             );
@@ -1141,7 +1142,7 @@ class _ContactDetailsModal extends StatelessWidget {
           child: const Text('Copy Phone'),
         ),
         FilledButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
           child: const Text('Close'),
         ),
       ],
@@ -1643,7 +1644,7 @@ class _ContactFormModalState extends ConsumerState<_ContactFormModal> {
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', lang)),
         ),
         FilledButton(
@@ -1714,7 +1715,7 @@ class _ContactFormModalState extends ConsumerState<_ContactFormModal> {
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/extensions.dart';
 import '../config/theme.dart';
 
 /// Item representation for [AppSearchableSelect]
@@ -481,7 +482,7 @@ class _SearchSelectDialogState<T> extends State<_SearchSelectDialog<T>> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                     icon: const Icon(Icons.close, size: 20),
                     tooltip: 'Close',
                     padding: EdgeInsets.zero,
@@ -582,7 +583,7 @@ class _SearchSelectDialogState<T> extends State<_SearchSelectDialog<T>> {
                               onTap:
                                   item.disabled
                                       ? null
-                                      : () => Navigator.of(context).pop(item),
+                                      : () => context.pop(item),
                               child: widget.itemBuilder!(
                                 context,
                                 item,
@@ -600,7 +601,7 @@ class _SearchSelectDialogState<T> extends State<_SearchSelectDialog<T>> {
                               onTap:
                                   item.disabled
                                       ? null
-                                      : () => Navigator.of(context).pop(item),
+                                      : () => context.pop(item),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16,

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -790,7 +791,7 @@ class _SubjectFormDialogState extends ConsumerState<_SubjectFormDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', langCode)),
         ),
         ElevatedButton(
@@ -866,7 +867,7 @@ class _SubjectFormDialogState extends ConsumerState<_SubjectFormDialog> {
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         UiHelpers.showSnackBar(
           context,
           isEditing

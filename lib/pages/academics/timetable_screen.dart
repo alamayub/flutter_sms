@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -1936,7 +1937,7 @@ class _PeriodFormDialogState extends ConsumerState<_PeriodFormDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => context.pop(),
           child: Text(AppTranslations.text('cancel', langCode)),
         ),
         ElevatedButton(
@@ -2005,7 +2006,7 @@ class _PeriodFormDialogState extends ConsumerState<_PeriodFormDialog> {
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         UiHelpers.showSnackBar(
           context,
           isEditing

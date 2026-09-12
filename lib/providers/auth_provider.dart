@@ -27,13 +27,11 @@ class AuthState {
     String? errorMessage,
     bool? isLoading,
     bool clearError = false,
-  }) {
-    return AuthState(
-      status: status ?? this.status,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+  }) => AuthState(
+    status: status ?? this.status,
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    isLoading: isLoading ?? this.isLoading,
+  );
 }
 
 class AuthNotifier extends Notifier<AuthState> {
@@ -53,7 +51,6 @@ class AuthNotifier extends Notifier<AuthState> {
       }
       return const AuthState(status: AuthStatus.unauthenticated);
     } catch (_) {
-      // For unit tests without storageServiceProvider, default to authenticated
       return const AuthState(status: AuthStatus.authenticated);
     }
   }

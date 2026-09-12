@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../config/extensions.dart';
 import '../../config/theme.dart';
 
 /// Modal bottom sheet action item configuration
@@ -145,7 +146,7 @@ class AppBottomSheet extends StatelessWidget {
                     color: Color(0xFF94A3B8),
                   ),
                   onTap: () {
-                    Navigator.of(context).pop();
+                    context.pop();
                     action.onTap();
                   },
                 ),
@@ -241,7 +242,7 @@ class AppBottomSheet extends StatelessWidget {
                           icon: const Icon(Icons.close, size: 20),
                           visualDensity: VisualDensity.compact,
                           splashRadius: 20,
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => context.pop(),
                         ),
                       ],
                     ),
