@@ -52,3 +52,20 @@ class SchoolManagementApp extends ConsumerWidget {
 
 // flutter build macos --release
 // flutter build windows --release
+
+// rm -rf /Applications/com.study2ool.sms.app
+// rm -rf ~/Library/Application\ Support/com.study2ool.sms
+// rm -rf ~/Library/Caches/com.study2ool.sms
+// rm -rf ~/Library/Preferences/com.study2ool.sms.plist
+// rm -rf ~/Library/Saved\ Application\ State/com.study2ool.sms.savedState
+
+// rm -rf ~/Library/Containers/com.study2ool.sms
+// rm -rf ~/Library/Group\ Containers/com.study2ool.sms
+
+// find ~/Library -iname '*com.study2ool.sms*' 2>/dev/null
+
+// rm -rf \
+// "$HOME/Library/Application Support/com.study2ool.sms" \
+// "$HOME/Library/Caches/com.study2ool.sms" \
+// "$HOME/Library/Preferences/com.study2ool.sms.plist" \
+// "$HOME/Library/Containers/com.study2ool.sms"
