@@ -7,7 +7,7 @@ import 'package:sms/config/theme.dart';
 import 'package:sms/config/translations.dart';
 import 'package:sms/data/app_database.dart';
 import 'package:sms/data/database_seeder.dart';
-import 'package:sms/pages/dashboard_screen.dart';
+import 'package:sms/pages/overview/dashboard_screen.dart';
 import 'package:sms/providers/dashboard_provider.dart';
 import 'package:sms/providers/database_provider.dart';
 import 'helpers/test_data_seeder.dart';

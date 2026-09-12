@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/class_section_provider.dart';
-import '../providers/locale_provider.dart';
-import '../providers/student_provider.dart';
-import '../widgets/app_input.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/class_section_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../providers/student_provider.dart';
+import '../../widgets/app_input.dart';
 
 class StudentIdCardScreen extends ConsumerStatefulWidget {
   const StudentIdCardScreen({super.key});

@@ -1,3 +1,4 @@
+import '../config/enums.dart';
 import '../data/app_database.dart';
 import 'employee_service.dart';
 

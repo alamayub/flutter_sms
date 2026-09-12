@@ -9,9 +9,6 @@ import '../providers/nav_providers.dart';
 import '../utils/date_time_utils.dart';
 import '../providers/auth_provider.dart';
 import '../providers/school_profile_provider.dart';
-import 'calendar_switcher.dart';
-import 'language_switcher.dart';
-import 'theme_switcher.dart';
 
 class SidebarWidget extends ConsumerWidget {
   final bool isPermanent;
@@ -268,139 +265,87 @@ class SidebarWidget extends ConsumerWidget {
         ),
 
         // Bottom Footer: Administrator Info & Control Switchers
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: BoxDecoration(
-            color:
-                isDark
-                    ? theme.colorScheme.surfaceContainerLow
-                    : theme.colorScheme.surfaceContainerHighest.withAlpha(80),
-            border: Border(
-              top: BorderSide(
+        InkWell(
+          borderRadius: AppRadius.roundedLg,
+          onTap: () {
+            ref
+                .read(selectedMenuIndexProvider.notifier)
+                .selectById(flatItems, 'school_profile');
+            if (!isPermanent && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: isDark ? theme.colorScheme.surface : Colors.white,
+              border: Border.all(
                 color: theme.colorScheme.outlineVariant.withAlpha(70),
-                width: 1,
+                width: 0.8,
               ),
+              // boxShadow: isDark ? AppShadows.cardDark : AppShadows.cardLight,
             ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // User Admin Profile Pill
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: AppRadius.roundedLg,
-                  onTap: () {
-                    ref
-                        .read(selectedMenuIndexProvider.notifier)
-                        .selectById(flatItems, 'school_profile');
-                    if (!isPermanent && Navigator.of(context).canPop()) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 15,
+                  backgroundColor: theme.colorScheme.primary.withAlpha(30),
+                  child: Text(
+                    school.adminUsername.isNotEmpty
+                        ? school.adminUsername[0].toUpperCase()
+                        : 'A',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.primary,
                     ),
-                    decoration: BoxDecoration(
-                      color: isDark ? theme.colorScheme.surface : Colors.white,
-                      borderRadius: AppRadius.roundedLg,
-                      border: Border.all(
-                        color: theme.colorScheme.outlineVariant.withAlpha(70),
-                        width: 0.8,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        school.adminUsername.isNotEmpty
+                            ? school.adminUsername
+                            : 'Administrator',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      boxShadow:
-                          isDark ? AppShadows.cardDark : AppShadows.cardLight,
-                    ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 15,
-                          backgroundColor: theme.colorScheme.primary.withAlpha(
-                            30,
-                          ),
-                          child: Text(
-                            school.adminUsername.isNotEmpty
-                                ? school.adminUsername[0].toUpperCase()
-                                : 'A',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
+                      Text(
+                        'School Profile',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                school.adminUsername.isNotEmpty
-                                    ? school.adminUsername
-                                    : 'Administrator',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: theme.colorScheme.onSurface,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                'School Profile',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.logout_rounded, size: 15),
-                          tooltip: 'Sign Out',
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(
-                            minWidth: 26,
-                            minHeight: 26,
-                          ),
-                          onPressed: () {
-                            ref.read(authStateProvider.notifier).logout();
-                          },
-                        ),
-                      ],
-                    ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              // Compact Switcher Controls Row
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isDark ? theme.colorScheme.surface : Colors.white,
-                  borderRadius: AppRadius.roundedMd,
-                  border: Border.all(
-                    color: theme.colorScheme.outlineVariant.withAlpha(60),
-                    width: 0.8,
+                IconButton(
+                  icon: const Icon(Icons.logout_rounded, size: 15),
+                  tooltip: 'Sign Out',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 26,
+                    minHeight: 26,
                   ),
+                  onPressed: () {
+                    ref.read(authStateProvider.notifier).logout();
+                  },
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    ThemeSwitcherWidget(compact: true),
-                    LanguageSwitcherWidget(compact: true),
-                    CalendarSwitcherWidget(compact: true),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

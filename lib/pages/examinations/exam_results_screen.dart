@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../config/responsive.dart';
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/class_section_provider.dart';
-import '../providers/exam_provider.dart';
-import '../providers/exam_result_provider.dart';
-import '../providers/locale_provider.dart';
-import '../services/exam_result_service.dart';
-import '../utils/exam_grading_utils.dart';
-import '../widgets/app_input.dart';
+import '../../config/enums.dart';
+import '../../config/responsive.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/class_section_provider.dart';
+import '../../providers/exam_provider.dart';
+import '../../providers/exam_result_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../services/exam_result_service.dart';
+import '../../utils/exam_grading_utils.dart';
+import '../../widgets/app_input.dart';
 
 enum _ResultViewMode { subjectEntry, studentMarksheet, tabulationLedger }
 

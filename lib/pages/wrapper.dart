@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../providers/auth_provider.dart';
-import 'auth_screen.dart';
+import 'auth/auth_screen.dart';
 import 'root_screen.dart';
 
 class Wrapper extends ConsumerWidget {

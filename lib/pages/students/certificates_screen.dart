@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../data/app_database.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/certificate_provider.dart';
-import '../providers/class_section_provider.dart';
-import '../providers/student_provider.dart';
-import '../providers/subject_provider.dart';
-import '../services/certificate_service.dart';
-import '../widgets/app_input.dart';
+import '../../data/app_database.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/certificate_provider.dart';
+import '../../providers/class_section_provider.dart';
+import '../../providers/student_provider.dart';
+import '../../providers/subject_provider.dart';
+import '../../services/certificate_service.dart';
+import '../../widgets/app_input.dart';
 
 class CertificatesScreen extends ConsumerStatefulWidget {
   final int? preselectedStudentId;

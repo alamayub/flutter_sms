@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/employee_provider.dart';
-import '../providers/locale_provider.dart';
-import '../widgets/app_input.dart';
+import '../../config/enums.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/employee_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../widgets/app_input.dart';
 
 class EmployeeIdCardScreen extends ConsumerStatefulWidget {
   const EmployeeIdCardScreen({super.key});

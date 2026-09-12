@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../config/enums.dart';
 import '../data/app_database.dart';
 import '../services/subject_service.dart';
 import 'database_provider.dart';

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../config/enums.dart';
 import '../data/app_database.dart';
 import '../services/attendance_service.dart';
 import 'academic_year_provider.dart';
@@ -257,10 +258,7 @@ Future<DashboardMetrics> computeDashboardMetrics(
 
   // 6. Financials: Fees & Expenses
   final allPayments = await db.select(db.feePayments).get();
-  final double feeCollected = allPayments.fold(
-    0.0,
-    (sum, p) => sum + p.amount,
-  );
+  final double feeCollected = allPayments.fold(0.0, (sum, p) => sum + p.amount);
 
   final allFees = await db.select(db.studentFees).get();
   final double totalInvoiced = allFees.fold(
@@ -365,13 +363,23 @@ final dashboardMetricsStreamProvider = StreamProvider<DashboardMetrics>((
   // Watch for mutations across core tables
   final controller = StreamController<void>();
   final s1 = db.select(db.students).watch().listen((_) => controller.add(null));
-  final s2 = db.select(db.employees).watch().listen((_) => controller.add(null));
-  final s3 = db.select(db.feePayments).watch().listen((_) => controller.add(null));
+  final s2 = db
+      .select(db.employees)
+      .watch()
+      .listen((_) => controller.add(null));
+  final s3 = db
+      .select(db.feePayments)
+      .watch()
+      .listen((_) => controller.add(null));
   final s4 = db.select(db.expenses).watch().listen((_) => controller.add(null));
-  final s5 =
-      db.select(db.studentAttendances).watch().listen((_) => controller.add(null));
-  final s6 =
-      db.select(db.employeeAttendances).watch().listen((_) => controller.add(null));
+  final s5 = db
+      .select(db.studentAttendances)
+      .watch()
+      .listen((_) => controller.add(null));
+  final s6 = db
+      .select(db.employeeAttendances)
+      .watch()
+      .listen((_) => controller.add(null));
 
   ref.onDispose(() {
     s1.cancel();

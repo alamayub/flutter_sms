@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as p;
-import '../config/theme.dart';
-import '../models/school_profile.dart';
-import '../providers/auth_provider.dart';
-import '../providers/school_profile_provider.dart';
-import '../services/app_media_service.dart';
-import '../services/database_backup_service.dart';
-import '../widgets/ui/app_badge.dart';
-import '../widgets/ui/app_card.dart';
-import '../widgets/ui/app_page_header.dart';
+import '../../config/theme.dart';
+import '../../models/school_profile.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/school_profile_provider.dart';
+import '../../services/app_media_service.dart';
+import '../../services/database_backup_service.dart';
+import '../../widgets/ui/app_badge.dart';
+import '../../widgets/ui/app_card.dart';
+import '../../widgets/ui/app_page_header.dart';
 
 class SchoolProfileScreen extends ConsumerStatefulWidget {
   const SchoolProfileScreen({super.key});

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import '../config/enums.dart';
 import 'app_database.dart';
 
 class DatabaseSeeder {
@@ -319,20 +320,6 @@ class DatabaseSeeder {
   /// Seeds 3 default academic years: 2026-2027, 2027-2028, and 2029-2030
   static Future<void> seedAcademicYears(AppDatabase db) async {
     final records = [
-      AcademicYearsCompanion(
-        name: const Value('2024-2025'),
-        startDate: Value(DateTime(2024, 4, 14)),
-        endDate: Value(DateTime(2025, 4, 13)),
-        isCurrent: const Value(false),
-        description: const Value('Academic Session 2024-2025'),
-      ),
-      AcademicYearsCompanion(
-        name: const Value('2025-2026'),
-        startDate: Value(DateTime(2025, 4, 14)),
-        endDate: Value(DateTime(2026, 4, 13)),
-        isCurrent: const Value(false),
-        description: const Value('Academic Session 2025-2026'),
-      ),
       AcademicYearsCompanion(
         name: const Value('2026-2027'),
         startDate: Value(DateTime(2026, 4, 14)),

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../config/responsive.dart';
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/class_section_provider.dart';
-import '../providers/locale_provider.dart';
-import '../providers/subject_provider.dart';
-import '../providers/teacher_provider.dart';
-import '../providers/timetable_provider.dart';
-import '../utils/ui_helpers.dart';
-import '../widgets/weekly_timetable_editor.dart';
-import '../widgets/searchable_select.dart';
+import '../../config/responsive.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/class_section_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../providers/subject_provider.dart';
+import '../../providers/teacher_provider.dart';
+import '../../providers/timetable_provider.dart';
+import '../../utils/ui_helpers.dart';
+import '../../widgets/weekly_timetable_editor.dart';
+import '../../widgets/searchable_select.dart';
 
 class TimetableScreen extends ConsumerStatefulWidget {
   const TimetableScreen({super.key});
@@ -135,7 +135,7 @@ class _TimetableScreenState extends ConsumerState<TimetableScreen> {
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Header with Filters & Actions
                   _buildHeader(
@@ -773,168 +773,178 @@ class _TimetableScreenState extends ConsumerState<TimetableScreen> {
         side: BorderSide(color: theme.dividerColor),
       ),
       clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 900),
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(
-              theme.colorScheme.surfaceContainerHighest.withAlpha(80),
-            ),
-            dataRowMinHeight: 76,
-            dataRowMaxHeight: 92,
-            columnSpacing: 14,
-            horizontalMargin: 16,
-            columns: [
-              DataColumn(
-                label: Text(
-                  langCode == 'ne' ? 'समय / घण्टी' : 'Time / Slot',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+      child: LayoutBuilder(
+        builder: (context, contatrains) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: contatrains.minWidth),
+              child: DataTable(
+                headingRowColor: WidgetStateProperty.all(
+                  theme.colorScheme.surfaceContainerHighest.withAlpha(80),
                 ),
-              ),
-              // Sunday through Friday standard school days
-              ...gridDays.map((day) {
-                return DataColumn(
-                  label: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _getDayShortName(day, langCode),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          AppTranslations.text(_getDayKey(day), langCode),
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: theme.textTheme.bodySmall?.color,
-                          ),
-                        ),
-                      ],
+                dataRowMinHeight: 76,
+                dataRowMaxHeight: 92,
+                columnSpacing: 14,
+                horizontalMargin: 16,
+                columns: [
+                  DataColumn(
+                    label: Text(
+                      langCode == 'ne' ? 'समय / घण्टी' : 'Time / Slot',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                );
-              }),
-            ],
-            rows:
-                sortedStartTimes.map((startTime) {
-                  final endTime = timeSlotsMap[startTime] ?? '';
-
-                  return DataRow(
-                    cells: [
-                      // Time Column
-                      DataCell(
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest
-                                .withAlpha(50),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                startTime,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'to $endTime',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: theme.textTheme.bodySmall?.color,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Day Columns (Sunday .. Friday)
-                      ...gridDays.map((day) {
-                        final period = gridData[day]?[startTime];
-                        if (period == null) {
-                          return DataCell(
-                            InkWell(
-                              onTap: () {
-                                final currentClass = classes.firstWhere(
-                                  (c) => c.id == selectedClassId,
-                                  orElse: () => classes.first,
-                                );
-                                final currentSection =
-                                    classes
-                                        .expand((c) => c.sections)
-                                        .where((s) => s.id == selectedSectionId)
-                                        .firstOrNull;
-                                _openWeeklyEditor(
-                                  context,
-                                  academicYearId: academicYearId,
-                                  academicYearName: academicYearName,
-                                  classId: currentClass.id,
-                                  sectionId: selectedSectionId,
-                                  className:
-                                      currentClass.displayName.isNotEmpty
-                                          ? currentClass.displayName
-                                          : currentClass.name,
-                                  sectionName: currentSection?.name,
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.add,
-                                  size: 16,
-                                  color: theme.dividerColor,
-                                ),
+                  // Sunday through Friday standard school days
+                  ...gridDays.map((day) {
+                    return DataColumn(
+                      label: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _getDayShortName(day, langCode),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          );
-                        }
+                            Text(
+                              AppTranslations.text(_getDayKey(day), langCode),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: theme.textTheme.bodySmall?.color,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+                rows:
+                    sortedStartTimes.map((startTime) {
+                      final endTime = timeSlotsMap[startTime] ?? '';
 
-                        return DataCell(
-                          _buildGridPeriodCard(
-                            context,
-                            period: period,
-                            langCode: langCode,
-                            onTap: () {
-                              final currentClass = classes.firstWhere(
-                                (c) => c.id == selectedClassId,
-                                orElse: () => classes.first,
-                              );
-                              final currentSection =
-                                  classes
-                                      .expand((c) => c.sections)
-                                      .where((s) => s.id == selectedSectionId)
-                                      .firstOrNull;
-                              _openWeeklyEditor(
-                                context,
-                                academicYearId: academicYearId,
-                                academicYearName: academicYearName,
-                                classId: currentClass.id,
-                                sectionId: selectedSectionId,
-                                className:
-                                    currentClass.displayName.isNotEmpty
-                                        ? currentClass.displayName
-                                        : currentClass.name,
-                                sectionName: currentSection?.name,
-                              );
-                            },
+                      return DataRow(
+                        cells: [
+                          // Time Column
+                          DataCell(
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surfaceContainerHighest
+                                    .withAlpha(50),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    startTime,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'to $endTime',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: theme.textTheme.bodySmall?.color,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        );
-                      }),
-                    ],
-                  );
-                }).toList(),
-          ),
-        ),
+
+                          // Day Columns (Sunday .. Friday)
+                          ...gridDays.map((day) {
+                            final period = gridData[day]?[startTime];
+                            if (period == null) {
+                              return DataCell(
+                                InkWell(
+                                  onTap: () {
+                                    final currentClass = classes.firstWhere(
+                                      (c) => c.id == selectedClassId,
+                                      orElse: () => classes.first,
+                                    );
+                                    final currentSection =
+                                        classes
+                                            .expand((c) => c.sections)
+                                            .where(
+                                              (s) => s.id == selectedSectionId,
+                                            )
+                                            .firstOrNull;
+                                    _openWeeklyEditor(
+                                      context,
+                                      academicYearId: academicYearId,
+                                      academicYearName: academicYearName,
+                                      classId: currentClass.id,
+                                      sectionId: selectedSectionId,
+                                      className:
+                                          currentClass.displayName.isNotEmpty
+                                              ? currentClass.displayName
+                                              : currentClass.name,
+                                      sectionName: currentSection?.name,
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 16,
+                                      color: theme.dividerColor,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return DataCell(
+                              _buildGridPeriodCard(
+                                context,
+                                period: period,
+                                langCode: langCode,
+                                onTap: () {
+                                  final currentClass = classes.firstWhere(
+                                    (c) => c.id == selectedClassId,
+                                    orElse: () => classes.first,
+                                  );
+                                  final currentSection =
+                                      classes
+                                          .expand((c) => c.sections)
+                                          .where(
+                                            (s) => s.id == selectedSectionId,
+                                          )
+                                          .firstOrNull;
+                                  _openWeeklyEditor(
+                                    context,
+                                    academicYearId: academicYearId,
+                                    academicYearName: academicYearName,
+                                    classId: currentClass.id,
+                                    sectionId: selectedSectionId,
+                                    className:
+                                        currentClass.displayName.isNotEmpty
+                                            ? currentClass.displayName
+                                            : currentClass.name,
+                                    sectionName: currentSection?.name,
+                                  );
+                                },
+                              ),
+                            );
+                          }),
+                        ],
+                      );
+                    }).toList(),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

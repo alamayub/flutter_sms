@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sms/pages/attendance_screen.dart';
-import 'package:sms/pages/employee_id_card_screen.dart';
-import 'package:sms/pages/expenses_screen.dart';
-import 'package:sms/pages/payroll_screen.dart';
-import 'package:sms/pages/student_id_card_screen.dart';
+import 'package:sms/pages/attendance/attendance_screen.dart';
+import 'package:sms/pages/employee_hr/employee_id_card_screen.dart';
+import 'package:sms/pages/finance_account/expenses_screen.dart';
+import 'package:sms/pages/employee_hr/payroll_screen.dart';
+import 'package:sms/pages/students/student_id_card_screen.dart';
 import 'package:sms/providers/nav_providers.dart';
 
 void main() {

@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../config/responsive.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../models/calendar_mode.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/calendar_provider.dart';
-import '../providers/expense_provider.dart';
-import '../providers/locale_provider.dart';
-import '../services/expense_service.dart';
-import '../utils/date_time_utils.dart';
-import '../widgets/app_input.dart';
-import '../widgets/ui/app_button.dart';
-import '../widgets/ui/app_empty_state.dart';
-import '../widgets/ui/app_error_view.dart';
-import '../widgets/ui/app_skeleton.dart';
-import '../widgets/ui/app_tabs.dart';
+import '../../config/responsive.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../models/calendar_mode.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/calendar_provider.dart';
+import '../../providers/expense_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../services/expense_service.dart';
+import '../../utils/date_time_utils.dart';
+import '../../widgets/app_input.dart';
+import '../../widgets/ui/app_button.dart';
+import '../../widgets/ui/app_empty_state.dart';
+import '../../widgets/ui/app_error_view.dart';
+import '../../widgets/ui/app_skeleton.dart';
+import '../../widgets/ui/app_tabs.dart';
 
 class ExpensesScreen extends ConsumerStatefulWidget {
   final int? fixedTab;

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import '../config/enums.dart';
 import '../data/app_database.dart';
 import '../utils/exam_grading_utils.dart';
 

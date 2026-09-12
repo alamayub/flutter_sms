@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import '../config/enums.dart';
 import '../data/app_database.dart';
 
 /// Summary statistics for daily or monthly attendance

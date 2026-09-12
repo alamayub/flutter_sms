@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 
+import '../config/enums.dart';
 import '../data/app_database.dart';
 
 /// Summary statistics for payroll reporting

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../config/responsive.dart';
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/class_section_provider.dart';
-import '../providers/locale_provider.dart';
-import '../utils/ui_helpers.dart';
-import '../utils/validators.dart';
-import '../widgets/app_input.dart';
-import '../widgets/ui/app_button.dart';
-import '../widgets/ui/app_empty_state.dart';
-import '../widgets/ui/app_error_view.dart';
-import '../widgets/ui/app_skeleton.dart';
+import '../../config/responsive.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/class_section_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../utils/ui_helpers.dart';
+import '../../utils/validators.dart';
+import '../../widgets/app_input.dart';
+import '../../widgets/ui/app_button.dart';
+import '../../widgets/ui/app_empty_state.dart';
+import '../../widgets/ui/app_error_view.dart';
+import '../../widgets/ui/app_skeleton.dart';
 
 class ClassesSectionsScreen extends ConsumerStatefulWidget {
   const ClassesSectionsScreen({super.key});

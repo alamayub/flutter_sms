@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../config/responsive.dart';
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/locale_provider.dart';
-import '../providers/subject_provider.dart';
-import '../utils/ui_helpers.dart';
-import '../utils/validators.dart';
-import '../widgets/app_input.dart';
+import '../../config/enums.dart';
+import '../../config/responsive.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/locale_provider.dart';
+import '../../providers/subject_provider.dart';
+import '../../utils/ui_helpers.dart';
+import '../../utils/validators.dart';
+import '../../widgets/app_input.dart';
 
-class SubjectsScreen extends ConsumerStatefulWidget {
+class SubjectsScreen extends HookConsumerWidget {
   const SubjectsScreen({super.key});
 
   @override
-  ConsumerState<SubjectsScreen> createState() => _SubjectsScreenState();
-}
-
-class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchController = useTextEditingController();
+    final searchQuery = useState<String>('');
     final subjectsAsync = ref.watch(subjectsStreamProvider);
     final selectedType = ref.watch(selectedSubjectTypeFilterProvider);
     final selectedOptional = ref.watch(selectedOptionalFilterProvider);
@@ -46,8 +36,8 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
           final filtered =
               subjects.where((s) {
-                if (_searchQuery.isEmpty) return true;
-                final q = _searchQuery.toLowerCase();
+                if (searchQuery.value.isEmpty) return true;
+                final q = searchQuery.value.toLowerCase();
                 final nameMatch = s.name.toLowerCase().contains(q);
                 final codeMatch = s.code.toLowerCase().contains(q);
                 return nameMatch || codeMatch;
@@ -82,18 +72,28 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                     selectedType,
                     selectedOptional,
                     langCode,
+                    ref,
                   ),
                   const SizedBox(height: 16),
 
                   // Search Bar
-                  _buildSearchBar(context, langCode),
+                  AppSearchField(
+                    controller: searchController,
+                    hintText: AppTranslations.text('search', langCode),
+                    onChanged: (val) {
+                      searchQuery.value = val.trim();
+                    },
+                    onClear: () {
+                      searchQuery.value = '';
+                    },
+                  ),
                   const SizedBox(height: 16),
 
                   // Content list
                   if (filtered.isEmpty)
                     _buildEmptyState(context, subjects.isEmpty, langCode)
                   else
-                    _buildSubjectsList(context, filtered, langCode),
+                    _buildSubjectsList(context, ref, filtered, langCode),
                 ],
               ),
             ),
@@ -117,13 +117,13 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
+          spacing: 4,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               AppTranslations.text('subjects', langCode),
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 4),
             Text(
               langCode == 'ne'
                   ? 'कुल: $total  |  अनिवार्य: $compulsory  |  ऐच्छिक: $optional'
@@ -149,6 +149,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
     SubjectType? selectedType,
     bool? selectedOptional,
     String langCode,
+    WidgetRef ref,
   ) {
     return Wrap(
       spacing: 10,
@@ -226,23 +227,6 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, String langCode) {
-    return AppSearchField(
-      controller: _searchController,
-      hintText: AppTranslations.text('search', langCode),
-      onChanged: (val) {
-        setState(() {
-          _searchQuery = val.trim();
-        });
-      },
-      onClear: () {
-        setState(() {
-          _searchQuery = '';
-        });
-      },
-    );
-  }
-
   Widget _buildEmptyState(
     BuildContext context,
     bool isListEmpty,
@@ -282,23 +266,34 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
   Widget _buildSubjectsList(
     BuildContext context,
+    WidgetRef ref,
     List<Subject> list,
     String langCode,
   ) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: list.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final item = list[index];
-        return _buildSubjectCard(context, item, langCode);
-      },
+    final theme = Theme.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: theme.dividerColor),
+      ),
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: list.length,
+        padding: EdgeInsets.all(16),
+        separatorBuilder: (context, index) => const Divider(height: 24),
+        itemBuilder: (context, index) {
+          final item = list[index];
+          return _buildSubjectCard(context, ref, item, langCode);
+        },
+      ),
     );
   }
 
   Widget _buildSubjectCard(
     BuildContext context,
+    WidgetRef ref,
     Subject item,
     String langCode,
   ) {
@@ -322,157 +317,151 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
         break;
     }
 
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: theme.dividerColor),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Code & Icon Box
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: typeColor.withAlpha(20),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: typeColor.withAlpha(60)),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Code & Icon Box
+        Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            color: typeColor.withAlpha(20),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: typeColor.withAlpha(60)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(typeIcon, size: 20, color: typeColor),
+              const SizedBox(height: 2),
+              Text(
+                item.subjectType == SubjectType.both
+                    ? 'BOTH'
+                    : item.subjectType.name.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 8,
+                  fontWeight: FontWeight.bold,
+                  color: typeColor,
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            ],
+          ),
+        ),
+        const SizedBox(width: 14),
+
+        // Subject Details
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Icon(typeIcon, size: 20, color: typeColor),
-                  const SizedBox(height: 2),
                   Text(
-                    item.subjectType == SubjectType.both
-                        ? 'BOTH'
-                        : item.subjectType.name.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 8,
+                    item.name,
+                    style: const TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: typeColor,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Optional vs Compulsory pill
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          item.isOptional
+                              ? AppTheme.warningColor.withAlpha(25)
+                              : AppTheme.successColor.withAlpha(25),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color:
+                            item.isOptional
+                                ? AppTheme.warningColor
+                                : AppTheme.successColor,
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Text(
+                      item.isOptional
+                          ? AppTranslations.text('optional', langCode)
+                          : AppTranslations.text('compulsory', langCode),
+                      style: TextStyle(
+                        color:
+                            item.isOptional
+                                ? AppTheme.warningColor
+                                : AppTheme.successColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(width: 14),
-
-            // Subject Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 4),
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        item.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  // Code Tag
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      item.code,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodySmall?.color,
                       ),
-                      const SizedBox(width: 8),
-                      // Optional vs Compulsory pill
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              item.isOptional
-                                  ? AppTheme.warningColor.withAlpha(25)
-                                  : AppTheme.successColor.withAlpha(25),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color:
-                                item.isOptional
-                                    ? AppTheme.warningColor
-                                    : AppTheme.successColor,
-                            width: 0.8,
-                          ),
-                        ),
-                        child: Text(
-                          item.isOptional
-                              ? AppTranslations.text('optional', langCode)
-                              : AppTranslations.text('compulsory', langCode),
-                          style: TextStyle(
-                            color:
-                                item.isOptional
-                                    ? AppTheme.warningColor
-                                    : AppTheme.successColor,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      // Code Tag
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 1,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          item.code,
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: theme.textTheme.bodySmall?.color,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Marks breakdown
-                      Text(
-                        'Full: ${item.fullMarks}  |  Pass: ${item.passMarks}${item.theoryMarks != null || item.practicalMarks != null ? '  (Th: ${item.theoryMarks ?? 0}, Pr: ${item.practicalMarks ?? 0})' : ''}',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: theme.textTheme.bodySmall?.color,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(width: 12),
+                  // Marks breakdown
+                  Text(
+                    'Full: ${item.fullMarks}  |  Pass: ${item.passMarks}${item.theoryMarks != null || item.practicalMarks != null ? '  (Th: ${item.theoryMarks ?? 0}, Pr: ${item.practicalMarks ?? 0})' : ''}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: theme.textTheme.bodySmall?.color,
+                    ),
                   ),
                 ],
               ),
-            ),
-
-            // Actions
-            IconButton(
-              icon: const Icon(Icons.edit_outlined, size: 18),
-              tooltip: AppTranslations.text('edit_subject', langCode),
-              onPressed:
-                  () => _openAddEditSubjectDialog(context, subject: item),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.delete_outline,
-                color: AppTheme.errorColor,
-                size: 18,
-              ),
-              tooltip: AppTranslations.text('delete_subject', langCode),
-              onPressed: () => _confirmDeleteSubject(item, langCode),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+
+        // Actions
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, size: 18),
+          tooltip: AppTranslations.text('edit_subject', langCode),
+          onPressed: () => _openAddEditSubjectDialog(context, subject: item),
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.delete_outline,
+            color: AppTheme.errorColor,
+            size: 18,
+          ),
+          tooltip: AppTranslations.text('delete_subject', langCode),
+          onPressed: () => _confirmDeleteSubject(context, ref, item, langCode),
+        ),
+      ],
     );
   }
 
-  Future<void> _confirmDeleteSubject(Subject item, String langCode) async {
+  Future<void> _confirmDeleteSubject(
+    BuildContext context,
+    WidgetRef ref,
+    Subject item,
+    String langCode,
+  ) async {
     final isConfirmed = await UiHelpers.showConfirmationDialog(
       context,
       title: AppTranslations.text('delete_subject', langCode),
@@ -484,9 +473,9 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
       isDestructive: true,
     );
 
-    if (isConfirmed && mounted) {
+    if (isConfirmed && context.mounted) {
       await ref.read(subjectControllerProvider.notifier).deleteSubject(item.id);
-      if (mounted) {
+      if (context.mounted) {
         UiHelpers.showSnackBar(
           context,
           '${item.name} deleted successfully',

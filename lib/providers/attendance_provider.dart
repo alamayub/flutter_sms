@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../data/app_database.dart';
+import '../config/enums.dart';
 import '../services/attendance_service.dart';
 import 'database_provider.dart';
 

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../config/responsive.dart';
-import '../config/theme.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../models/calendar_mode.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/calendar_provider.dart';
-import '../providers/locale_provider.dart';
-import '../utils/date_time_utils.dart';
-import '../utils/ui_helpers.dart';
-import '../utils/validators.dart';
-import '../widgets/app_input.dart';
-import '../widgets/dual_date_picker.dart';
+import '../../config/responsive.dart';
+import '../../config/theme.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../models/calendar_mode.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/calendar_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../utils/date_time_utils.dart';
+import '../../utils/ui_helpers.dart';
+import '../../utils/validators.dart';
+import '../../widgets/app_input.dart';
+import '../../widgets/dual_date_picker.dart';
 
 class AcademicYearScreen extends ConsumerStatefulWidget {
   const AcademicYearScreen({super.key});

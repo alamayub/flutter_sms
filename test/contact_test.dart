@@ -1,4 +1,5 @@
 import 'package:drift/native.dart';
+import 'package:sms/config/enums.dart';
 import 'package:sms/data/app_database.dart';
 import 'package:sms/services/contact_service.dart';
 import 'package:flutter_test/flutter_test.dart';

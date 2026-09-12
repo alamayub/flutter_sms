@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../config/responsive.dart';
-import '../config/translations.dart';
-import '../data/app_database.dart';
-import '../providers/academic_year_provider.dart';
-import '../providers/class_section_provider.dart';
-import '../providers/fee_provider.dart';
-import '../providers/locale_provider.dart';
-import '../providers/student_provider.dart';
-import '../services/fee_service.dart';
-import '../widgets/searchable_select.dart';
+import '../../config/responsive.dart';
+import '../../config/translations.dart';
+import '../../data/app_database.dart';
+import '../../providers/academic_year_provider.dart';
+import '../../providers/class_section_provider.dart';
+import '../../providers/fee_provider.dart';
+import '../../providers/locale_provider.dart';
+import '../../providers/student_provider.dart';
+import '../../services/fee_service.dart';
+import '../../widgets/searchable_select.dart';
 
 class FeeCollectionScreen extends ConsumerStatefulWidget {
   const FeeCollectionScreen({super.key});

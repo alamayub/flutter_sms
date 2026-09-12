@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../pages/academic_year.dart';
-import '../pages/attendance_screen.dart';
-import '../pages/certificates_screen.dart';
-import '../pages/classes_sections_screen.dart';
-import '../pages/contacts_screen.dart';
-import '../pages/dashboard_screen.dart';
-import '../pages/employee_id_card_screen.dart';
-import '../pages/employees_screen.dart';
-import '../pages/exam_results_screen.dart';
-import '../pages/exams_screen.dart';
-import '../pages/expenses_screen.dart';
-import '../pages/fee_collection.dart';
-import '../pages/payroll_screen.dart';
-import '../pages/student_id_card_screen.dart';
-import '../pages/school_profile_screen.dart';
-import '../pages/students_screen.dart';
-import '../pages/subjects_screen.dart';
-import '../pages/timetable_screen.dart';
+import '../pages/academics/academic_year.dart';
+import '../pages/attendance/attendance_screen.dart';
+import '../pages/students/certificates_screen.dart';
+import '../pages/academics/classes_sections_screen.dart';
+import '../pages/employee_hr/contacts_screen.dart';
+import '../pages/overview/dashboard_screen.dart';
+import '../pages/employee_hr/employee_id_card_screen.dart';
+import '../pages/employee_hr/employees_screen.dart';
+import '../pages/examinations/exam_results_screen.dart';
+import '../pages/examinations/exams_screen.dart';
+import '../pages/finance_account/expenses_screen.dart';
+import '../pages/finance_account/fee_collection.dart';
+import '../pages/employee_hr/payroll_screen.dart';
+import '../pages/students/student_id_card_screen.dart';
+import '../pages/overview/school_profile_screen.dart';
+import '../pages/students/students_screen.dart';
+import '../pages/academics/subjects_screen.dart';
+import '../pages/academics/timetable_screen.dart';
 
 class MenuGroup {
   final String id;

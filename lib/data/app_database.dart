@@ -5,95 +5,10 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import '../config/enums.dart';
 import 'database_seeder.dart';
 
 part 'app_database.g.dart';
-
-/// Academic enrollment status in a given academic session
-enum AcademicStatus {
-  active,
-  promoted,
-  retained,
-  transferred,
-  graduated;
-
-  String get displayName {
-    switch (this) {
-      case AcademicStatus.active:
-        return 'Active';
-      case AcademicStatus.promoted:
-        return 'Promoted';
-      case AcademicStatus.retained:
-        return 'Retained';
-      case AcademicStatus.transferred:
-        return 'Transferred';
-      case AcademicStatus.graduated:
-        return 'Graduated';
-    }
-  }
-}
-
-/// Academic outcome/result status
-enum AcademicResult {
-  pending,
-  passed,
-  failed;
-
-  String get displayName {
-    switch (this) {
-      case AcademicResult.pending:
-        return 'Pending';
-      case AcademicResult.passed:
-        return 'Passed';
-      case AcademicResult.failed:
-        return 'Failed';
-    }
-  }
-}
-
-/// Attendance status for students and staff
-enum AttendanceStatus {
-  present,
-  absent,
-  late,
-  halfDay,
-  onLeave,
-  excused;
-
-  String get displayName {
-    switch (this) {
-      case AttendanceStatus.present:
-        return 'Present';
-      case AttendanceStatus.absent:
-        return 'Absent';
-      case AttendanceStatus.late:
-        return 'Late';
-      case AttendanceStatus.halfDay:
-        return 'Half Day';
-      case AttendanceStatus.onLeave:
-        return 'On Leave';
-      case AttendanceStatus.excused:
-        return 'Excused';
-    }
-  }
-
-  String get shortCode {
-    switch (this) {
-      case AttendanceStatus.present:
-        return 'P';
-      case AttendanceStatus.absent:
-        return 'A';
-      case AttendanceStatus.late:
-        return 'L';
-      case AttendanceStatus.halfDay:
-        return 'HD';
-      case AttendanceStatus.onLeave:
-        return 'LV';
-      case AttendanceStatus.excused:
-        return 'EX';
-    }
-  }
-}
 
 @DataClassName('Student')
 class Students extends Table {
@@ -290,24 +205,6 @@ class ClassWithSections {
   }
 }
 
-/// Subject delivery type: theory, practical, or both
-enum SubjectType {
-  theory,
-  practical,
-  both;
-
-  String get displayName {
-    switch (this) {
-      case SubjectType.theory:
-        return 'Theory';
-      case SubjectType.practical:
-        return 'Practical';
-      case SubjectType.both:
-        return 'Theory & Practical';
-    }
-  }
-}
-
 @DataClassName('Subject')
 class Subjects extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -322,8 +219,6 @@ class Subjects extends Table {
   TextColumn get description => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
-
-enum EmployeeType { teacher, staff }
 
 @DataClassName('Employee')
 class Employees extends Table {
@@ -445,24 +340,6 @@ class PeriodWithDetails {
       return breakTitle ?? 'Break';
     }
     return subject?.name ?? 'No Subject';
-  }
-}
-
-/// Source entity type for contacts
-enum ContactSourceType {
-  student,
-  employee,
-  other;
-
-  String get displayName {
-    switch (this) {
-      case ContactSourceType.student:
-        return 'Student';
-      case ContactSourceType.employee:
-        return 'Employee';
-      case ContactSourceType.other:
-        return 'Other';
-    }
   }
 }
 
@@ -4622,6 +4499,6 @@ class AppDatabase extends _$AppDatabase {
 
 LazyDatabase _openConnection() => LazyDatabase(() async {
   final dbFolder = await getApplicationDocumentsDirectory();
-  final file = File(p.join(dbFolder.path, 'app.db'));
+  final file = File(p.join(dbFolder.path, 'sms_app_db.db'));
   return NativeDatabase(file);
 });
