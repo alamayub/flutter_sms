@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../config/extensions.dart';
 import '../../config/responsive.dart';
 import '../../config/theme.dart';
 import '../../config/translations.dart';
@@ -12,9 +11,8 @@ import '../../providers/calendar_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/ui_helpers.dart';
-import '../../utils/validators.dart';
 import '../../widgets/app_input.dart';
-import '../../widgets/dual_date_picker.dart';
+import '../../widgets/forms/academic_year_form.dart';
 
 class AcademicYearScreen extends ConsumerStatefulWidget {
   const AcademicYearScreen({super.key});
@@ -78,10 +76,6 @@ class _AcademicYearScreenState extends ConsumerState<AcademicYearScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header section
-                  _buildHeader(context, years.length, langCode),
-                  const SizedBox(height: 16),
-
                   // Active Session Banner
                   _buildActiveSessionBanner(
                     context,
@@ -117,38 +111,11 @@ class _AcademicYearScreenState extends ConsumerState<AcademicYearScreen> {
             (err, stack) =>
                 Center(child: Text('Error loading academic sessions: $err')),
       ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, int totalCount, String langCode) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppTranslations.text('academic_session', langCode),
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              langCode == 'ne'
-                  ? 'कुल शैक्षिक सत्रहरू: $totalCount'
-                  : 'Total Academic Sessions: $totalCount',
-              style: TextStyle(
-                color: Theme.of(context).textTheme.bodySmall?.color,
-                fontSize: 13,
-              ),
-            ),
-          ],
-        ),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.add, size: 18),
-          label: Text(AppTranslations.text('add', langCode)),
-          onPressed: () => _openAddEditDialog(context),
-        ),
-      ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _openAddEditDialog(context),
+        label: Text(AppTranslations.text('add', langCode)),
+        icon: Icon(Icons.add, size: 18),
+      ),
     );
   }
 
@@ -703,258 +670,7 @@ class _AcademicYearScreenState extends ConsumerState<AcademicYearScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => _AcademicYearFormDialog(year: year),
+      builder: (_) => AcademicYearForm(year: year),
     );
-  }
-}
-
-class _AcademicYearFormDialog extends ConsumerStatefulWidget {
-  final AcademicYear? year;
-
-  const _AcademicYearFormDialog({this.year});
-
-  @override
-  ConsumerState<_AcademicYearFormDialog> createState() =>
-      _AcademicYearFormDialogState();
-}
-
-class _AcademicYearFormDialogState
-    extends ConsumerState<_AcademicYearFormDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
-  late TextEditingController _descController;
-  late DateTime _startDate;
-  late DateTime _endDate;
-  late bool _isCurrent;
-  bool _isSubmitting = false;
-
-  @override
-  void initState() {
-    super.initState();
-    final isEditing = widget.year != null;
-
-    if (isEditing) {
-      _nameController = TextEditingController(text: widget.year!.name);
-      _descController = TextEditingController(
-        text: widget.year!.description ?? '',
-      );
-      _startDate = widget.year!.startDate;
-      _endDate = widget.year!.endDate;
-      _isCurrent = widget.year!.isCurrent;
-    } else {
-      // Default: current Nepali academic session (e.g. 2081/82)
-      final nowBs = DateTimeUtils.nowBs;
-      final yearStr = DateTimeUtils.getAcademicYearBs(nowBs);
-      _nameController = TextEditingController(text: '$yearStr BS');
-      _descController = TextEditingController();
-      _startDate = DateTime.now();
-      _endDate = DateTime.now().add(const Duration(days: 365));
-      _isCurrent = true;
-    }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isEditing = widget.year != null;
-    final currentLang = ref.watch(localeProvider);
-    final langCode = currentLang.locale.languageCode;
-
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Text(
-        isEditing
-            ? (langCode == 'ne'
-                ? 'शैक्षिक सत्र सम्पादन'
-                : 'Edit Academic Session')
-            : (langCode == 'ne'
-                ? 'नयाँ शैक्षिक सत्र थप्नुहोस्'
-                : 'New Academic Session'),
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      content: SizedBox(
-        width: 480,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name Field
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText:
-                        langCode == 'ne' ? 'सत्रको नाम *' : 'Session Name *',
-                    hintText: 'e.g. 2081/82 BS',
-                    prefixIcon: const Icon(Icons.label_outline),
-                  ),
-                  validator:
-                      (v) => Validators.requiredField(
-                        v,
-                        'Session name is required',
-                      ),
-                ),
-                const SizedBox(height: 14),
-
-                // Start Date Picker (Dual AD & BS)
-                DualDatePickerField(
-                  label: langCode == 'ne' ? 'सुरु मिति *' : 'Start Date *',
-                  selectedDate: _startDate,
-                  onDateSelected: (newDate) {
-                    setState(() {
-                      _startDate = newDate;
-                      if (_endDate.isBefore(_startDate)) {
-                        _endDate = _startDate.add(const Duration(days: 365));
-                      }
-                    });
-                  },
-                ),
-                const SizedBox(height: 14),
-
-                // End Date Picker (Dual AD & BS)
-                DualDatePickerField(
-                  label: langCode == 'ne' ? 'अन्त्य मिति *' : 'End Date *',
-                  selectedDate: _endDate,
-                  onDateSelected: (newDate) {
-                    setState(() {
-                      _endDate = newDate;
-                    });
-                  },
-                ),
-                const SizedBox(height: 14),
-
-                // Active Switch
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    langCode == 'ne'
-                        ? 'सक्रिय सत्र बनाउनुहोस्'
-                        : 'Set as Active Session',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Text(
-                    langCode == 'ne'
-                        ? 'यसले अन्य सबै सत्रहरूलाई निष्क्रिय बनाउनेछ'
-                        : 'This will automatically deactivate all other sessions',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  value: _isCurrent,
-                  onChanged: (val) {
-                    setState(() {
-                      _isCurrent = val;
-                    });
-                  },
-                ),
-                const SizedBox(height: 8),
-
-                // Description Field
-                TextFormField(
-                  controller: _descController,
-                  maxLines: 2,
-                  decoration: InputDecoration(
-                    labelText:
-                        langCode == 'ne'
-                            ? 'विवरण (ऐच्छिक)'
-                            : 'Description (Optional)',
-                    hintText: 'Add notes about this academic session...',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isSubmitting ? null : () => context.pop(),
-          child: Text(AppTranslations.text('cancel', langCode)),
-        ),
-        ElevatedButton(
-          onPressed: _isSubmitting ? null : _save,
-          child:
-              _isSubmitting
-                  ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                  : Text(AppTranslations.text('save', langCode)),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    if (_endDate.isBefore(_startDate)) {
-      UiHelpers.showSnackBar(
-        context,
-        'End date must be after start date',
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    try {
-      final controller = ref.read(academicYearControllerProvider.notifier);
-      final isEditing = widget.year != null;
-
-      if (isEditing) {
-        await controller.updateYear(
-          id: widget.year!.id,
-          name: _nameController.text,
-          startDate: _startDate,
-          endDate: _endDate,
-          isCurrent: _isCurrent,
-          description: _descController.text,
-        );
-      } else {
-        await controller.createYear(
-          name: _nameController.text,
-          startDate: _startDate,
-          endDate: _endDate,
-          isCurrent: _isCurrent,
-          description: _descController.text,
-        );
-      }
-
-      if (mounted) {
-        context.pop();
-        UiHelpers.showSnackBar(
-          context,
-          isEditing ? 'Academic session updated' : 'Academic session created',
-          isSuccess: true,
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        UiHelpers.showSnackBar(context, 'Failed to save: $e', isError: true);
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-      }
-    }
   }
 }

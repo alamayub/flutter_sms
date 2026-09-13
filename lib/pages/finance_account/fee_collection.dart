@@ -3814,8 +3814,21 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                               fontSize: 14,
                             ),
                           ),
-                          PopupMenuButton<FeeCategory>(
+                          AppSearchablePopupMenuButton<FeeCategory>(
                             tooltip: 'Add Fee Type from generic list',
+                            items:
+                                categories
+                                    .map(
+                                      (
+                                        cat,
+                                      ) => SearchableSelectItem<FeeCategory>(
+                                        value: cat,
+                                        label: cat.name,
+                                        subtitle:
+                                            '${cat.frequency.replaceAll('_', ' ')} • ${_formatCurrency(cat.defaultAmount)}',
+                                      ),
+                                    )
+                                    .toList(),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
@@ -3848,28 +3861,6 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                                 ],
                               ),
                             ),
-                            itemBuilder: (context) {
-                              return categories.map((cat) {
-                                return PopupMenuItem<FeeCategory>(
-                                  value: cat,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(cat.name),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        _formatCurrency(cat.defaultAmount),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList();
-                            },
                             onSelected: (cat) {
                               setDialogState(() {
                                 rows.add(

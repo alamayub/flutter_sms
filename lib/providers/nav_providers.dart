@@ -164,6 +164,16 @@ final navGroupsProvider = Provider<List<MenuGroup>>(
           icon: Icons.school,
           widget: const StudentsScreen(),
         ),
+      ],
+    ),
+
+    // 5. STUDENT SERVICES
+    MenuGroup(
+      id: 'student_services',
+      titleKey: 'group_student_services',
+      defaultTitle: 'Student Services',
+      icon: Icons.miscellaneous_services_outlined,
+      items: [
         MenuItem(
           id: 'student_id_cards',
           titleKey: 'student_id_cards',
@@ -181,7 +191,7 @@ final navGroupsProvider = Provider<List<MenuGroup>>(
       ],
     ),
 
-    // 5. EXAMINATIONS
+    // 6. EXAMINATIONS
     MenuGroup(
       id: 'examinations',
       titleKey: 'group_examinations',

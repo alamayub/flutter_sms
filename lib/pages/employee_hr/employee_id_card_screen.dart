@@ -8,6 +8,7 @@ import '../../data/app_database.dart';
 import '../../providers/employee_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../widgets/app_input.dart';
+import '../../widgets/profile_photo.dart';
 
 class EmployeeIdCardScreen extends ConsumerStatefulWidget {
   const EmployeeIdCardScreen({super.key});
@@ -1085,17 +1086,13 @@ class _EmployeeIdCardScreenState extends ConsumerState<EmployeeIdCardScreen> {
                   color: _cardColor.withAlpha(20),
                   border: Border.all(color: _cardColor, width: 2),
                 ),
-                child: Center(
-                  child: Text(
-                    employee.name.isNotEmpty
-                        ? employee.name.characters.first.toUpperCase()
-                        : 'E',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: _cardColor,
-                    ),
-                  ),
+                child: ProfilePhoto(
+                  name: employee.name,
+                  photoPath: employee.photoPath,
+                  size: 74,
+                  backgroundColor: _cardColor.withAlpha(20),
+                  foregroundColor: _cardColor,
+                  fontSize: 32,
                 ),
               ),
             ),
@@ -1464,17 +1461,13 @@ class _EmployeeIdCardScreenState extends ConsumerState<EmployeeIdCardScreen> {
                             color: _cardColor.withAlpha(20),
                             border: Border.all(color: _cardColor, width: 2),
                           ),
-                          child: Center(
-                            child: Text(
-                              employee.name.isNotEmpty
-                                  ? employee.name.characters.first.toUpperCase()
-                                  : 'E',
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: _cardColor,
-                              ),
-                            ),
+                          child: ProfilePhoto(
+                            name: employee.name,
+                            photoPath: employee.photoPath,
+                            size: 65,
+                            backgroundColor: _cardColor.withAlpha(20),
+                            foregroundColor: _cardColor,
+                            fontSize: 26,
                           ),
                         ),
                         const SizedBox(height: 6),

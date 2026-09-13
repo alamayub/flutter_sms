@@ -1073,11 +1073,17 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
   }
 
   Future<void> _pickPhoto() async {
-    final path = await ImageStorageHelper.pickAndSaveEmployeePhoto();
-    if (path != null && mounted) {
-      setState(() {
-        _photoPath = path;
-      });
+    try {
+      final path = await ImageStorageHelper.pickAndSaveEmployeePhoto();
+      if (path != null && mounted) {
+        setState(() {
+          _photoPath = path;
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        context.showSnackbar('Could not select employee photo: $error');
+      }
     }
   }
 

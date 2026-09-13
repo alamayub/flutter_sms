@@ -1878,33 +1878,24 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
   }
 
   Widget _buildAddSubjectButton(BuildContext context) {
-    return PopupMenuButton<Subject>(
-      tooltip: 'Add another subject paper',
-      itemBuilder: (ctx) {
-        final existingSubjectIds = _rows.map((r) => r.subject.id).toSet();
-        final available =
-            _availableSubjects
-                .where((s) => !existingSubjectIds.contains(s.id))
-                .toList();
-
-        if (available.isEmpty) {
-          return [
-            const PopupMenuItem<Subject>(
-              enabled: false,
-              child: Text('All subjects are already added'),
-            ),
-          ];
-        }
-
-        return available
-            .map(
-              (s) => PopupMenuItem<Subject>(
-                value: s,
-                child: Text('${s.name} (${s.code})'),
-              ),
-            )
+    final existingSubjectIds = _rows.map((r) => r.subject.id).toSet();
+    final available =
+        _availableSubjects
+            .where((s) => !existingSubjectIds.contains(s.id))
             .toList();
-      },
+
+    return AppSearchablePopupMenuButton<Subject>(
+      tooltip: 'Add another subject paper',
+      items:
+          available
+              .map(
+                (subject) => SearchableSelectItem<Subject>(
+                  value: subject,
+                  label: subject.name,
+                  subtitle: subject.code,
+                ),
+              )
+              .toList(),
       onSelected: (subject) => _addSubjectRow(subject),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),

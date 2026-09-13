@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import '../../config/theme.dart';
 import '../../models/school_profile.dart';
 import '../../providers/auth_provider.dart';
@@ -192,23 +193,37 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
     );
 
     if (result.success && mounted) {
+      final backupInfo = result.backupInfo!;
+      final backupBytes = await File(backupInfo.filePath).readAsBytes();
+      final savedUri = await FilePicker.saveFile(
+        fileName: backupInfo.fileName,
+        bytes: backupBytes,
+        mimeType: 'application/zip',
+        dialogTitle: 'Save database backup',
+        type: FileType.custom,
+        allowedExtensions: ['zip'],
+      );
+      if (savedUri == null || !mounted) return;
       setState(() {
-        _latestExport = result.backupInfo;
+        _latestExport = DatabaseBackupInfo(
+          filePath: savedUri.toString(),
+          fileName: backupInfo.fileName,
+          fileSizeBytes: backupInfo.fileSizeBytes,
+          createdAt: backupInfo.createdAt,
+          isFullBackup: backupInfo.isFullBackup,
+          mediaFileCount: backupInfo.mediaFileCount,
+        );
       });
       _loadRecentBackups();
       context.showSnackbar(
         SnackBar(
-          content: Text('${result.message} (${result.backupInfo?.fileName})'),
+          content: Text('${result.message} (${backupInfo.fileName})'),
           backgroundColor: const Color(0xFF10B981),
           action: SnackBarAction(
             label: 'Copy Path',
             textColor: Colors.white,
             onPressed: () {
-              if (result.backupInfo != null) {
-                Clipboard.setData(
-                  ClipboardData(text: result.backupInfo!.filePath),
-                );
-              }
+              Clipboard.setData(ClipboardData(text: savedUri.toString()));
             },
           ),
         ),
@@ -260,8 +275,18 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
                         'Select Backup Archive (.zip) or Database (.db)',
                   );
 
-                  if (fileResult != null && fileResult.path != null) {
-                    final pickedPath = fileResult.path!;
+                  if (fileResult != null) {
+                    final pickedPath =
+                        fileResult.path ??
+                        p.join(
+                          (await getTemporaryDirectory()).path,
+                          'import_${DateTime.now().millisecondsSinceEpoch}_${fileResult.name}',
+                        );
+                    if (fileResult.path == null) {
+                      await File(
+                        pickedPath,
+                      ).writeAsBytes(await fileResult.readAsBytes());
+                    }
                     final file = File(pickedPath);
                     final size = await file.length();
                     setDialogState(() {

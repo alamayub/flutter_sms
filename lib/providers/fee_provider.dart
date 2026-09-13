@@ -375,6 +375,31 @@ class FeeController extends Notifier<AsyncValue<void>> {
     }
   }
 
+  Future<List<int>> assignAdmissionFeeSchedule({
+    required int studentId,
+    required int academicYearId,
+    required List<AdmissionFeePlan> plans,
+    DateTime? dueDate,
+  }) async {
+    state = const AsyncValue.loading();
+    try {
+      final ids = await ref
+          .read(feeServiceProvider)
+          .assignAdmissionFeeSchedule(
+            studentId: studentId,
+            academicYearId: academicYearId,
+            plans: plans,
+            dueDate: dueDate,
+          );
+      state = const AsyncValue.data(null);
+      ref.invalidate(feeSummaryStatsProvider);
+      return ids;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
   Future<int> bulkAssignFee({
     required int classId,
     int? sectionId,

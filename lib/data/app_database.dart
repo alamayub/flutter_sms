@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../config/enums.dart';
+import 'database_seeder.dart';
 
 part 'academic_database.dart';
 part 'app_database.g.dart';
@@ -48,6 +49,8 @@ part 'timetable_database.dart';
   ],
 )
 class AppDatabase extends _$AppDatabase {
+  static const databaseFileName = 'sms_app_db.db';
+
   AppDatabase([QueryExecutor? e]) : super(e ?? _openConnection());
 
   @override
@@ -57,6 +60,10 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (Migrator m) async {
       await m.createAll();
+      await DatabaseSeeder.seedAcademicYears(this);
+      await DatabaseSeeder.seedClassesAndSections(this);
+      await DatabaseSeeder.seedSubjects(this);
+      await DatabaseSeeder.seedFeeCategories(this);
     },
   );
 
@@ -90,6 +97,10 @@ class AppDatabase extends _$AppDatabase {
       await delete(sections).go();
       await delete(schoolClasses).go();
       await delete(academicYears).go();
+      await DatabaseSeeder.seedAcademicYears(this);
+      await DatabaseSeeder.seedClassesAndSections(this);
+      await DatabaseSeeder.seedSubjects(this);
+      await DatabaseSeeder.seedFeeCategories(this);
     });
   }
 
@@ -3174,6 +3185,6 @@ class AppDatabase extends _$AppDatabase {
 
 LazyDatabase _openConnection() => LazyDatabase(() async {
   final dbFolder = await getApplicationDocumentsDirectory();
-  final file = File(p.join(dbFolder.path, 'sms_app_db.db'));
+  final file = File(p.join(dbFolder.path, AppDatabase.databaseFileName));
   return NativeDatabase(file);
 });

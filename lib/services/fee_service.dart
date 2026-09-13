@@ -84,6 +84,35 @@ class FeePaymentAllocation {
   });
 }
 
+/// Fee configuration selected while admitting a student.
+/// `amount` and `discountAmount` are per generated billing schedule, unless
+/// the category is one-time (where only one record is generated).
+class AdmissionFeePlan {
+  final int feeCategoryId;
+  final String title;
+  final String frequency;
+  final double amount;
+  final double discountAmount;
+  final String? notes;
+
+  const AdmissionFeePlan({
+    required this.feeCategoryId,
+    required this.title,
+    required this.frequency,
+    required this.amount,
+    this.discountAmount = 0,
+    this.notes,
+  });
+}
+
+class _AdmissionFeePeriod {
+  final String label;
+  final int? month;
+  final String? term;
+
+  const _AdmissionFeePeriod(this.label, {this.month, this.term});
+}
+
 /// Request model to dynamically select or create a fee head and record payment
 class CreateAndPayFeeItem {
   final int? existingStudentFeeId; // If paying a previously assigned fee
@@ -333,6 +362,102 @@ class FeeService {
         notes: Value(notes?.trim()),
       ),
     );
+  }
+
+  /// Creates the complete fee schedule for a newly admitted student.
+  ///
+  /// Each monthly, quarterly, half-yearly, yearly, or term-wise period gets
+  /// its own StudentFee row. Therefore paying one month/term updates only
+  /// that row, while paying every row completes the full annual schedule.
+  Future<List<int>> assignAdmissionFeeSchedule({
+    required int studentId,
+    required int academicYearId,
+    required List<AdmissionFeePlan> plans,
+    DateTime? dueDate,
+  }) async {
+    final createdIds = <int>[];
+
+    for (final plan in plans) {
+      final frequency = plan.frequency.trim().toLowerCase();
+      final periods = _feePeriodsFor(frequency);
+      if (plan.amount <= 0) {
+        throw ArgumentError(
+          'Fee amount for ${plan.title} must be greater than zero.',
+        );
+      }
+      if (plan.discountAmount < 0) {
+        throw ArgumentError('Fee discount cannot be negative.');
+      }
+      if (plan.discountAmount > plan.amount * periods.length + 0.01) {
+        throw ArgumentError(
+          'Fee discount for ${plan.title} cannot exceed its annual amount.',
+        );
+      }
+      final discountPerPeriod =
+          periods.isEmpty ? 0.0 : plan.discountAmount / periods.length;
+      var discountRemainder = plan.discountAmount;
+
+      for (var index = 0; index < periods.length; index++) {
+        final period = periods[index];
+        final periodDiscount =
+            index == periods.length - 1 ? discountRemainder : discountPerPeriod;
+        discountRemainder -= periodDiscount;
+
+        createdIds.add(
+          await assignFeeToStudent(
+            studentId: studentId,
+            feeCategoryId: plan.feeCategoryId,
+            title: '${plan.title.trim()} - ${period.label}',
+            totalAmount: plan.amount,
+            discountAmount: periodDiscount.clamp(0, plan.amount).toDouble(),
+            dueDate: dueDate,
+            academicYearId: academicYearId,
+            academicMonth: period.month,
+            academicTerm: period.term,
+            notes: plan.notes,
+          ),
+        );
+      }
+    }
+
+    return createdIds;
+  }
+
+  List<_AdmissionFeePeriod> _feePeriodsFor(String frequency) {
+    switch (frequency) {
+      case 'one_time':
+        return [const _AdmissionFeePeriod('One-Time')];
+      case 'quarterly':
+        return [
+          const _AdmissionFeePeriod('Quarter 1', month: 1, term: 'Q1'),
+          const _AdmissionFeePeriod('Quarter 2', month: 4, term: 'Q2'),
+          const _AdmissionFeePeriod('Quarter 3', month: 7, term: 'Q3'),
+          const _AdmissionFeePeriod('Quarter 4', month: 10, term: 'Q4'),
+        ];
+      case 'half_yearly':
+        return [
+          const _AdmissionFeePeriod('Half Year 1', month: 1, term: 'H1'),
+          const _AdmissionFeePeriod('Half Year 2', month: 7, term: 'H2'),
+        ];
+      case 'yearly':
+        return [const _AdmissionFeePeriod('Yearly', month: 1, term: 'Yearly')];
+      case 'term_wise':
+        return [
+          const _AdmissionFeePeriod('Term 1', month: 1, term: 'Term 1'),
+          const _AdmissionFeePeriod('Term 2', month: 5, term: 'Term 2'),
+          const _AdmissionFeePeriod('Term 3', month: 9, term: 'Term 3'),
+        ];
+      case 'monthly':
+      default:
+        return List.generate(
+          12,
+          (index) => _AdmissionFeePeriod(
+            'Month ${index + 1}',
+            month: index + 1,
+            term: 'Month ${index + 1}',
+          ),
+        );
+    }
   }
 
   /// Bulk assign a fee to all students in a class (and optionally a section)

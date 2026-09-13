@@ -77,7 +77,7 @@ class DatabaseBackupService {
   /// Retrieves the active live database file path
   static Future<File> getLiveDatabaseFile() async {
     final docsDir = await getApplicationDocumentsDirectory();
-    return File(p.join(docsDir.path, 'app.db'));
+    return File(p.join(docsDir.path, AppDatabase.databaseFileName));
   }
 
   /// Retrieves the dedicated folder where backups are saved

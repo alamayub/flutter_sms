@@ -11,7 +11,6 @@ import '../../config/translations.dart';
 import '../../data/app_database.dart';
 import '../../providers/academic_year_provider.dart';
 import '../../providers/class_section_provider.dart';
-import '../../providers/contact_provider.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/student_provider.dart';
@@ -19,10 +18,8 @@ import '../../services/student_service.dart';
 import '../../utils/image_storage_helper.dart';
 import 'certificates_screen.dart';
 import '../../widgets/app_input.dart';
-import '../../widgets/ui/app_button.dart';
-import '../../widgets/ui/app_empty_state.dart';
-import '../../widgets/ui/app_error_view.dart';
-import '../../widgets/ui/app_skeleton.dart';
+import '../../widgets/forms/student_admission.dart';
+import '../../widgets/students/students_list.dart';
 import '../../widgets/ui/app_tabs.dart';
 
 class StudentsScreen extends ConsumerStatefulWidget {
@@ -269,56 +266,28 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
               ),
             ),
 
-            // Students List / Cards
-            studentsAsync.when(
-              data: (students) {
-                if (students.isEmpty) {
-                  return SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Center(
-                      child: AppEmptyState.noData(
-                        title: AppTranslations.text('no_students', lang),
-                        icon: Icons.school_outlined,
-                        action: AppButton.primary(
-                          onPressed: () => _showAdmissionDialog(context),
-                          leadingIcon: const Icon(
-                            Icons.person_add_rounded,
-                            size: 16,
-                          ),
-                          text: AppTranslations.text('admit_student', lang),
-                        ),
-                      ),
+            StudentsList(
+              studentsAsync: studentsAsync,
+              languageCode: lang,
+              onAddStudent: () => _showAdmissionDialog(context),
+              onOpenProfile:
+                  (student) => _showStudentProfileDialog(context, student),
+              onEditStudent:
+                  (student) =>
+                      _showAdmissionDialog(context, existingStudent: student),
+              onDeleteStudent:
+                  (student) => _confirmDeleteStudent(context, student),
+              onOpenCertificates: (student) {
+                context.push(
+                  Scaffold(
+                    appBar: AppBar(
+                      title: Text('Certificates - ${student.name}'),
                     ),
-                  );
-                }
-
-                return SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final item = students[index];
-                      return _buildStudentCard(context, item, lang);
-                    }, childCount: students.length),
+                    body: CertificatesScreen(preselectedStudentId: student.id),
                   ),
                 );
               },
-              loading:
-                  () => SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: AppSkeleton.list(count: 6),
-                    ),
-                  ),
-              error:
-                  (err, stack) => SliverFillRemaining(
-                    child: Center(
-                      child: AppErrorView(
-                        error: err,
-                        stackTrace: stack,
-                        onRetry: () => ref.refresh(studentsListStreamProvider),
-                      ),
-                    ),
-                  ),
+              onRetry: () => ref.refresh(studentsListStreamProvider),
             ),
           ],
         ),
@@ -515,298 +484,149 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
     );
   }
 
-  Widget _buildStudentCard(
-    BuildContext context,
-    StudentWithDetails item,
-    String lang,
-  ) {
-    final theme = Theme.of(context);
-    final hasPhoto = ImageStorageHelper.isLocalFile(item.photoPath);
-
-    String classSectionDisplay = 'Not enrolled';
-    if (item.currentClass != null) {
-      classSectionDisplay = item.currentClass!.displayName;
-      if (item.currentSection != null) {
-        classSectionDisplay += ' - ${item.currentSection!.name}';
-      }
-    }
-
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 10),
-      color: theme.colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6),
-        ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => _showStudentProfileDialog(context, item),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Photo / Avatar
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child:
-                    hasPhoto
-                        ? Image.file(
-                          File(item.photoPath!),
-                          width: 54,
-                          height: 54,
-                          fit: BoxFit.cover,
-                          errorBuilder:
-                              (_, _, _) => _buildInitialsAvatar(context, item),
-                        )
-                        : _buildInitialsAvatar(context, item),
-              ),
-              const SizedBox(width: 14),
-
-              // Main Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item.name,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        // Student ID badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(
-                              alpha: 0.1,
-                            ),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.3,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            item.studentId,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Class, Section & Roll
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.class_outlined,
-                          size: 16,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          classSectionDisplay,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        if (item.rollNumber != null) ...[
-                          const SizedBox(width: 12),
-                          Icon(
-                            Icons.format_list_numbered_rounded,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Roll: ${item.rollNumber}',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                        if (item.bloodGroup != null) ...[
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 1,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.red.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              item.bloodGroup!,
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: Colors.red.shade700,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Phone & Admission number
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 4,
-                      children: [
-                        Text(
-                          '${AppTranslations.text("admission_number", lang)}: ${item.admissionNumber}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.outline,
-                          ),
-                        ),
-                        if (item.phone != null && item.phone!.isNotEmpty)
-                          Text(
-                            '📞 ${item.phone}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.outline,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Action Popup
-              PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert, size: 20),
-                onSelected: (val) {
-                  if (val == 'view') {
-                    _showStudentProfileDialog(context, item);
-                  } else if (val == 'edit') {
-                    _showAdmissionDialog(context, existingStudent: item);
-                  } else if (val == 'certificates') {
-                    context.push(
-                      Scaffold(
-                        appBar: AppBar(
-                          title: Text('Certificates - ${item.name}'),
-                        ),
-                        body: CertificatesScreen(preselectedStudentId: item.id),
-                      ),
-                    );
-                  } else if (val == 'delete') {
-                    _confirmDeleteStudent(context, item);
-                  }
-                },
-                itemBuilder:
-                    (context) => [
-                      PopupMenuItem(
-                        value: 'view',
-                        child: Row(
-                          children: [
-                            const Icon(Icons.visibility_outlined, size: 18),
-                            const SizedBox(width: 8),
-                            Text(AppTranslations.text('student_profile', lang)),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 'certificates',
-                        child: const Row(
-                          children: [
-                            Icon(Icons.card_membership_outlined, size: 18),
-                            SizedBox(width: 8),
-                            Text('Certificates'),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit_outlined, size: 18),
-                            const SizedBox(width: 8),
-                            Text(AppTranslations.text('edit_student', lang)),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.delete_outline,
-                              size: 18,
-                              color: Colors.red,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              AppTranslations.text('delete_student', lang),
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInitialsAvatar(BuildContext context, StudentWithDetails item) {
-    final theme = Theme.of(context);
-    final initials =
-        item.name.isNotEmpty
-            ? item.name
-                .trim()
-                .split(' ')
-                .map((e) => e.isNotEmpty ? e[0] : '')
-                .take(2)
-                .join()
-                .toUpperCase()
-            : 'ST';
-
-    return Container(
-      width: 54,
-      height: 54,
-      color: theme.colorScheme.primaryContainer,
-      child: Center(
-        child: Text(
-          initials,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showAdmissionDialog(
     BuildContext context, {
     StudentWithDetails? existingStudent,
-  }) {
-    showDialog(
+  }) async {
+    final result = await showDialog<AdmissionCompletedData>(
       context: context,
       barrierDismissible: false,
       builder:
           (context) => StudentAdmissionDialog(existingStudent: existingStudent),
     );
+    if (result != null && context.mounted) {
+      _showAdmissionFeeReceiptDialog(context, result);
+    }
+  }
+
+  void _showAdmissionFeeReceiptDialog(
+    BuildContext context,
+    AdmissionCompletedData result,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        final total = result.plans.fold<double>(
+          0,
+          (sum, plan) =>
+              sum + plan.amount * _admissionFeePeriodCount(plan.frequency),
+        );
+        final discount = result.plans.fold<double>(
+          0,
+          (sum, plan) => sum + plan.discountAmount,
+        );
+
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.receipt_long, color: Colors.indigo),
+              SizedBox(width: 8),
+              Text('Admission Fee Receipt'),
+            ],
+          ),
+          content: SizedBox(
+            width: 560,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Student: ${result.studentName}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text('Student ID: ${result.studentId}'),
+                  Text('Admission No: ${result.admissionNumber}'),
+                  const SizedBox(height: 14),
+                  const Text(
+                    'Assigned fee schedule',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  if (result.plans.isEmpty)
+                    const Text('No fee schedule was assigned.'),
+                  ...result.plans.map(
+                    (plan) => ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(plan.title),
+                      subtitle: Text(
+                        '${plan.frequency.replaceAll('_', ' ')} • ${_admissionFeePeriodCount(plan.frequency)} record(s) • Pending',
+                      ),
+                      trailing: Text(
+                        _formatAdmissionCurrency(
+                          plan.amount *
+                              _admissionFeePeriodCount(plan.frequency),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Divider(),
+                  _admissionTotalRow('Total assessed', total),
+                  if (discount > 0)
+                    _admissionTotalRow('Scholarship / discount', -discount),
+                  _admissionTotalRow('Net payable', total - discount),
+                  if (result.feeError != null) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      'Fee assignment warning: ${result.feeError}',
+                      style: const TextStyle(color: Colors.orange),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Close'),
+            ),
+            FilledButton.icon(
+              icon: const Icon(Icons.print),
+              label: const Text('Print Fee Receipt'),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                context.showSnackbar(
+                  'Admission fee receipt for ${result.studentName} sent to printer.',
+                  type: MessageType.success,
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _admissionTotalRow(String label, double amount) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(label), Text(_formatAdmissionCurrency(amount))],
+      ),
+    );
+  }
+
+  String _formatAdmissionCurrency(double amount) {
+    return 'Rs. ${NumberFormat('#,##0.00').format(amount)}';
+  }
+
+  int _admissionFeePeriodCount(String frequency) {
+    switch (frequency.toLowerCase()) {
+      case 'one_time':
+      case 'yearly':
+        return 1;
+      case 'quarterly':
+        return 4;
+      case 'half_yearly':
+        return 2;
+      case 'term_wise':
+        return 3;
+      case 'monthly':
+      default:
+        return 12;
+    }
   }
 
   void _showPromotionDialog(BuildContext context) {
@@ -873,952 +693,6 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
 // 1. STUDENT ADMISSION & EDIT DIALOG
 // ==============================================================================
 
-class StudentAdmissionDialog extends ConsumerStatefulWidget {
-  final StudentWithDetails? existingStudent;
-
-  const StudentAdmissionDialog({super.key, this.existingStudent});
-
-  @override
-  ConsumerState<StudentAdmissionDialog> createState() =>
-      _StudentAdmissionDialogState();
-}
-
-class _StudentAdmissionDialogState
-    extends ConsumerState<StudentAdmissionDialog> {
-  final _formKey = GlobalKey<FormState>();
-
-  // Personal Fields
-  late TextEditingController _nameController;
-  late TextEditingController _addressController;
-  String _gender = 'Male';
-  DateTime? _dateOfBirth;
-  String? _bloodGroup;
-  String? _photoPath;
-
-  // Enrollment Fields
-  int? _selectedAcademicYearId;
-  int? _selectedClassId;
-  int? _selectedSectionId;
-  late TextEditingController _rollNumberController;
-  DateTime _admissionDate = DateTime.now();
-
-  // Contacts
-  late TextEditingController _guardianNameController;
-  late TextEditingController _guardianPhoneController;
-  late TextEditingController _guardianRelationController;
-  late TextEditingController _guardianOccupationController;
-
-  late TextEditingController _emergencyNameController;
-  late TextEditingController _emergencyPhoneController;
-  late TextEditingController _emergencyRelationController;
-  late TextEditingController _emergencyOccupationController;
-
-  // Facilities Opted
-  bool _hasTransport = false;
-  bool _hasHostel = false;
-  bool _hasLibrary = false;
-
-  bool _isSaving = false;
-  String? _previewStudentId;
-  String? _previewAdmissionNumber;
-
-  @override
-  void initState() {
-    super.initState();
-    final student = widget.existingStudent?.student;
-
-    _nameController = TextEditingController(text: student?.name ?? '');
-    _addressController = TextEditingController(text: student?.address ?? '');
-    _gender = student?.gender ?? 'Male';
-    _dateOfBirth = student?.dateOfBirth;
-    _bloodGroup = student?.bloodGroup;
-    _photoPath = student?.photoPath;
-
-    _hasTransport = student?.hasTransport ?? false;
-    _hasHostel = student?.hasHostel ?? false;
-    _hasLibrary = student?.hasLibrary ?? false;
-
-    _selectedAcademicYearId = widget.existingStudent?.currentAcademicYear?.id;
-    _selectedClassId = widget.existingStudent?.classId;
-    _selectedSectionId = widget.existingStudent?.sectionId;
-    _rollNumberController = TextEditingController(
-      text: widget.existingStudent?.rollNumber?.toString() ?? '',
-    );
-    _admissionDate = student?.admissionDate ?? DateTime.now();
-
-    _guardianNameController = TextEditingController();
-    _guardianPhoneController = TextEditingController();
-    _guardianRelationController = TextEditingController(text: 'Father');
-    _guardianOccupationController = TextEditingController();
-
-    _emergencyNameController = TextEditingController(
-      text: student?.emergencyContactName ?? '',
-    );
-    _emergencyPhoneController = TextEditingController(
-      text: student?.emergencyContactPhone ?? '',
-    );
-    _emergencyRelationController = TextEditingController(
-      text: student?.emergencyContactRelation ?? 'Emergency Contact',
-    );
-    _emergencyOccupationController = TextEditingController();
-
-    _loadPreviews();
-    _loadExistingContacts();
-  }
-
-  Future<void> _loadExistingContacts() async {
-    if (widget.existingStudent == null) return;
-    try {
-      final contactService = ref.read(contactServiceProvider);
-      final contacts = await contactService.getContactsBySource(
-        ContactSourceType.student,
-        widget.existingStudent!.id,
-      );
-      if (!mounted) return;
-      for (final c in contacts) {
-        if (c.isPrimary ||
-            (!c.isEmergency && _guardianNameController.text.isEmpty)) {
-          if (_guardianNameController.text.isEmpty) {
-            _guardianNameController.text = c.name;
-            _guardianPhoneController.text = c.phone;
-            if (c.relation != null && c.relation!.isNotEmpty) {
-              _guardianRelationController.text = c.relation!;
-            }
-            if (c.occupation != null && c.occupation!.isNotEmpty) {
-              _guardianOccupationController.text = c.occupation!;
-            }
-          }
-        }
-        if (c.isEmergency) {
-          if (_emergencyNameController.text.isEmpty) {
-            _emergencyNameController.text = c.name;
-          }
-          if (_emergencyPhoneController.text.isEmpty) {
-            _emergencyPhoneController.text = c.phone;
-          }
-          if (c.relation != null && c.relation!.isNotEmpty) {
-            _emergencyRelationController.text = c.relation!;
-          }
-          if (c.occupation != null && c.occupation!.isNotEmpty) {
-            _emergencyOccupationController.text = c.occupation!;
-          }
-        }
-      }
-    } catch (_) {}
-  }
-
-  Future<void> _loadPreviews() async {
-    if (widget.existingStudent != null) {
-      setState(() {
-        _previewStudentId = widget.existingStudent!.studentId;
-        _previewAdmissionNumber = widget.existingStudent!.admissionNumber;
-      });
-      return;
-    }
-    final service = ref.read(studentServiceProvider);
-    final year = _admissionDate.year;
-    final nextId = await service.generateNextStudentId(year);
-    final nextAdm = await service.generateNextAdmissionNumber(year);
-    if (mounted) {
-      setState(() {
-        _previewStudentId = nextId;
-        _previewAdmissionNumber = nextAdm;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _addressController.dispose();
-    _rollNumberController.dispose();
-    _guardianNameController.dispose();
-    _guardianPhoneController.dispose();
-    _guardianRelationController.dispose();
-    _guardianOccupationController.dispose();
-    _emergencyNameController.dispose();
-    _emergencyPhoneController.dispose();
-    _emergencyRelationController.dispose();
-    _emergencyOccupationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final lang = ref.watch(localeProvider).locale.languageCode;
-    final theme = Theme.of(context);
-    final yearsAsync = ref.watch(academicYearsStreamProvider);
-    final classesAsync = ref.watch(classesWithSectionsStreamProvider);
-    final isEditing = widget.existingStudent != null;
-
-    return AlertDialog(
-      title: Row(
-        children: [
-          Icon(
-            isEditing ? Icons.edit_rounded : Icons.person_add_rounded,
-            color: theme.colorScheme.primary,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            isEditing
-                ? AppTranslations.text('edit_student', lang)
-                : AppTranslations.text('admit_student', lang),
-          ),
-        ],
-      ),
-      content: SizedBox(
-        width: 650,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ID Preview Banner
-                if (_previewStudentId != null)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withValues(
-                        alpha: 0.4,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${AppTranslations.text("student_id", lang)}: $_previewStudentId',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        Text(
-                          '${AppTranslations.text("admission_number", lang)}: $_previewAdmissionNumber',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                // Photo Picker & Basic Personal Info
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Photo
-                    Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            width: 104,
-                            height: 104,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: theme.dividerColor.withAlpha(120),
-                              ),
-                            ),
-                            child:
-                                ImageStorageHelper.isLocalFile(_photoPath)
-                                    ? Image.file(
-                                      File(_photoPath!),
-                                      fit: BoxFit.cover,
-                                    )
-                                    : Icon(
-                                      Icons.person,
-                                      size: 52,
-                                      color: theme.colorScheme.primary
-                                          .withAlpha(120),
-                                    ),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () async {
-                                final path =
-                                    await ImageStorageHelper.pickAndSaveStudentPhoto(
-                                      studentId:
-                                          widget
-                                              .existingStudent
-                                              ?.student
-                                              .studentId ??
-                                          _previewStudentId,
-                                    );
-                                if (path != null) {
-                                  setState(() => _photoPath = path);
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.camera_alt_outlined,
-                                size: 15,
-                              ),
-                              label: Text(
-                                _photoPath != null
-                                    ? AppTranslations.text('change_photo', lang)
-                                    : AppTranslations.text(
-                                      'select_photo',
-                                      lang,
-                                    ),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            if (_photoPath != null) ...[
-                              IconButton(
-                                visualDensity: VisualDensity.compact,
-                                tooltip: 'Remove photo',
-                                icon: const Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.redAccent,
-                                  size: 18,
-                                ),
-                                onPressed: () {
-                                  setState(() => _photoPath = null);
-                                },
-                              ),
-                            ],
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-
-                    // Name & Gender
-                    Expanded(
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _nameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Student Full Name *',
-                            ),
-                            validator: (val) {
-                              if (val == null || val.trim().isEmpty) {
-                                return 'Student name is required';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AppSearchableSelect<String>(
-                                  value: _gender,
-                                  label: 'Gender *',
-                                  hint: 'Select Gender',
-                                  items: const [
-                                    SearchableSelectItem(
-                                      value: 'Male',
-                                      label: 'Male',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'Female',
-                                      label: 'Female',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'Other',
-                                      label: 'Other',
-                                    ),
-                                  ],
-                                  onChanged: (val) {
-                                    if (val != null) {
-                                      setState(() => _gender = val);
-                                    }
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: AppSearchableSelect<String?>(
-                                  value: _bloodGroup,
-                                  label: AppTranslations.text(
-                                    'blood_group',
-                                    lang,
-                                  ),
-                                  hint: 'Select Blood Group',
-                                  isClearable: true,
-                                  items: const [
-                                    SearchableSelectItem(
-                                      value: null,
-                                      label: 'Unknown',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'A+',
-                                      label: 'A+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'A-',
-                                      label: 'A-',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'B+',
-                                      label: 'B+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'B-',
-                                      label: 'B-',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'O+',
-                                      label: 'O+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'O-',
-                                      label: 'O-',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'AB+',
-                                      label: 'AB+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'AB-',
-                                      label: 'AB-',
-                                    ),
-                                  ],
-                                  onChanged:
-                                      (val) =>
-                                          setState(() => _bloodGroup = val),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Date of birth & Address
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
-                          final picked = await showDatePicker(
-                            context: context,
-                            initialDate:
-                                _dateOfBirth ??
-                                DateTime(DateTime.now().year - 10),
-                            firstDate: DateTime(1990),
-                            lastDate: DateTime.now(),
-                          );
-                          if (picked != null) {
-                            setState(() => _dateOfBirth = picked);
-                          }
-                        },
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Date of Birth',
-                            suffixIcon: Icon(Icons.calendar_today, size: 18),
-                          ),
-                          child: Text(
-                            _dateOfBirth != null
-                                ? DateFormat('yyyy-MM-dd').format(_dateOfBirth!)
-                                : 'Select DOB',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _addressController,
-                        decoration: const InputDecoration(labelText: 'Address'),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Section 2: Academic Enrollment
-                Text(
-                  AppTranslations.text('enrollment_info', lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Divider(),
-                const SizedBox(height: 8),
-
-                // Academic Year & Class
-                Row(
-                  children: [
-                    Expanded(
-                      child: yearsAsync.when(
-                        data: (years) {
-                          _selectedAcademicYearId ??=
-                              years.where((y) => y.isCurrent).firstOrNull?.id ??
-                              (years.isNotEmpty ? years.first.id : null);
-
-                          return AppSearchableSelect<int>(
-                            value: _selectedAcademicYearId,
-                            label:
-                                '${AppTranslations.text("academic_session", lang)} *',
-                            hint: 'Select Session',
-                            items:
-                                years
-                                    .map(
-                                      (y) => SearchableSelectItem<int>(
-                                        value: y.id,
-                                        label:
-                                            '${y.name} ${y.isCurrent ? "(Current)" : ""}',
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged:
-                                (val) => setState(
-                                  () => _selectedAcademicYearId = val,
-                                ),
-                            validator:
-                                (v) => v == null ? 'Session is required' : null,
-                          );
-                        },
-                        loading: () => const LinearProgressIndicator(),
-                        error: (_, _) => const SizedBox.shrink(),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: classesAsync.when(
-                        data: (classes) {
-                          _selectedClassId ??=
-                              classes.isNotEmpty
-                                  ? classes.first.schoolClass.id
-                                  : null;
-
-                          return AppSearchableSelect<int>(
-                            value: _selectedClassId,
-                            label: '${AppTranslations.text("class", lang)} *',
-                            hint: 'Select Class',
-                            items:
-                                classes
-                                    .map(
-                                      (c) => SearchableSelectItem<int>(
-                                        value: c.schoolClass.id,
-                                        label: c.schoolClass.displayName,
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                _selectedClassId = val;
-                                _selectedSectionId = null;
-                              });
-                            },
-                            validator:
-                                (v) => v == null ? 'Class is required' : null,
-                          );
-                        },
-                        loading: () => const LinearProgressIndicator(),
-                        error: (_, _) => const SizedBox.shrink(),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Section & Roll Number
-                Row(
-                  children: [
-                    Expanded(
-                      child: classesAsync.when(
-                        data: (classes) {
-                          final curClass =
-                              classes
-                                  .where(
-                                    (c) => c.schoolClass.id == _selectedClassId,
-                                  )
-                                  .firstOrNull;
-                          final sections = curClass?.sections ?? [];
-
-                          if (_selectedSectionId == null &&
-                              sections.isNotEmpty) {
-                            _selectedSectionId = sections.first.id;
-                          }
-
-                          return AppSearchableSelect<int>(
-                            value: _selectedSectionId,
-                            label: '${AppTranslations.text("section", lang)} *',
-                            hint: 'Select Section',
-                            items:
-                                sections
-                                    .map(
-                                      (s) => SearchableSelectItem<int>(
-                                        value: s.id,
-                                        label: 'Section ${s.name}',
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged:
-                                (val) =>
-                                    setState(() => _selectedSectionId = val),
-                            validator:
-                                (v) => v == null ? 'Section is required' : null,
-                          );
-                        },
-                        loading: () => const LinearProgressIndicator(),
-                        error: (_, _) => const SizedBox.shrink(),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _rollNumberController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('roll_number', lang),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Facilities Opted Section
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.shade50.withAlpha(90),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.indigo.shade100),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.room_service,
-                            size: 16,
-                            color: Colors.indigo,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Facilities Opted',
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.indigo.shade900,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 8,
-                        children: [
-                          FilterChip(
-                            avatar: const Icon(Icons.directions_bus, size: 16),
-                            label: const Text('Transport Facility'),
-                            selected: _hasTransport,
-                            selectedColor: Colors.indigo.shade100,
-                            onSelected:
-                                (val) => setState(() => _hasTransport = val),
-                          ),
-                          FilterChip(
-                            avatar: const Icon(Icons.hotel, size: 16),
-                            label: const Text('Hostel Facility'),
-                            selected: _hasHostel,
-                            selectedColor: Colors.indigo.shade100,
-                            onSelected:
-                                (val) => setState(() => _hasHostel = val),
-                          ),
-                          FilterChip(
-                            avatar: const Icon(Icons.local_library, size: 16),
-                            label: const Text('Library Facility'),
-                            selected: _hasLibrary,
-                            selectedColor: Colors.indigo.shade100,
-                            onSelected:
-                                (val) => setState(() => _hasLibrary = val),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Section 3: Guardian & Emergency Contacts
-                Text(
-                  AppTranslations.text('guardian_info', lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Divider(),
-                const SizedBox(height: 8),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianNameController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'guardian_name',
-                            lang,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianPhoneController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'guardian_phone',
-                            lang,
-                          ),
-                        ),
-                        keyboardType: TextInputType.phone,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianRelationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'guardian_relation',
-                            lang,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianOccupationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('occupation', lang),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Emergency Contact Fields
-                Text(
-                  AppTranslations.text('emergency_details', lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Divider(),
-                const SizedBox(height: 8),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyNameController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'emergency_contact',
-                            lang,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyPhoneController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'emergency_phone',
-                            lang,
-                          ),
-                        ),
-                        keyboardType: TextInputType.phone,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyRelationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('relation', lang),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyOccupationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('occupation', lang),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isSaving ? null : () => context.pop(),
-          child: Text(AppTranslations.text('cancel', lang)),
-        ),
-        FilledButton(
-          onPressed: _isSaving ? null : _saveStudent,
-          child:
-              _isSaving
-                  ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                  : Text(AppTranslations.text('save', lang)),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _saveStudent() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_selectedAcademicYearId == null ||
-        _selectedClassId == null ||
-        _selectedSectionId == null) {
-      context.showSnackbar(
-        const SnackBar(
-          content: Text('Academic Year, Class, and Section are required'),
-        ),
-      );
-      return;
-    }
-
-    setState(() => _isSaving = true);
-    final roll = int.tryParse(_rollNumberController.text.trim());
-
-    if (widget.existingStudent == null) {
-      // Create new admission
-      final id = await ref
-          .read(studentControllerProvider.notifier)
-          .admitStudent(
-            name: _nameController.text.trim(),
-            gender: _gender,
-            academicYearId: _selectedAcademicYearId!,
-            classId: _selectedClassId!,
-            sectionId: _selectedSectionId!,
-            rollNumber: roll,
-            admissionDate: _admissionDate,
-            dateOfBirth: _dateOfBirth,
-            bloodGroup: _bloodGroup,
-            address: _addressController.text.trim(),
-            photoPath: _photoPath,
-            emergencyContactName: _emergencyNameController.text.trim(),
-            emergencyContactPhone: _emergencyPhoneController.text.trim(),
-            emergencyContactRelation: _emergencyRelationController.text.trim(),
-            emergencyContactOccupation:
-                _emergencyOccupationController.text.trim(),
-            guardianName: _guardianNameController.text.trim(),
-            guardianPhone: _guardianPhoneController.text.trim(),
-            guardianRelation: _guardianRelationController.text.trim(),
-            guardianOccupation: _guardianOccupationController.text.trim(),
-            hasTransport: _hasTransport,
-            hasHostel: _hasHostel,
-            hasLibrary: _hasLibrary,
-          );
-
-      if (mounted) {
-        setState(() => _isSaving = false);
-        if (id != null) {
-          context.pop();
-          context.showSnackbar(
-            const SnackBar(content: Text('Student admitted successfully!')),
-          );
-        } else {
-          context.showSnackbar(
-            const SnackBar(content: Text('Failed to admit student')),
-          );
-        }
-      }
-    } else {
-      // Update existing student
-      final success = await ref
-          .read(studentControllerProvider.notifier)
-          .updateStudent(
-            student: widget.existingStudent!.student,
-            academicYearId: _selectedAcademicYearId!,
-            classId: _selectedClassId!,
-            sectionId: _selectedSectionId!,
-            rollNumber: roll,
-            name: _nameController.text.trim(),
-            gender: _gender,
-            dateOfBirth: _dateOfBirth,
-            bloodGroup: _bloodGroup,
-            address: _addressController.text.trim(),
-            phone: widget.existingStudent!.student.phone,
-            email: widget.existingStudent!.student.email,
-            photoPath: _photoPath,
-            emergencyContactName: _emergencyNameController.text.trim(),
-            emergencyContactPhone: _emergencyPhoneController.text.trim(),
-            emergencyContactRelation: _emergencyRelationController.text.trim(),
-            emergencyContactOccupation:
-                _emergencyOccupationController.text.trim(),
-            guardianName: _guardianNameController.text.trim(),
-            guardianPhone: _guardianPhoneController.text.trim(),
-            guardianRelation: _guardianRelationController.text.trim(),
-            guardianOccupation: _guardianOccupationController.text.trim(),
-            hasTransport: _hasTransport,
-            hasHostel: _hasHostel,
-            hasLibrary: _hasLibrary,
-          );
-
-      if (mounted) {
-        setState(() => _isSaving = false);
-        if (success) {
-          context.pop();
-          context.showSnackbar(
-            const SnackBar(content: Text('Student profile updated!')),
-          );
-        } else {
-          context.showSnackbar(
-            const SnackBar(content: Text('Failed to update student')),
-          );
-        }
-      }
-    }
-  }
-}
-
-// ==============================================================================
 // 2. STUDENT PROMOTION DIALOG
 // ==============================================================================
 

@@ -31,6 +31,78 @@ class SearchableSelectItem<T> {
   int get hashCode => value.hashCode;
 }
 
+/// Searchable, anchored popup menu for selecting from a data list.
+class AppSearchablePopupMenuButton<T> extends StatelessWidget {
+  final List<SearchableSelectItem<T>> items;
+  final ValueChanged<T> onSelected;
+  final Widget? child;
+  final Widget? icon;
+  final String? tooltip;
+  final String searchHint;
+
+  const AppSearchablePopupMenuButton({
+    super.key,
+    required this.items,
+    required this.onSelected,
+    this.child,
+    this.icon,
+    this.tooltip,
+    this.searchHint = 'Type to search...',
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip ?? '',
+      waitDuration: tooltip == null ? Duration.zero : null,
+      child: InkWell(
+        onTap: () => _open(context),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: child ?? icon ?? const Icon(Icons.more_vert),
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context) async {
+    final buttonBox = context.findRenderObject() as RenderBox;
+    final overlayBox =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final buttonRect = Rect.fromPoints(
+      buttonBox.localToGlobal(Offset.zero, ancestor: overlayBox),
+      buttonBox.localToGlobal(
+        buttonBox.size.bottomRight(Offset.zero),
+        ancestor: overlayBox,
+      ),
+    );
+    final width = buttonBox.size.width < 280 ? 280.0 : buttonBox.size.width;
+
+    final selected = await showMenu<SearchableSelectItem<T>>(
+      context: context,
+      position: RelativeRect.fromRect(
+        buttonRect,
+        Offset.zero & overlayBox.size,
+      ),
+      constraints: BoxConstraints(
+        minWidth: width,
+        maxWidth: width > 420 ? width : 420,
+        maxHeight: MediaQuery.sizeOf(context).height * 0.65,
+      ),
+      elevation: 6,
+      menuPadding: EdgeInsets.zero,
+      items: [
+        _SearchablePopupEntry<T>(
+          width: width,
+          title: tooltip ?? 'Select option',
+          searchHint: searchHint,
+          items: items,
+        ),
+      ],
+    );
+
+    if (selected != null) onSelected(selected.value);
+  }
+}
+
 /// A modern, responsive, searchable select dropdown widget that conforms
 /// to the app's design system tokens, interactive cursors, and theme styling.
 class AppSearchableSelect<T> extends FormField<T> {
@@ -198,19 +270,38 @@ class _AppSearchableSelectState<T> extends FormFieldState<T> {
   void _handleTap() async {
     if (!widget.enabled) return;
 
-    final selected = await showDialog<SearchableSelectItem<T>?>(
+    final fieldBox = context.findRenderObject() as RenderBox;
+    final overlayBox =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final fieldRect = Rect.fromPoints(
+      fieldBox.localToGlobal(Offset.zero, ancestor: overlayBox),
+      fieldBox.localToGlobal(
+        fieldBox.size.bottomRight(Offset.zero),
+        ancestor: overlayBox,
+      ),
+    );
+
+    final selected = await showMenu<SearchableSelectItem<T>>(
       context: context,
-      barrierDismissible: true,
-      builder: (BuildContext ctx) {
-        return _SearchSelectDialog<T>(
+      position: RelativeRect.fromRect(fieldRect, Offset.zero & overlayBox.size),
+      constraints: BoxConstraints(
+        minWidth: fieldBox.size.width,
+        maxWidth: fieldBox.size.width > 420 ? fieldBox.size.width : 420,
+        maxHeight: MediaQuery.sizeOf(context).height * 0.65,
+      ),
+      elevation: 6,
+      menuPadding: EdgeInsets.zero,
+      items: [
+        _SearchablePopupEntry<T>(
+          width: fieldBox.size.width,
           title: widget.label ?? widget.hint ?? 'Select Option',
           searchHint: widget.searchHint,
           items: widget.items,
           selectedValue: value,
           isSearchable: widget.isSearchable,
           itemBuilder: widget.itemBuilder,
-        );
-      },
+        ),
+      ],
     );
 
     if (selected != null) {
@@ -364,6 +455,192 @@ class _AppSearchableSelectState<T> extends FormFieldState<T> {
                 ),
               ),
             ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// A popup-menu entry containing an inline search field and selectable list.
+/// This keeps searchable selects anchored to their field instead of opening a
+/// modal dialog.
+class _SearchablePopupEntry<T> extends PopupMenuEntry<SearchableSelectItem<T>> {
+  final double width;
+  final String title;
+  final String searchHint;
+  final List<SearchableSelectItem<T>> items;
+  final T? selectedValue;
+  final bool isSearchable;
+  final Widget Function(
+    BuildContext context,
+    SearchableSelectItem<T> item,
+    bool isSelected,
+  )?
+  itemBuilder;
+
+  const _SearchablePopupEntry({
+    required this.width,
+    required this.title,
+    required this.searchHint,
+    required this.items,
+    this.selectedValue,
+    this.isSearchable = true,
+    this.itemBuilder,
+  });
+
+  @override
+  double get height => 420;
+
+  @override
+  bool represents(SearchableSelectItem<T>? value) => false;
+
+  @override
+  State<_SearchablePopupEntry<T>> createState() =>
+      _SearchablePopupEntryState<T>();
+}
+
+class _SearchablePopupEntryState<T> extends State<_SearchablePopupEntry<T>> {
+  final _searchController = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<SearchableSelectItem<T>> get _filteredItems {
+    final query = _query.trim().toLowerCase();
+    if (query.isEmpty) return widget.items;
+    return widget.items.where((item) {
+      return item.label.toLowerCase().contains(query) ||
+          (item.subtitle?.toLowerCase().contains(query) ?? false);
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final selectedItems = _filteredItems;
+
+    return SizedBox(
+      width: widget.width,
+      height: 420,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (widget.isSearchable)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
+              child: TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: widget.searchHint,
+                  prefixIcon: const Icon(Icons.search, size: 19),
+                  suffixIcon:
+                      _query.isEmpty
+                          ? null
+                          : IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() => _query = '');
+                            },
+                          ),
+                  isDense: true,
+                  border: const OutlineInputBorder(),
+                ),
+                onChanged: (value) => setState(() => _query = value),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
+            child: Text(
+              widget.title,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+          Expanded(
+            child:
+                selectedItems.isEmpty
+                    ? Center(
+                      child: Text(
+                        'No matching options found',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    )
+                    : ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      itemCount: selectedItems.length,
+                      itemBuilder: (context, index) {
+                        final item = selectedItems[index];
+                        final isSelected = item.value == widget.selectedValue;
+                        final content =
+                            widget.itemBuilder?.call(
+                              context,
+                              item,
+                              isSelected,
+                            ) ??
+                            _defaultItem(context, item, isSelected, primary);
+
+                        return InkWell(
+                          onTap:
+                              item.disabled
+                                  ? null
+                                  : () => Navigator.of(context).pop(item),
+                          child: content,
+                        );
+                      },
+                    ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _defaultItem(
+    BuildContext context,
+    SearchableSelectItem<T> item,
+    bool isSelected,
+    Color primary,
+  ) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      color: isSelected ? primary.withAlpha(22) : null,
+      child: Row(
+        children: [
+          if (item.leading != null) ...[
+            item.leading!,
+            const SizedBox(width: 10),
+          ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(item.label),
+                if (item.subtitle != null)
+                  Text(
+                    item.subtitle!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (item.trailing != null) item.trailing!,
+          if (isSelected) ...[
+            const SizedBox(width: 8),
+            Icon(Icons.check, size: 18, color: primary),
           ],
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../config/theme.dart';
 import '../../config/enums.dart';
@@ -54,8 +55,18 @@ class ImportDBScreen extends ConsumerWidget {
                           'Select Backup Archive (.zip) or Database (.db)',
                     );
 
-                    if (fileResult != null && fileResult.path != null) {
-                      final pickedPath = fileResult.path!;
+                    if (fileResult != null) {
+                      final pickedPath =
+                          fileResult.path ??
+                          p.join(
+                            (await getTemporaryDirectory()).path,
+                            'import_${DateTime.now().millisecondsSinceEpoch}_${fileResult.name}',
+                          );
+                      if (fileResult.path == null) {
+                        await File(
+                          pickedPath,
+                        ).writeAsBytes(await fileResult.readAsBytes());
+                      }
                       final file = File(pickedPath);
                       final size = await file.length();
                       setDialogState(() {

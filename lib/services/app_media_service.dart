@@ -1,12 +1,57 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 /// Central service for persistent local media files (school logos, student photos, employee photos)
 /// stored in a dedicated `sms_media` folder alongside the SQLite database (`app.db`).
 class AppMediaService {
-  static final ImagePicker _picker = ImagePicker();
+  static Future<File?> _pickImageFile() async {
+    final picked = await FilePicker.pickFile(
+      type: FileType.image,
+      dialogTitle: 'Select an image',
+    );
+    if (picked == null) return null;
+
+    final localPath = picked.path;
+    if (localPath != null && localPath.isNotEmpty) {
+      return File(localPath);
+    }
+
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File(
+      p.join(
+        tempDir.path,
+        'picked_image_${DateTime.now().microsecondsSinceEpoch}_${picked.name}',
+      ),
+    );
+    await tempFile.writeAsBytes(await picked.readAsBytes());
+    return tempFile;
+  }
+
+  static Future<T?> _pickAndSave<T>(
+    Future<T> Function(File source) save,
+    String errorLabel,
+  ) async {
+    File? temporaryFile;
+    try {
+      final pickedFile = await _pickImageFile();
+      if (pickedFile == null) return null;
+      temporaryFile =
+          pickedFile.path.startsWith((await getTemporaryDirectory()).path)
+              ? pickedFile
+              : null;
+      return await save(pickedFile);
+    } catch (error) {
+      throw StateError('Could not select and save $errorLabel: $error');
+    } finally {
+      if (temporaryFile != null) {
+        try {
+          if (await temporaryFile.exists()) await temporaryFile.delete();
+        } catch (_) {}
+      }
+    }
+  }
 
   /// Dedicated media directory alongside `app.db`
   static Future<Directory> getMediaDirectory() async {
@@ -63,18 +108,7 @@ class AppMediaService {
 
   /// Picks an image from device gallery and saves it into `logos/`
   static Future<String?> pickAndSaveLogo() async {
-    try {
-      final XFile? picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 90,
-      );
-      if (picked == null) return null;
-      return await saveLogoFile(File(picked.path));
-    } catch (_) {
-      return null;
-    }
+    return _pickAndSave(saveLogoFile, 'school logo');
   }
 
   /// Copies a picked or source file into the persistent `students/` directory
@@ -100,21 +134,10 @@ class AppMediaService {
 
   /// Picks an image from device gallery and saves it into `students/`
   static Future<String?> pickAndSaveStudentPhoto({String? studentId}) async {
-    try {
-      final XFile? picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
-      );
-      if (picked == null) return null;
-      return await saveStudentPhotoFile(
-        File(picked.path),
-        studentId: studentId,
-      );
-    } catch (_) {
-      return null;
-    }
+    return _pickAndSave(
+      (source) => saveStudentPhotoFile(source, studentId: studentId),
+      'student photo',
+    );
   }
 
   /// Copies a picked or source file into the persistent `employees/` directory
@@ -142,21 +165,10 @@ class AppMediaService {
   static Future<String?> pickAndSaveEmployeePhoto({
     String? employeeCode,
   }) async {
-    try {
-      final XFile? picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
-      );
-      if (picked == null) return null;
-      return await saveEmployeePhotoFile(
-        File(picked.path),
-        employeeCode: employeeCode,
-      );
-    } catch (_) {
-      return null;
-    }
+    return _pickAndSave(
+      (source) => saveEmployeePhotoFile(source, employeeCode: employeeCode),
+      'employee photo',
+    );
   }
 
   /// Safely deletes a media file from local disk if it exists

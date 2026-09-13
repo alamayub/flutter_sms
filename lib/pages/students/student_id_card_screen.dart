@@ -11,6 +11,7 @@ import '../../providers/class_section_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/student_provider.dart';
 import '../../widgets/app_input.dart';
+import '../../widgets/profile_photo.dart';
 
 class StudentIdCardScreen extends ConsumerStatefulWidget {
   const StudentIdCardScreen({super.key});
@@ -1003,15 +1004,13 @@ class _StudentIdCardScreenState extends ConsumerState<StudentIdCardScreen> {
               border: Border.all(color: _cardColor, width: 2.5),
               color: _cardColor.withAlpha(25),
             ),
-            child: Center(
-              child: Text(
-                student.name.isNotEmpty ? student.name[0] : 'S',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: _cardColor,
-                ),
-              ),
+            child: ProfilePhoto(
+              name: student.name,
+              photoPath: student.photoPath,
+              size: 72,
+              backgroundColor: _cardColor.withAlpha(25),
+              foregroundColor: _cardColor,
+              fontSize: 28,
             ),
           ),
           const SizedBox(height: 6),
@@ -1261,15 +1260,14 @@ class _StudentIdCardScreenState extends ConsumerState<StudentIdCardScreen> {
                           border: Border.all(color: _cardColor, width: 2),
                           color: _cardColor.withAlpha(25),
                         ),
-                        child: Center(
-                          child: Text(
-                            student.name.isNotEmpty ? student.name[0] : 'S',
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: _cardColor,
-                            ),
-                          ),
+                        child: ProfilePhoto(
+                          name: student.name,
+                          photoPath: student.photoPath,
+                          size: 64,
+                          backgroundColor: _cardColor.withAlpha(25),
+                          foregroundColor: _cardColor,
+                          borderRadius: BorderRadius.circular(6),
+                          fontSize: 26,
                         ),
                       ),
                       const SizedBox(height: 6),
