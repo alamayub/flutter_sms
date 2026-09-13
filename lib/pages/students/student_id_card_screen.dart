@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -1749,7 +1750,7 @@ class _StudentIdCardScreenState extends ConsumerState<StudentIdCardScreen> {
               ),
               onPressed: () {
                 Navigator.pop(dialogContext);
-                ScaffoldMessenger.of(context).showSnackBar(
+                context.showSnackbar(
                   SnackBar(
                     content: Text(
                       lang == 'ne'

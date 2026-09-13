@@ -62,6 +62,13 @@ class AppButtonSize {
   static const double iconSizeLg = 20.0;
 }
 
+/// Shared heights for interactive controls across the application.
+class AppControlSize {
+  static const double standard = AppButtonSize.heightMd;
+  static const double compact = AppButtonSize.heightSm;
+  static const double tab = standard;
+}
+
 /// Transition durations and curves matching:
 /// transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1)
 class AppTransitions {
@@ -574,6 +581,7 @@ class AppTheme {
         filled: true,
         fillColor: lightSurface,
         isDense: true,
+        constraints: const BoxConstraints(minHeight: AppControlSize.standard),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
@@ -810,6 +818,9 @@ class AppTheme {
             return lightTextSecondary;
           }),
           textStyle: WidgetStatePropertyAll(AppTypography.button(fontSize: 13)),
+          minimumSize: const WidgetStatePropertyAll(
+            Size.fromHeight(AppControlSize.standard),
+          ),
           padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           ),
@@ -988,6 +999,7 @@ class AppTheme {
         filled: true,
         fillColor: darkSurface,
         isDense: true,
+        constraints: const BoxConstraints(minHeight: AppControlSize.standard),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
@@ -1224,6 +1236,9 @@ class AppTheme {
             return darkTextSecondary;
           }),
           textStyle: WidgetStatePropertyAll(AppTypography.button(fontSize: 13)),
+          minimumSize: const WidgetStatePropertyAll(
+            Size.fromHeight(AppControlSize.standard),
+          ),
           padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           ),

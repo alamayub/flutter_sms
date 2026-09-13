@@ -306,7 +306,7 @@ class _WeeklyTimetableEditorDialogState
       }
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    context.showSnackbar(
       SnackBar(
         content: Text(
           AppTranslations.text('copied_to_weekdays', widget.langCode),
@@ -665,7 +665,6 @@ class _WeeklyTimetableEditorDialogState
   }
 
   Future<void> _saveWeeklyTimetable() async {
-    final messenger = ScaffoldMessenger.of(context);
     final errorColor = Theme.of(context).colorScheme.error;
 
     // Build the full list of inputs across the week
@@ -716,7 +715,7 @@ class _WeeklyTimetableEditorDialogState
             periods: periodInputs,
           );
 
-      messenger.showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text(
             AppTranslations.text('weekly_timetable_saved', widget.langCode),
@@ -728,7 +727,7 @@ class _WeeklyTimetableEditorDialogState
       // ignore: use_build_context_synchronously
       context.pop();
     } catch (e) {
-      messenger.showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text('Failed to save weekly timetable: $e'),
           backgroundColor: errorColor,

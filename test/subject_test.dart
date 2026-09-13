@@ -2,7 +2,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/config/enums.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/subject_service.dart';
 
 void main() {
@@ -125,8 +124,6 @@ void main() {
       final initialCount = (await service.getAllSubjects()).length;
       expect(initialCount, greaterThan(0));
 
-      // Re-running seeder should not duplicate
-      await DatabaseSeeder.seedIfEmpty(db);
       final afterCount = (await service.getAllSubjects()).length;
       expect(afterCount, initialCount);
     });

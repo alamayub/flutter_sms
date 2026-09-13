@@ -3,7 +3,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/config/enums.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/exam_result_service.dart';
 import 'package:sms/services/exam_service.dart';
 import 'package:sms/utils/exam_grading_utils.dart';
@@ -215,7 +214,6 @@ void main() {
 
     setUp(() async {
       db = AppDatabase(NativeDatabase.memory());
-      await DatabaseSeeder.seedIfEmpty(db);
       resultService = ExamResultService(db);
       examService = ExamService(db);
     });

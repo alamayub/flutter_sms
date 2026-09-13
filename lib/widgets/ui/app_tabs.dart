@@ -18,7 +18,7 @@ class AppPillTabBar extends StatelessWidget implements PreferredSizeWidget {
     this.isScrollable = false,
     this.tabAlignment,
     this.onTap,
-    this.height = 42.0,
+    this.height = AppControlSize.tab,
     this.padding = const EdgeInsets.all(4.0),
   });
 
@@ -98,7 +98,7 @@ class AppUnderlineTabBar extends StatelessWidget
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(46.0);
+  Size get preferredSize => const Size.fromHeight(AppControlSize.tab);
 
   @override
   Widget build(BuildContext context) {

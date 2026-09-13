@@ -1193,7 +1193,7 @@ class _ExamResultsScreenState extends ConsumerState<ExamResultsScreen> {
     }
 
     if (students.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(content: Text('No students found to save marks for.')),
       );
       return;
@@ -1325,7 +1325,7 @@ class _ExamResultsScreenState extends ConsumerState<ExamResultsScreen> {
 
       if (mounted) {
         setState(() => _isSavingSubjectBatch = false);
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           SnackBar(
             content: Text(
               success
@@ -1338,9 +1338,7 @@ class _ExamResultsScreenState extends ConsumerState<ExamResultsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isSavingSubjectBatch = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error saving marks: $e')));
+        context.showSnackbar(SnackBar(content: Text('Error saving marks: $e')));
       }
     }
   }
@@ -2095,7 +2093,7 @@ class _ExamResultsScreenState extends ConsumerState<ExamResultsScreen> {
 
       if (mounted) {
         setState(() => _isSavingStudentMarksheet = false);
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           SnackBar(
             content: Text(
               success
@@ -2108,9 +2106,9 @@ class _ExamResultsScreenState extends ConsumerState<ExamResultsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isSavingStudentMarksheet = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error saving marksheet: $e')));
+        context.showSnackbar(
+          SnackBar(content: Text('Error saving marksheet: $e')),
+        );
       }
     }
   }
@@ -2176,7 +2174,7 @@ class _ExamResultsScreenState extends ConsumerState<ExamResultsScreen> {
                           classId: classId,
                           sectionId: sectionId,
                         );
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       const SnackBar(
                         content: Text('Ledger recalculation complete!'),
                       ),

@@ -6,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/theme.dart';
+import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/app_media_service.dart';
 
@@ -20,26 +22,21 @@ class RegisterScreen extends HookConsumerWidget {
     final authState = ref.watch(authStateProvider);
 
     // Registration Form Controllers
-    final schoolNameCtrl = TextEditingController(text: 'Pragyan Academy');
-    final schoolCodeCtrl = TextEditingController(text: 'EMIS-2081-001');
-    final addressCtrl = TextEditingController(text: 'Kathmandu, Nepal');
-    final phoneCtrl = TextEditingController(text: '+977-1-4567890');
-    final emailCtrl = TextEditingController(text: 'info@pragyan.edu.np');
-    final websiteCtrl = TextEditingController(text: 'www.pragyan.edu.np');
-    final principalCtrl = TextEditingController(text: 'Dr. Ramesh Sharma');
-    final establishedCtrl = TextEditingController(text: '2052 BS (1995 AD)');
-    final taglineCtrl = TextEditingController(
-      text: 'Knowledge, Character, Excellence',
-    );
-    final idCardFooterCtrl = TextEditingController(
-      text:
-          'This card is non-transferable and must be returned upon leaving the school.',
-    );
-    final regUsernameCtrl = TextEditingController(text: 'admin');
-    final regPasswordCtrl = TextEditingController(text: 'admin123');
-    final regConfirmPasswordCtrl = TextEditingController(text: 'admin123');
-    final regPinCtrl = TextEditingController(text: '1234');
-    final regConfirmPinCtrl = TextEditingController(text: '1234');
+    final schoolNameCtrl = useTextEditingController();
+    final schoolCodeCtrl = useTextEditingController();
+    final addressCtrl = useTextEditingController();
+    final phoneCtrl = useTextEditingController();
+    final emailCtrl = useTextEditingController();
+    final websiteCtrl = useTextEditingController();
+    final principalCtrl = useTextEditingController();
+    final establishedCtrl = useTextEditingController();
+    final taglineCtrl = useTextEditingController();
+    final idCardFooterCtrl = useTextEditingController();
+    final regUsernameCtrl = useTextEditingController();
+    final regPasswordCtrl = useTextEditingController();
+    final regConfirmPasswordCtrl = useTextEditingController();
+    final regPinCtrl = useTextEditingController();
+    final regConfirmPinCtrl = useTextEditingController();
 
     final logoPath = useState<String?>(null);
 
@@ -55,9 +52,10 @@ class RegisterScreen extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Could not pick logo: $e')));
+          context.showSnackbar(
+            'Could not pick logo: $e',
+            type: MessageType.error,
+          );
         }
       }
     }

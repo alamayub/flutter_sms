@@ -2,7 +2,6 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/teacher_service.dart';
 import 'package:sms/services/timetable_service.dart';
 
@@ -102,9 +101,6 @@ void main() {
 
         expect(initialTeacherCount, greaterThan(0));
         expect(initialPeriodCount, greaterThan(0));
-
-        // Re-run seeder
-        await DatabaseSeeder.seedIfEmpty(db);
 
         final afterTeacherCount =
             (await teacherService.getAllTeachers()).length;

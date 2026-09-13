@@ -27,38 +27,27 @@ class AppFormDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      content: SizedBox(
-        width: width,
-        child: content,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      content: SizedBox(width: width, child: content),
       actions: [
         TextButton(
-          onPressed: isSubmitting
-              ? null
-              : onCancel ?? () => context.pop(),
+          onPressed: isSubmitting ? null : onCancel ?? () => context.pop(),
           child: Text(cancelText),
         ),
         ElevatedButton(
           onPressed: isSubmitting ? null : onAction,
-          child: isSubmitting
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                )
-              : Text(actionText),
+          child:
+              isSubmitting
+                  ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                  : Text(actionText),
         ),
       ],
     );

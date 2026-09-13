@@ -37,6 +37,7 @@ class AppInputDecoration {
       prefixIcon: prefixIcon,
       suffixIcon: suffixIcon,
       isDense: isDense,
+      constraints: const BoxConstraints(minHeight: AppControlSize.standard),
       filled: true,
       fillColor: surfaceColor,
       contentPadding:
@@ -129,6 +130,7 @@ class AppInputDecoration {
               )
               : suffixIcon,
       isDense: isDense,
+      constraints: const BoxConstraints(minHeight: AppControlSize.standard),
       filled: true,
       fillColor: surfaceColor,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -169,6 +171,7 @@ class AppInputDecoration {
       prefixIcon: prefixIcon,
       suffixIcon: suffixIcon,
       isDense: true,
+      constraints: const BoxConstraints(minHeight: AppControlSize.compact),
       filled: true,
       fillColor: surfaceColor,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),

@@ -585,7 +585,7 @@ class _ContactsScreenState extends ConsumerState<ContactsScreen> {
                     final service = ref.read(contactServiceProvider);
                     await service.deleteContact(contact.id);
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         SnackBar(
                           content: Text('Deleted contact "${contact.name}"'),
                         ),
@@ -593,7 +593,7 @@ class _ContactsScreenState extends ConsumerState<ContactsScreen> {
                     }
                   } catch (e) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         SnackBar(content: Text('Failed to delete: $e')),
                       );
                     }
@@ -843,7 +843,7 @@ class _ContactCard extends StatelessWidget {
                       if (val == 'delete') onDelete();
                       if (val == 'copy') {
                         Clipboard.setData(ClipboardData(text: contact.phone));
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               'Copied ${contact.phone} to clipboard',
@@ -929,7 +929,7 @@ class _ContactCard extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: contact.phone));
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         SnackBar(
                           content: Text('Copied ${contact.phone} to clipboard'),
                         ),
@@ -1135,7 +1135,7 @@ class _ContactDetailsModal extends StatelessWidget {
           onPressed: () {
             Clipboard.setData(ClipboardData(text: contact.phone));
             context.pop();
-            ScaffoldMessenger.of(context).showSnackBar(
+            context.showSnackbar(
               SnackBar(content: Text('Copied ${contact.phone} to clipboard')),
             );
           },
@@ -1716,7 +1716,7 @@ class _ContactFormModalState extends ConsumerState<_ContactFormModal> {
 
       if (mounted) {
         context.pop();
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           SnackBar(
             content: Text(
               widget.contact != null
@@ -1728,9 +1728,9 @@ class _ContactFormModalState extends ConsumerState<_ContactFormModal> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error saving contact: $e')));
+        context.showSnackbar(
+          SnackBar(content: Text('Error saving contact: $e')),
+        );
       }
     } finally {
       if (mounted) {

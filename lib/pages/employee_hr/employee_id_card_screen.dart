@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../config/enums.dart';
 import '../../config/theme.dart';
@@ -2150,7 +2151,7 @@ class _EmployeeIdCardScreenState extends ConsumerState<EmployeeIdCardScreen> {
                       ),
                       onPressed: () {
                         Navigator.of(ctx).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               lang == 'ne'

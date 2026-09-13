@@ -850,7 +850,7 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
                       .read(studentControllerProvider.notifier)
                       .deleteStudent(student.id);
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       SnackBar(
                         content: Text(
                           success
@@ -1715,7 +1715,7 @@ class _StudentAdmissionDialogState
     if (_selectedAcademicYearId == null ||
         _selectedClassId == null ||
         _selectedSectionId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(
           content: Text('Academic Year, Class, and Section are required'),
         ),
@@ -1760,11 +1760,11 @@ class _StudentAdmissionDialogState
         setState(() => _isSaving = false);
         if (id != null) {
           context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(
+          context.showSnackbar(
             const SnackBar(content: Text('Student admitted successfully!')),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+          context.showSnackbar(
             const SnackBar(content: Text('Failed to admit student')),
           );
         }
@@ -1805,11 +1805,11 @@ class _StudentAdmissionDialogState
         setState(() => _isSaving = false);
         if (success) {
           context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(
+          context.showSnackbar(
             const SnackBar(content: Text('Student profile updated!')),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+          context.showSnackbar(
             const SnackBar(content: Text('Failed to update student')),
           );
         }
@@ -2486,7 +2486,7 @@ class _StudentPromotionDialogState
 
   Future<void> _executePromotion() async {
     if (_sourceYearId == null || _targetYearId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(
           content: Text('Please select Source and Target Academic Years'),
         ),
@@ -2508,11 +2508,11 @@ class _StudentPromotionDialogState
       setState(() => _isPromoting = false);
       if (success) {
         context.pop();
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(content: Text('Students promoted successfully!')),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(content: Text('Failed to complete promotion')),
         );
       }

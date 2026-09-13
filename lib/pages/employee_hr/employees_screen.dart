@@ -885,7 +885,6 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
     Employee employee,
     String langCode,
   ) async {
-    final messenger = ScaffoldMessenger.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder:
@@ -917,7 +916,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
           .read(employeeControllerProvider.notifier)
           .deleteEmployee(employee.id);
       if (mounted) {
-        messenger.showSnackBar(
+        context.showSnackbar(
           SnackBar(
             content: Text(
               langCode == 'ne'
@@ -1831,7 +1830,6 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
   Future<void> _saveEmployee() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final messenger = ScaffoldMessenger.of(context);
     final isEditing = widget.employee != null;
     final langCode = widget.langCode;
     final errorColor = Theme.of(context).colorScheme.error;
@@ -1939,7 +1937,7 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
 
       // ignore: use_build_context_synchronously
       context.pop();
-      messenger.showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text(
             isEditing
@@ -1953,7 +1951,7 @@ class _EmployeeFormDialogState extends ConsumerState<_EmployeeFormDialog> {
         ),
       );
     } catch (e) {
-      messenger.showSnackBar(
+      context.showSnackbar(
         SnackBar(content: Text('Error: $e'), backgroundColor: errorColor),
       );
     }

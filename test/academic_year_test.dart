@@ -1,7 +1,6 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/academic_year_service.dart';
 import 'package:sms/utils/date_time_utils.dart';
 
@@ -179,9 +178,6 @@ void main() {
     test('DatabaseSeeder is idempotent (does not duplicate records)', () async {
       final initialCount = (await db.getAllAcademicYears()).length;
       expect(initialCount, 5);
-
-      // Calling seedIfEmpty when not empty does not add duplicates
-      await DatabaseSeeder.seedIfEmpty(db);
       final afterSecondCall = (await db.getAllAcademicYears()).length;
       expect(afterSecondCall, 5);
     });

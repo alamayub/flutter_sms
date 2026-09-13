@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -1276,7 +1277,6 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
 
   void _confirmDeleteExpense(BuildContext context, ExpenseWithCategory item) {
     final lang = ref.read(localeProvider).locale.languageCode;
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
       builder:
@@ -1299,7 +1299,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   final success = await ref
                       .read(expenseControllerProvider.notifier)
                       .deleteExpense(item.id);
-                  scaffoldMessenger.showSnackBar(
+                  context.showSnackbar(
                     SnackBar(
                       content: Text(
                         success
@@ -1732,7 +1732,7 @@ class _ExpenseDialogState extends ConsumerState<_ExpenseDialog> {
 
     if (mounted) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text(
             success
@@ -1871,9 +1871,7 @@ class _CategoryManagementDialog extends ConsumerWidget {
                                           )
                                           .deleteCategory(cat.id);
                                       if (context.mounted && !success) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
+                                        context.showSnackbar(
                                           const SnackBar(
                                             content: Text(
                                               'Cannot delete category with associated expenses',

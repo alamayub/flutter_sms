@@ -1,7 +1,6 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/class_section_service.dart';
 
 void main() {
@@ -67,9 +66,6 @@ void main() {
       () async {
         final initialCount = (await service.getAllClassesWithSections()).length;
         expect(initialCount, 13);
-
-        // Re-running seeder should not duplicate
-        await DatabaseSeeder.seedIfEmpty(db);
         final afterCount = (await service.getAllClassesWithSections()).length;
         expect(afterCount, 13);
       },

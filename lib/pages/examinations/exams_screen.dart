@@ -1234,7 +1234,7 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
                       .read(examControllerProvider.notifier)
                       .deleteExam(examId);
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       SnackBar(
                         content: Text(
                           success
@@ -1282,7 +1282,7 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
                       .read(examControllerProvider.notifier)
                       .deleteClassSchedule(examId, classId);
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       SnackBar(
                         content: Text(
                           success
@@ -1837,7 +1837,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
       }
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    context.showSnackbar(
       const SnackBar(
         content: Text('Applied bulk timings and room to all subject rows'),
         duration: Duration(seconds: 1),
@@ -1937,19 +1937,19 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
   Future<void> _saveExamAndRoutine() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedClassId == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please select a Class')));
+      context.showSnackbar(
+        const SnackBar(content: Text('Please select a Class')),
+      );
       return;
     }
     if (_startDate.isAfter(_endDate)) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(content: Text('Start date cannot be after end date')),
       );
       return;
     }
     if (_rows.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(
           content: Text('Please configure at least one subject in the routine'),
         ),
@@ -1961,7 +1961,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
         _selectedAcademicYearId ??
         ref.read(activeAcademicYearProvider).value?.id;
     if (yearId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(content: Text('Please select an academic session')),
       );
       return;
@@ -2047,7 +2047,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
 
       if (mounted) {
         (context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           SnackBar(
             content: Text(
               _loadedExam != null
@@ -2059,7 +2059,7 @@ class _UnifiedExamDialogState extends ConsumerState<_UnifiedExamDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           SnackBar(
             content: Text('Error saving exam: $e'),
             backgroundColor: Colors.red,

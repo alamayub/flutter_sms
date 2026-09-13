@@ -10,11 +10,9 @@ class SchoolProfileNotifier extends Notifier<SchoolProfile> {
   SchoolProfile build() {
     try {
       _storageService = ref.watch(storageServiceProvider);
-      return _storageService?.getSchoolProfile() ??
-          SchoolProfile.defaultRegistered();
+      return _storageService?.getSchoolProfile() ?? SchoolProfile.initial();
     } catch (_) {
-      // Safe fallback for isolated unit/widget tests
-      return SchoolProfile.defaultRegistered();
+      return SchoolProfile.initial();
     }
   }
 

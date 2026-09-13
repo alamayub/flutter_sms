@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nepali_utils/nepali_utils.dart';
@@ -788,7 +789,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen>
                                 final activeYear =
                                     activeYearAsync.asData?.value;
                                 if (activeYear == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  context.showSnackbar(
                                     const SnackBar(
                                       content: Text(
                                         'No active academic year found.',
@@ -813,7 +814,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen>
                                 setState(() => _isSaving = false);
 
                                 if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  context.showSnackbar(
                                     SnackBar(
                                       content: Text(
                                         success
@@ -1546,7 +1547,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen>
                             setState(() => _isSaving = false);
 
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              context.showSnackbar(
                                 SnackBar(
                                   content: Text(
                                     success

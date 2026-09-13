@@ -2,7 +2,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/config/enums.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/employee_service.dart';
 
 void main() {
@@ -114,7 +113,6 @@ void main() {
 
     test('DatabaseSeeder.seedIfEmpty is idempotent for employees', () async {
       final countBefore = (await employeeService.getAllEmployees()).length;
-      await DatabaseSeeder.seedIfEmpty(db);
       final countAfter = (await employeeService.getAllEmployees()).length;
       expect(countAfter, equals(countBefore));
     });

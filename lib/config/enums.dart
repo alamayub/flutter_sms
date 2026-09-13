@@ -121,3 +121,5 @@ enum ContactSourceType {
     }
   }
 }
+
+enum MessageType { neutral, error, success, warning }

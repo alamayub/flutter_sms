@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/theme.dart';
+import '../../config/enums.dart';
+import '../../config/extensions.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/database_backup_service.dart';
 import '../../widgets/ui/app_badge.dart';
@@ -427,13 +429,9 @@ class ImportDBScreen extends ConsumerWidget {
 
                                 if (result.success && ctx.mounted) {
                                   Navigator.of(ctx).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Database restored successfully! Logged in.',
-                                      ),
-                                      backgroundColor: Color(0xFF10B981),
-                                    ),
+                                  context.showSnackbar(
+                                    'Database restored successfully! Logged in.',
+                                    type: MessageType.success,
                                   );
                                 } else {
                                   setDialogState(

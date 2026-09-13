@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sms/config/theme.dart';
 import 'package:sms/config/translations.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/pages/overview/dashboard_screen.dart';
 import 'package:sms/providers/dashboard_provider.dart';
 import 'package:sms/providers/database_provider.dart';
@@ -20,8 +19,6 @@ void main() {
 
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
-    await DatabaseSeeder.seedAcademicYears(db);
-    await DatabaseSeeder.seedClassesAndSections(db);
     await TestDataSeeder.seedStudents(db);
     await TestDataSeeder.seedEmployees(db);
   });
@@ -31,41 +28,46 @@ void main() {
   });
 
   group('Dashboard Metrics Computation Tests', () {
-    test('computeDashboardMetrics calculates correct metrics on seeded DB', () async {
-      final metrics = await computeDashboardMetrics(db);
+    test(
+      'computeDashboardMetrics calculates correct metrics on seeded DB',
+      () async {
+        final metrics = await computeDashboardMetrics(db);
 
-      // Verify student metrics
-      expect(metrics.totalStudents, greaterThan(0));
-      expect(metrics.activeStudents, greaterThan(0));
-      expect(
-        metrics.maleStudents + metrics.femaleStudents + metrics.otherGenderStudents,
-        equals(metrics.totalStudents),
-      );
+        // Verify student metrics
+        expect(metrics.totalStudents, greaterThan(0));
+        expect(metrics.activeStudents, greaterThan(0));
+        expect(
+          metrics.maleStudents +
+              metrics.femaleStudents +
+              metrics.otherGenderStudents,
+          equals(metrics.totalStudents),
+        );
 
-      // Verify employee metrics
-      expect(metrics.totalEmployees, greaterThan(0));
-      expect(
-        metrics.teachersCount + metrics.staffCount,
-        equals(metrics.totalEmployees),
-      );
+        // Verify employee metrics
+        expect(metrics.totalEmployees, greaterThan(0));
+        expect(
+          metrics.teachersCount + metrics.staffCount,
+          equals(metrics.totalEmployees),
+        );
 
-      // Verify classes and sections
-      expect(metrics.totalClasses, greaterThan(0));
-      expect(metrics.totalSections, greaterThan(0));
+        // Verify classes and sections
+        expect(metrics.totalClasses, greaterThan(0));
+        expect(metrics.totalSections, greaterThan(0));
 
-      // Verify class student counts
-      expect(metrics.classStudentCounts, isNotEmpty);
+        // Verify class student counts
+        expect(metrics.classStudentCounts, isNotEmpty);
 
-      // Verify attendance summary objects
-      expect(metrics.studentAttendanceToday, isNotNull);
-      expect(metrics.employeeAttendanceToday, isNotNull);
+        // Verify attendance summary objects
+        expect(metrics.studentAttendanceToday, isNotNull);
+        expect(metrics.employeeAttendanceToday, isNotNull);
 
-      // Financials
-      expect(metrics.feeCollected, greaterThanOrEqualTo(0.0));
-      expect(metrics.totalInvoiced, greaterThanOrEqualTo(0.0));
-      expect(metrics.feePending, greaterThanOrEqualTo(0.0));
-      expect(metrics.expensesTotal, greaterThanOrEqualTo(0.0));
-    });
+        // Financials
+        expect(metrics.feeCollected, greaterThanOrEqualTo(0.0));
+        expect(metrics.totalInvoiced, greaterThanOrEqualTo(0.0));
+        expect(metrics.feePending, greaterThanOrEqualTo(0.0));
+        expect(metrics.expensesTotal, greaterThanOrEqualTo(0.0));
+      },
+    );
 
     test('computeDashboardMetrics handles empty database gracefully', () async {
       final emptyDb = AppDatabase(NativeDatabase.memory());
@@ -122,9 +124,7 @@ void main() {
           ],
           child: MaterialApp(
             theme: AppTheme.lightTheme,
-            home: const Scaffold(
-              body: DashboardScreen(),
-            ),
+            home: const Scaffold(body: DashboardScreen()),
           ),
         ),
       );

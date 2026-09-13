@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../config/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -1703,9 +1704,7 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
                                             }
 
                                             if (context.mounted) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
+                                              context.showSnackbar(
                                                 const SnackBar(
                                                   content: Text(
                                                     'Certificate issued successfully!',
@@ -1726,9 +1725,7 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
                                             }
                                           } catch (e) {
                                             if (context.mounted) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
+                                              context.showSnackbar(
                                                 SnackBar(
                                                   content: Text(
                                                     'Failed to issue certificate: $e',
@@ -2591,7 +2588,7 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
       ref.invalidate(certificatesStreamProvider);
       ref.invalidate(certificateSummaryProvider);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(
             content: Text('Certificate deleted'),
             backgroundColor: Colors.orange,
@@ -2857,7 +2854,7 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
                                 icon: const Icon(Icons.download, size: 16),
                                 label: const Text('Download / Save PDF'),
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  context.showSnackbar(
                                     SnackBar(
                                       content: Text(
                                         'Downloading Certificate ${cert.certificateNumber} as PDF...',
@@ -2884,7 +2881,7 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
                                 label: const Text('Print Official Certificate'),
                                 onPressed: () {
                                   Navigator.pop(dialogContext);
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  context.showSnackbar(
                                     SnackBar(
                                       content: Text(
                                         'Certificate ${cert.certificateNumber} sent to printer!',

@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../../config/extensions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,9 +101,9 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Could not pick image: $e')));
+        context.showSnackbar(
+          SnackBar(content: Text('Could not pick image: $e')),
+        );
       }
     }
   }
@@ -122,7 +123,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
       passwordHash = SchoolProfile.hashPassword(_newPasswordCtrl.text.trim());
       final newPass = _newPasswordCtrl.text.trim();
       if (newPass.length < 4) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(
             content: Text('Password must be at least 4 characters'),
           ),
@@ -136,7 +137,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
     if (_newPinCtrl.text.trim().isNotEmpty) {
       final newPin = _newPinCtrl.text.trim();
       if (newPin.length != 4 || !RegExp(r'^\d{4}$').hasMatch(newPin)) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(
             content: Text(
               '4-Digit Security PIN must be exactly 4 numeric digits',
@@ -175,7 +176,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
         _newPasswordCtrl.clear();
         _newPinCtrl.clear();
       });
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(
           content: Text('School profile updated successfully!'),
           backgroundColor: Color(0xFF10B981),
@@ -195,7 +196,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
         _latestExport = result.backupInfo;
       });
       _loadRecentBackups();
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text('${result.message} (${result.backupInfo?.fileName})'),
           backgroundColor: const Color(0xFF10B981),
@@ -213,7 +214,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
         ),
       );
     } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text(result.message),
           backgroundColor: Theme.of(context).colorScheme.error,
@@ -630,7 +631,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
                               if (result.success && ctx.mounted) {
                                 Navigator.of(ctx).pop();
                                 _loadRecentBackups();
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                context.showSnackbar(
                                   const SnackBar(
                                     content: Text(
                                       'Database successfully restored!',
@@ -1288,9 +1289,7 @@ class _SchoolProfileScreenState extends ConsumerState<SchoolProfileScreen> {
                                               Clipboard.setData(
                                                 ClipboardData(text: b.filePath),
                                               );
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
+                                              context.showSnackbar(
                                                 const SnackBar(
                                                   content: Text(
                                                     'Path copied to clipboard',

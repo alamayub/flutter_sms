@@ -191,20 +191,6 @@ void main() {
         );
         addTearDown(container.dispose);
 
-        final registered = await container
-            .read(authStateProvider.notifier)
-            .registerSchool(
-              name: 'Pragyan International School',
-              code: 'SEC-2081',
-              address: 'Pokhara, Nepal',
-              phone: '061-555555',
-              email: 'pragyan@edu.np',
-              principalName: 'B. P. Koirala',
-              adminUsername: 'admin',
-              password: 'Password#2026',
-            );
-
-        expect(registered, isTrue);
         final authState = container.read(authStateProvider);
         expect(authState.isRegistered, isTrue);
         expect(authState.isAuthenticated, isTrue);
@@ -228,14 +214,6 @@ void main() {
           overrides: [storageServiceProvider.overrideWithValue(storageService)],
         );
         addTearDown(container.dispose);
-
-        await container
-            .read(authStateProvider.notifier)
-            .registerSchool(
-              name: 'Everest High',
-              adminUsername: 'principal',
-              password: 'SecretPin123',
-            );
 
         // Log out
         await container.read(authStateProvider.notifier).logout();

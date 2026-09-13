@@ -31,10 +31,9 @@ class SchoolProfile {
     this.principalName = '',
     this.establishedYear = '',
     this.logoPath,
-    this.tagline = 'Knowledge, Character, Excellence',
-    this.idCardFooter =
-        'This card is non-transferable and must be returned upon leaving the school.',
-    this.adminUsername = 'admin',
+    this.tagline = '',
+    this.idCardFooter = '',
+    this.adminUsername = '',
     required this.adminPasswordHash,
     this.adminPinHash = '',
     this.isRegistered = false,
@@ -42,40 +41,13 @@ class SchoolProfile {
     this.lastBackupAt,
   });
 
-  /// Factory for a clean default/unregistered template
+  /// Factory for a clean, unregistered profile with no demo data or credentials.
   factory SchoolProfile.initial() {
     return SchoolProfile(
-      name: 'Pragyan Academy',
-      code: 'SCH-001',
-      address: 'Kathmandu, Nepal',
-      phone: '+977-1-4567890',
-      email: 'info@pragyan.edu.np',
-      website: 'www.pragyan.edu.np',
-      principalName: 'Dr. Ramesh Sharma',
-      establishedYear: '2052 BS (1995 AD)',
-      adminUsername: 'admin',
-      adminPasswordHash: hashPassword('admin123'),
-      adminPinHash: hashPassword('1234'),
+      name: '',
+      adminPasswordHash: '',
+      adminPinHash: '',
       isRegistered: false,
-    );
-  }
-
-  /// Default registered profile for instant testing and backward compatibility
-  factory SchoolProfile.defaultRegistered() {
-    return SchoolProfile(
-      name: 'Pragyan Academy',
-      code: 'SCH-001',
-      address: 'Kathmandu, Nepal',
-      phone: '+977-1-4567890',
-      email: 'info@pragyan.edu.np',
-      website: 'www.pragyan.edu.np',
-      principalName: 'Dr. Ramesh Sharma',
-      establishedYear: '2052 BS (1995 AD)',
-      adminUsername: 'admin',
-      adminPasswordHash: hashPassword('admin123'),
-      adminPinHash: hashPassword('1234'),
-      isRegistered: true,
-      registeredAt: DateTime(2026, 1, 1),
     );
   }
 
@@ -170,7 +142,7 @@ class SchoolProfile {
 
   factory SchoolProfile.fromJson(Map<String, dynamic> json) {
     return SchoolProfile(
-      name: json['name'] as String? ?? 'Pragyan Academy',
+      name: json['name'] as String? ?? '',
       code: json['code'] as String? ?? '',
       address: json['address'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
@@ -179,17 +151,11 @@ class SchoolProfile {
       principalName: json['principalName'] as String? ?? '',
       establishedYear: json['establishedYear'] as String? ?? '',
       logoPath: json['logoPath'] as String?,
-      tagline: json['tagline'] as String? ?? 'Knowledge, Character, Excellence',
-      idCardFooter:
-          json['idCardFooter'] as String? ??
-          'This card is non-transferable and must be returned upon leaving the school.',
-      adminUsername: json['adminUsername'] as String? ?? 'admin',
-      adminPasswordHash:
-          json['adminPasswordHash'] as String? ??
-          SchoolProfile.hashPassword('admin123'),
-      adminPinHash:
-          json['adminPinHash'] as String? ??
-          SchoolProfile.hashPassword('1234'),
+      tagline: json['tagline'] as String? ?? '',
+      idCardFooter: json['idCardFooter'] as String? ?? '',
+      adminUsername: json['adminUsername'] as String? ?? '',
+      adminPasswordHash: json['adminPasswordHash'] as String? ?? '',
+      adminPinHash: json['adminPinHash'] as String? ?? '',
       isRegistered: json['isRegistered'] as bool? ?? false,
       registeredAt:
           json['registeredAt'] != null

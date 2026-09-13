@@ -2,7 +2,6 @@ import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/fee_service.dart';
 
 void main() {
@@ -12,9 +11,6 @@ void main() {
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
     service = FeeService(db);
-    // Seed prerequisites: academic years, classes, sections, students
-    await DatabaseSeeder.seedAcademicYears(db);
-    await DatabaseSeeder.seedClassesAndSections(db);
   });
 
   tearDown(() async {

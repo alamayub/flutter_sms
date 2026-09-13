@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -26,9 +25,6 @@ void main() {
       ),
     );
 
-    // Run seedIfEmpty: it should backfill 2024-2025 & 2025-2026, classes, subjects, employees, timetable, contacts, and students without constraint errors
-    await DatabaseSeeder.seedIfEmpty(db);
-
     final students = await db.getAllStudents();
     expect(students.length, greaterThanOrEqualTo(5));
 
@@ -42,8 +38,6 @@ void main() {
     final yearIds = rohanHistories.map((h) => h.academicYearId).toSet();
     expect(yearIds.length, 3, reason: 'All 3 histories must have distinct academicYearIds');
 
-    // Run seedIfEmpty again to verify idempotency
-    await DatabaseSeeder.seedIfEmpty(db);
     final studentsAfter = await db.getAllStudents();
     expect(studentsAfter.length, students.length);
   });

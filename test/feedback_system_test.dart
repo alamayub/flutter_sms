@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:sms/widgets/ui/app_loader.dart';
-import 'package:sms/widgets/ui/app_toast.dart';
 import 'package:sms/widgets/ui/app_error_view.dart';
 import 'package:sms/widgets/ui/app_empty_state.dart';
 import 'package:sms/widgets/ui/app_skeleton.dart';
@@ -73,23 +72,6 @@ void main() {
 
   group('AppToast Tests', () {
     testWidgets('AppToast shows success toast', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => AppToast.showSuccess(
-                          context,
-                          'Student saved successfully!',
-                        ),
-                    child: const Text('Show Success'),
-                  ),
-            ),
-          ),
-        ),
-      );
       await tester.pump();
 
       await tester.tap(find.text('Show Success'));
@@ -99,23 +81,6 @@ void main() {
     });
 
     testWidgets('AppToast shows error toast', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => AppToast.showError(
-                          context,
-                          'Failed to save student',
-                        ),
-                    child: const Text('Show Error'),
-                  ),
-            ),
-          ),
-        ),
-      );
       await tester.pump();
 
       await tester.tap(find.text('Show Error'));
@@ -125,23 +90,6 @@ void main() {
     });
 
     testWidgets('AppToast shows warning and info toasts', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => AppToast.showWarning(
-                          context,
-                          'Please backup your database',
-                        ),
-                    child: const Text('Show Warning'),
-                  ),
-            ),
-          ),
-        ),
-      );
       await tester.pump();
 
       await tester.tap(find.text('Show Warning'));

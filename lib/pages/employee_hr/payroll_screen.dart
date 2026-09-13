@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../../config/extensions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -833,7 +834,7 @@ class _SalaryPaymentsTab extends ConsumerWidget {
                       .read(payrollControllerProvider.notifier)
                       .deleteSalaryPayment(paymentId);
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       SnackBar(
                         content: Text(
                           success
@@ -1203,7 +1204,7 @@ class _SalaryAdvancesTab extends ConsumerWidget {
                       .read(payrollControllerProvider.notifier)
                       .deleteSalaryAdvance(advanceId);
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       SnackBar(
                         content: Text(
                           success
@@ -1916,7 +1917,7 @@ class _PaySalaryDialogState extends ConsumerState<_PaySalaryDialog> {
     if (_selectedEmployeeId == null) return;
 
     if (_netSalary < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         const SnackBar(
           content: Text('Net salary cannot be negative!'),
           backgroundColor: Colors.red,
@@ -1959,11 +1960,11 @@ class _PaySalaryDialogState extends ConsumerState<_PaySalaryDialog> {
     if (mounted) {
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(content: Text('Salary disbursed successfully!')),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(
             content: Text('Failed to disburse salary. Check inputs.'),
             backgroundColor: Colors.red,
@@ -2254,11 +2255,11 @@ class _GiveAdvanceDialogState extends ConsumerState<_GiveAdvanceDialog> {
     if (mounted) {
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(content: Text('Salary advance granted successfully!')),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showSnackbar(
           const SnackBar(
             content: Text('Failed to grant advance'),
             backgroundColor: Colors.red,

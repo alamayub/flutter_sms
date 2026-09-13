@@ -1,7 +1,6 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/certificate_service.dart';
 import 'helpers/test_data_seeder.dart';
 
@@ -12,9 +11,6 @@ void main() {
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
     service = CertificateService(db);
-    // Seed prerequisites: academic years, classes, sections, students
-    await DatabaseSeeder.seedAcademicYears(db);
-    await DatabaseSeeder.seedClassesAndSections(db);
     await TestDataSeeder.seedStudents(db);
   });
 

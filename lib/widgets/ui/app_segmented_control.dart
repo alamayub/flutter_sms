@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/theme.dart';
 
 /// Standardized SaaS segmented control with consistent height, borders, and typography.
 class AppSegmentedControl<T> extends StatelessWidget {
@@ -18,7 +19,7 @@ class AppSegmentedControl<T> extends StatelessWidget {
     this.multiSelectionEnabled = false,
     this.emptySelectionAllowed = false,
     this.showSelectedIcon = false,
-    this.minHeight = 38.0,
+    this.minHeight = AppControlSize.standard,
   });
 
   @override

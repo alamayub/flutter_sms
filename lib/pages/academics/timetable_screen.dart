@@ -447,7 +447,7 @@ class _TimetableScreenState extends ConsumerState<TimetableScreen> {
     final otherYears =
         academicYears.where((y) => y.id != currentYearId).toList();
     if (otherYears.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      context.showSnackbar(
         SnackBar(
           content: Text(
             langCode == 'ne'
@@ -564,7 +564,6 @@ class _TimetableScreenState extends ConsumerState<TimetableScreen> {
                   ),
                   onPressed: () async {
                     Navigator.pop(dialogContext);
-                    final messenger = ScaffoldMessenger.of(context);
                     try {
                       final count = await ref
                           .read(timetableControllerProvider.notifier)
@@ -576,7 +575,7 @@ class _TimetableScreenState extends ConsumerState<TimetableScreen> {
                             sectionId:
                                 copyOnlyCurrentClass ? selectedSectionId : null,
                           );
-                      messenger.showSnackBar(
+                      context.showSnackbar(
                         SnackBar(
                           content: Text(
                             langCode == 'ne'
@@ -587,7 +586,7 @@ class _TimetableScreenState extends ConsumerState<TimetableScreen> {
                         ),
                       );
                     } catch (e) {
-                      messenger.showSnackBar(
+                      context.showSnackbar(
                         SnackBar(
                           content: Text('Failed to copy schedule: $e'),
                           backgroundColor: Colors.red.shade700,

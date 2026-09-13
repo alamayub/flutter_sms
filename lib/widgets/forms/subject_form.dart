@@ -208,9 +208,9 @@ class SubjectForm extends HookConsumerWidget {
                   ),
                 ],
               ),
-      
+
               const SizedBox(height: 14),
-      
+
               // Subject Delivery Type
               Text(
                 AppTranslations.text('subject_type', langCode),
@@ -219,9 +219,9 @@ class SubjectForm extends HookConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-      
+
               const SizedBox(height: 6),
-      
+
               SegmentedButton<SubjectType>(
                 segments: [
                   ButtonSegment(
@@ -245,9 +245,9 @@ class SubjectForm extends HookConsumerWidget {
                   onSubjectTypeChanged(set.first);
                 },
               ),
-      
+
               const SizedBox(height: 12),
-      
+
               // Optional Subject Checkbox
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
@@ -269,9 +269,9 @@ class SubjectForm extends HookConsumerWidget {
                   isOptional.value = value;
                 },
               ),
-      
+
               const SizedBox(height: 12),
-      
+
               // Marks Setup
               Row(
                 children: [
@@ -280,55 +280,49 @@ class SubjectForm extends HookConsumerWidget {
                       controller: fullMarksController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        labelText: AppTranslations.text(
-                          'full_marks',
-                          langCode,
-                        ),
+                        labelText: AppTranslations.text('full_marks', langCode),
                       ),
                       validator: (v) {
                         final n = int.tryParse(v ?? '');
-      
+
                         if (n == null || n <= 0) {
                           return 'Invalid';
                         }
-      
+
                         return null;
                       },
                     ),
                   ),
-      
+
                   const SizedBox(width: 8),
-      
+
                   Expanded(
                     child: TextFormField(
                       controller: passMarksController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        labelText: AppTranslations.text(
-                          'pass_marks',
-                          langCode,
-                        ),
+                        labelText: AppTranslations.text('pass_marks', langCode),
                       ),
                       validator: (v) {
                         final pass = int.tryParse(v ?? '');
-      
+
                         final full = int.tryParse(fullMarksController.text);
-      
+
                         if (pass == null || pass <= 0) {
                           return 'Invalid';
                         }
-      
+
                         if (full != null && pass > full) {
                           return '> Full';
                         }
-      
+
                         return null;
                       },
                     ),
                   ),
-      
+
                   const SizedBox(width: 8),
-      
+
                   Expanded(
                     child: TextFormField(
                       controller: theoryMarksController,
@@ -341,9 +335,9 @@ class SubjectForm extends HookConsumerWidget {
                       ),
                     ),
                   ),
-      
+
                   const SizedBox(width: 8),
-      
+
                   Expanded(
                     child: TextFormField(
                       controller: practicalMarksController,
@@ -358,9 +352,9 @@ class SubjectForm extends HookConsumerWidget {
                   ),
                 ],
               ),
-      
+
               const SizedBox(height: 12),
-      
+
               // Description
               TextFormField(
                 controller: descController,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -2936,7 +2937,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                     final effectiveDiscount = calcDiscount;
 
                     if (effectiveDiscount > feeItem.totalAmount + 0.001) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         const SnackBar(
                           content: Text(
                             'Discount/scholarship cannot exceed total fee.',
@@ -2949,7 +2950,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
 
                     if (feeItem.paidAmount >
                         (feeItem.totalAmount - effectiveDiscount) + 0.01) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         SnackBar(
                           content: Text(
                             'Discount reduces net fee below already paid amount of ${_formatCurrency(feeItem.paidAmount)}.',
@@ -2962,7 +2963,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
 
                     if (remainingDue <= 0.01) {
                       if (enteredAmount < 0 || enteredAmount > 0.01) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           const SnackBar(
                             content: Text(
                               'Full scholarship applied. Payment amount must be 0.',
@@ -2974,7 +2975,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } else {
                       if (enteredAmount <= 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           const SnackBar(
                             content: Text('Please enter a valid amount > 0.'),
                             backgroundColor: Colors.red,
@@ -2984,7 +2985,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
 
                       if (enteredAmount > remainingDue + 0.01) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               'Amount cannot exceed remaining balance of ${_formatCurrency(remainingDue)}',
@@ -3035,7 +3036,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                           );
 
                       if (context.mounted && payment != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               enteredAmount == 0
@@ -3059,7 +3060,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text('Failed to record payment: $e'),
                             backgroundColor: Colors.red,
@@ -3532,7 +3533,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                         label: const Text('Print Receipt'),
                         onPressed: () {
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          context.showSnackbar(
                             SnackBar(
                               content: Text(
                                 'Receipt ${payment.receiptNumber} sent to printer!',
@@ -4388,9 +4389,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                                               );
 
                                               if (context.mounted) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
+                                                context.showSnackbar(
                                                   SnackBar(
                                                     content: Text(
                                                       'Payment of ${_formatCurrency(receipt.totalPaid)} recorded! (${receipt.receiptNumber})',
@@ -4419,9 +4418,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                                                 () => isSubmitting = false,
                                               );
                                               if (context.mounted) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
+                                                context.showSnackbar(
                                                   SnackBar(
                                                     content: Text(
                                                       'Payment failed: $e',
@@ -4670,7 +4667,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                             dueDate: dueDate,
                           );
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           const SnackBar(
                             content: Text(
                               'Admission Package assessed successfully (4 generic fee heads created)!',
@@ -4681,7 +4678,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text('Failed to assess package: $e'),
                             backgroundColor: Colors.red,
@@ -5086,7 +5083,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                           0.0;
 
                       if (disc > f.totalAmount + 0.01) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               'Discount for ${f.title} cannot exceed total fee.',
@@ -5133,7 +5130,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       setState(() => _selectedFeeIds.clear());
 
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               'Consolidated payment of ${_formatCurrency(receipt.totalPaid)} recorded! (${receipt.receiptNumber})',
@@ -5155,7 +5152,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text('Failed to record payments: $e'),
                             backgroundColor: Colors.red,
@@ -5562,7 +5559,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                         label: const Text('Print Receipt'),
                         onPressed: () {
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          context.showSnackbar(
                             SnackBar(
                               content: Text(
                                 'Consolidated Receipt ${receipt.receiptNumber} sent to printer!',
@@ -5739,7 +5736,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                         label: const Text('Print Receipt'),
                         onPressed: () {
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          context.showSnackbar(
                             SnackBar(
                               content: Text(
                                 'Receipt ${p.receiptNumber} sent to printer!',
@@ -5787,7 +5784,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       .read(feeControllerProvider.notifier)
                       .deletePayment(paymentId);
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       const SnackBar(
                         content: Text(
                           'Payment deleted and student balance restored.',
@@ -5798,7 +5795,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.showSnackbar(
                       SnackBar(
                         content: Text('Failed to delete payment: $e'),
                         backgroundColor: Colors.red,
@@ -5997,7 +5994,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                   child: const Text('Assign Fee'),
                   onPressed: () async {
                     if (targetStudentId == null || selectedCatId == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         const SnackBar(
                           content: Text(
                             'Please select both a student and a fee category.',
@@ -6015,7 +6012,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                         double.tryParse(discountController.text.trim()) ?? 0.0;
 
                     if (title.isEmpty || amount <= 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         const SnackBar(
                           content: Text(
                             'Please enter valid title and amount > 0.',
@@ -6046,7 +6043,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                           );
 
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           const SnackBar(
                             content: Text('Fee assigned successfully!'),
                             backgroundColor: Colors.green,
@@ -6055,7 +6052,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text('Failed to assign fee: $e'),
                             backgroundColor: Colors.red,
@@ -6305,7 +6302,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                   child: const Text('Assign to Class'),
                   onPressed: () async {
                     if (selectedClassId == null || selectedCatId == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         const SnackBar(
                           content: Text(
                             'Please select a class and a fee category.',
@@ -6323,7 +6320,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                         double.tryParse(discountController.text.trim()) ?? 0.0;
 
                     if (title.isEmpty || amount <= 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      context.showSnackbar(
                         const SnackBar(
                           content: Text(
                             'Please enter valid title and amount > 0.',
@@ -6355,7 +6352,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                           );
 
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text(
                               'Fee successfully assigned to $count student(s)!',
@@ -6366,7 +6363,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text('Failed to assign fee: $e'),
                             backgroundColor: Colors.red,
@@ -6501,7 +6498,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       );
                       ref.invalidate(feeCategoriesStreamProvider);
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           const SnackBar(
                             content: Text('Fee category created!'),
                             backgroundColor: Colors.green,
@@ -6510,7 +6507,7 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        context.showSnackbar(
                           SnackBar(
                             content: Text('Failed to create category: $e'),
                             backgroundColor: Colors.red,

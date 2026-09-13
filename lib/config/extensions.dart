@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/snackbar_widget.dart';
+import 'enums.dart';
+
 extension NavigationExtension on BuildContext {
   bool get canPop => Navigator.of(this).canPop();
 
@@ -34,4 +37,37 @@ extension NavigationExtension on BuildContext {
       (_) => false,
     );
   }
+
+  // show snackbbar
+  void showSnackbar(
+    Object message, {
+    MessageType type = MessageType.success,
+    Duration duration = const Duration(seconds: 5),
+  }) {
+    final resolvedMessage = switch (message) {
+      String value => value,
+      SnackBar snackBar when snackBar.content is Text =>
+        (snackBar.content as Text).data ?? '',
+      _ => message.toString(),
+    };
+
+    final overlay = Overlay.of(this);
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder:
+          (_) => SnackbarWidget(
+            message: resolvedMessage,
+            type: type,
+            duration: duration,
+            onDismiss: () => entry.remove(),
+          ),
+    );
+
+    overlay.insert(entry);
+  }
+}
+
+extension OpacityToAlpha on double {
+  int get toAlpha => (this * 255).round();
 }

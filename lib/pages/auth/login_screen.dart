@@ -15,8 +15,8 @@ class LoginScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final formKey = useMemoized(() => GlobalKey<FormState>());
     final authState = ref.watch(authStateProvider);
-    final loginUsernameCtrl = useTextEditingController(text: 'admin');
-    final loginPasswordCtrl = useTextEditingController(text: '1234');
+    final loginUsernameCtrl = useTextEditingController();
+    final loginPasswordCtrl = useTextEditingController();
     final obscurePassword = useState<bool>(true);
 
     void submitLogin() async {

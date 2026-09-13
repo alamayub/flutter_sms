@@ -2,7 +2,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/config/enums.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/exam_service.dart';
 
 void main() {
@@ -11,7 +10,6 @@ void main() {
 
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
-    await DatabaseSeeder.seedIfEmpty(db);
     examService = ExamService(db);
   });
 

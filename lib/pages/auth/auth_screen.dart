@@ -4,6 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../config/theme.dart';
+import '../../config/enums.dart';
+import '../../config/extensions.dart';
+import '../../providers/database_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/school_profile_provider.dart';
 import '../../widgets/ui/app_badge.dart';
@@ -29,7 +32,13 @@ class AuthScreen extends HookConsumerWidget {
       initialIsRegister || authState.status == AuthStatus.unregistered,
     );
 
-    final localError = useState<String?>(null);
+    final isResettingDatabase = useState(false);
+
+    void showAuthMessage(String? message) {
+      if (message != null && context.mounted) {
+        context.showSnackbar(message, type: MessageType.error);
+      }
+    }
 
     final isNarrow = MediaQuery.of(context).size.width < 700;
 
@@ -110,57 +119,11 @@ class AuthScreen extends HookConsumerWidget {
                       ],
                       const SizedBox(height: 24),
 
-                      // Error message if any
-                      if (localError.value != null ||
-                          authState.errorMessage != null) ...[
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.errorContainer.withAlpha(
-                              160,
-                            ),
-                            borderRadius: AppRadius.roundedMd,
-                            border: Border.all(
-                              color: theme.colorScheme.error.withAlpha(80),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.error_outline_rounded,
-                                size: 18,
-                                color: theme.colorScheme.error,
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  localError.value ?? authState.errorMessage!,
-                                  style: TextStyle(
-                                    color: theme.colorScheme.onErrorContainer,
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-
                       // Form Body
                       if (isRegisterMode.value)
-                        RegisterScreen(
-                          onErrorUpdate: (err) => localError.value = err,
-                        )
+                        RegisterScreen(onErrorUpdate: showAuthMessage)
                       else
-                        LoginScreen(
-                          onErrorUpdate: (err) => localError.value = err,
-                        ),
+                        LoginScreen(onErrorUpdate: showAuthMessage),
 
                       const SizedBox(height: 20),
 
@@ -192,7 +155,6 @@ class AuthScreen extends HookConsumerWidget {
                                       ..onTap = () {
                                         isRegisterMode.value =
                                             !isRegisterMode.value;
-                                        localError.value = null;
                                       },
                               ),
                             ],
@@ -203,6 +165,80 @@ class AuthScreen extends HookConsumerWidget {
 
                       // Database Import Option
                       const ImportDBScreen(),
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.restart_alt_rounded, size: 16),
+                        label: const Text('Reset Database'),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 44),
+                          foregroundColor: theme.colorScheme.error,
+                          side: BorderSide(
+                            color: theme.colorScheme.error.withAlpha(140),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.roundedMd,
+                          ),
+                        ),
+                        onPressed:
+                            isResettingDatabase.value
+                                ? null
+                                : () async {
+                                  final shouldReset = await showDialog<bool>(
+                                    context: context,
+                                    builder:
+                                        (dialogContext) => AlertDialog(
+                                          title: const Text('Reset database?'),
+                                          content: const Text(
+                                            'All students, employees, fees, exams, attendance, and other records will be permanently deleted. The database will be left empty for fresh setup.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed:
+                                                  () => Navigator.pop(
+                                                    dialogContext,
+                                                    false,
+                                                  ),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed:
+                                                  () => Navigator.pop(
+                                                    dialogContext,
+                                                    true,
+                                                  ),
+                                              child: const Text('Reset'),
+                                            ),
+                                          ],
+                                        ),
+                                  );
+
+                                  if (shouldReset != true || !context.mounted) {
+                                    return;
+                                  }
+
+                                  isResettingDatabase.value = true;
+                                  try {
+                                    await ref
+                                        .read(databaseProvider)
+                                        .resetDatabase();
+                                    if (!context.mounted) return;
+                                    context.showSnackbar(
+                                      'Database reset successfully.',
+                                      type: MessageType.success,
+                                    );
+                                  } catch (error) {
+                                    if (!context.mounted) return;
+                                    context.showSnackbar(
+                                      'Failed to reset database: $error',
+                                      type: MessageType.error,
+                                    );
+                                  } finally {
+                                    if (context.mounted) {
+                                      isResettingDatabase.value = false;
+                                    }
+                                  }
+                                },
+                      ),
                     ],
                   ),
                 ),

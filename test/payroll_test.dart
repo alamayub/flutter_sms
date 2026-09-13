@@ -1,7 +1,6 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sms/data/app_database.dart';
-import 'package:sms/data/database_seeder.dart';
 import 'package:sms/services/payroll_service.dart';
 
 void main() {
@@ -11,8 +10,6 @@ void main() {
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
     service = PayrollService(db);
-    // Seed initial employees and academic years
-    await DatabaseSeeder.seedAcademicYears(db);
   });
 
   tearDown(() async {

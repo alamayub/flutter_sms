@@ -41,7 +41,7 @@ class AuthNotifier extends Notifier<AuthState> {
   AuthState build() {
     try {
       _storageService = ref.watch(storageServiceProvider);
-      final isRegistered = _storageService?.isSchoolRegistered() ?? true;
+      final isRegistered = _storageService?.isSchoolRegistered() ?? false;
       if (!isRegistered) {
         return const AuthState(status: AuthStatus.unregistered);
       }
@@ -51,14 +51,14 @@ class AuthNotifier extends Notifier<AuthState> {
       }
       return const AuthState(status: AuthStatus.unauthenticated);
     } catch (_) {
-      return const AuthState(status: AuthStatus.authenticated);
+      return const AuthState(status: AuthStatus.unregistered);
     }
   }
 
   Future<bool> registerSchool({
     required String name,
     required String password,
-    String pin = '1234',
+    required String pin,
     String code = '',
     String address = '',
     String phone = '',
@@ -67,10 +67,9 @@ class AuthNotifier extends Notifier<AuthState> {
     String principalName = '',
     String establishedYear = '',
     String? logoPath,
-    String adminUsername = 'admin',
-    String tagline = 'Knowledge, Character, Excellence',
-    String idCardFooter =
-        'This card is non-transferable and must be returned upon leaving the school.',
+    required String adminUsername,
+    String tagline = '',
+    String idCardFooter = '',
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
