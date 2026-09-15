@@ -21,6 +21,7 @@ import '../app_input.dart';
 class _AdmissionFeeDraft {
   final FeeCategory category;
   String frequency;
+  bool markAsPaid = false;
   final TextEditingController amountController;
   final TextEditingController discountController;
 
@@ -73,18 +74,17 @@ class AdmissionCompletedData {
   });
 }
 
-class StudentAdmissionDialog extends ConsumerStatefulWidget {
+class StudentAdmissionPage extends ConsumerStatefulWidget {
   final StudentWithDetails? existingStudent;
 
-  const StudentAdmissionDialog({super.key, this.existingStudent});
+  const StudentAdmissionPage({super.key, this.existingStudent});
 
   @override
-  ConsumerState<StudentAdmissionDialog> createState() =>
-      _StudentAdmissionDialogState();
+  ConsumerState<StudentAdmissionPage> createState() =>
+      _StudentAdmissionPageState();
 }
 
-class _StudentAdmissionDialogState
-    extends ConsumerState<StudentAdmissionDialog> {
+class _StudentAdmissionPageState extends ConsumerState<StudentAdmissionPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Personal Fields
@@ -259,681 +259,674 @@ class _StudentAdmissionDialogState
     final feeCategoriesAsync = ref.watch(feeCategoriesStreamProvider);
     final isEditing = widget.existingStudent != null;
 
-    return AlertDialog(
-      title: Row(
-        children: [
-          Icon(
-            isEditing ? Icons.edit_rounded : Icons.person_add_rounded,
-            color: theme.colorScheme.primary,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            isEditing
-                ? AppTranslations.text('edit_student', lang)
-                : AppTranslations.text('admit_student', lang),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(
+              isEditing ? Icons.edit_rounded : Icons.person_add_rounded,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              isEditing
+                  ? AppTranslations.text('edit_student', lang)
+                  : AppTranslations.text('admit_student', lang),
+            ),
+          ],
+        ),
       ),
-      content: SizedBox(
-        width: 650,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ID Preview Banner
-                if (_previewStudentId != null)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withValues(
-                        alpha: 0.4,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${AppTranslations.text("student_id", lang)}: $_previewStudentId',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        Text(
-                          '${AppTranslations.text("admission_number", lang)}: $_previewAdmissionNumber',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                // Photo Picker & Basic Personal Info
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Photo
-                    Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            width: 104,
-                            height: 104,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: theme.dividerColor.withAlpha(120),
-                              ),
-                            ),
-                            child:
-                                ImageStorageHelper.isLocalFile(_photoPath)
-                                    ? Image.file(
-                                      File(_photoPath!),
-                                      fit: BoxFit.cover,
-                                    )
-                                    : Icon(
-                                      Icons.person,
-                                      size: 52,
-                                      color: theme.colorScheme.primary
-                                          .withAlpha(120),
-                                    ),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () async {
-                                try {
-                                  final path =
-                                      await ImageStorageHelper.pickAndSaveStudentPhoto(
-                                        studentId:
-                                            widget
-                                                .existingStudent
-                                                ?.student
-                                                .studentId ??
-                                            _previewStudentId,
-                                      );
-                                  if (path != null && mounted) {
-                                    setState(() => _photoPath = path);
-                                  }
-                                } catch (error) {
-                                  if (mounted) {
-                                    context.showSnackbar(
-                                      'Could not select student photo: $error',
-                                      type: MessageType.error,
-                                    );
-                                  }
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.camera_alt_outlined,
-                                size: 15,
-                              ),
-                              label: Text(
-                                _photoPath != null
-                                    ? AppTranslations.text('change_photo', lang)
-                                    : AppTranslations.text(
-                                      'select_photo',
-                                      lang,
-                                    ),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            if (_photoPath != null) ...[
-                              IconButton(
-                                visualDensity: VisualDensity.compact,
-                                tooltip: 'Remove photo',
-                                icon: const Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.redAccent,
-                                  size: 18,
-                                ),
-                                onPressed: () {
-                                  setState(() => _photoPath = null);
-                                },
-                              ),
-                            ],
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-
-                    // Name & Gender
-                    Expanded(
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _nameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Student Full Name *',
-                            ),
-                            validator: (val) {
-                              if (val == null || val.trim().isEmpty) {
-                                return 'Student name is required';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AppSearchableSelect<String>(
-                                  value: _gender,
-                                  label: 'Gender *',
-                                  hint: 'Select Gender',
-                                  items: const [
-                                    SearchableSelectItem(
-                                      value: 'Male',
-                                      label: 'Male',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'Female',
-                                      label: 'Female',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'Other',
-                                      label: 'Other',
-                                    ),
-                                  ],
-                                  onChanged: (val) {
-                                    if (val != null) {
-                                      setState(() => _gender = val);
-                                    }
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: AppSearchableSelect<String?>(
-                                  value: _bloodGroup,
-                                  label: AppTranslations.text(
-                                    'blood_group',
-                                    lang,
-                                  ),
-                                  hint: 'Select Blood Group',
-                                  isClearable: true,
-                                  items: const [
-                                    SearchableSelectItem(
-                                      value: null,
-                                      label: 'Unknown',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'A+',
-                                      label: 'A+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'A-',
-                                      label: 'A-',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'B+',
-                                      label: 'B+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'B-',
-                                      label: 'B-',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'O+',
-                                      label: 'O+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'O-',
-                                      label: 'O-',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'AB+',
-                                      label: 'AB+',
-                                    ),
-                                    SearchableSelectItem(
-                                      value: 'AB-',
-                                      label: 'AB-',
-                                    ),
-                                  ],
-                                  onChanged:
-                                      (val) =>
-                                          setState(() => _bloodGroup = val),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Date of birth & Address
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
-                          final picked = await showDatePicker(
-                            context: context,
-                            initialDate:
-                                _dateOfBirth ??
-                                DateTime(DateTime.now().year - 10),
-                            firstDate: DateTime(1990),
-                            lastDate: DateTime.now(),
-                          );
-                          if (picked != null) {
-                            setState(() => _dateOfBirth = picked);
-                          }
-                        },
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Date of Birth',
-                            suffixIcon: Icon(Icons.calendar_today, size: 18),
-                          ),
-                          child: Text(
-                            _dateOfBirth != null
-                                ? DateFormat('yyyy-MM-dd').format(_dateOfBirth!)
-                                : 'Select DOB',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _addressController,
-                        decoration: const InputDecoration(labelText: 'Address'),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Section 2: Academic Enrollment
-                Text(
-                  AppTranslations.text('enrollment_info', lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Divider(),
-                const SizedBox(height: 8),
-
-                // Academic Year & Class
-                Row(
-                  children: [
-                    Expanded(
-                      child: yearsAsync.when(
-                        data: (years) {
-                          _selectedAcademicYearId ??=
-                              years.where((y) => y.isCurrent).firstOrNull?.id ??
-                              (years.isNotEmpty ? years.first.id : null);
-
-                          return AppSearchableSelect<int>(
-                            value: _selectedAcademicYearId,
-                            label:
-                                '${AppTranslations.text("academic_session", lang)} *',
-                            hint: 'Select Session',
-                            items:
-                                years
-                                    .map(
-                                      (y) => SearchableSelectItem<int>(
-                                        value: y.id,
-                                        label:
-                                            '${y.name} ${y.isCurrent ? "(Current)" : ""}',
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged:
-                                (val) => setState(
-                                  () => _selectedAcademicYearId = val,
-                                ),
-                            validator:
-                                (v) => v == null ? 'Session is required' : null,
-                          );
-                        },
-                        loading: () => const LinearProgressIndicator(),
-                        error: (_, _) => const SizedBox.shrink(),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: classesAsync.when(
-                        data: (classes) {
-                          _selectedClassId ??=
-                              classes.isNotEmpty
-                                  ? classes.first.schoolClass.id
-                                  : null;
-
-                          return AppSearchableSelect<int>(
-                            value: _selectedClassId,
-                            label: '${AppTranslations.text("class", lang)} *',
-                            hint: 'Select Class',
-                            items:
-                                classes
-                                    .map(
-                                      (c) => SearchableSelectItem<int>(
-                                        value: c.schoolClass.id,
-                                        label: c.schoolClass.displayName,
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                _selectedClassId = val;
-                                _selectedSectionId = null;
-                              });
-                            },
-                            validator:
-                                (v) => v == null ? 'Class is required' : null,
-                          );
-                        },
-                        loading: () => const LinearProgressIndicator(),
-                        error: (_, _) => const SizedBox.shrink(),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Section & Roll Number
-                Row(
-                  children: [
-                    Expanded(
-                      child: classesAsync.when(
-                        data: (classes) {
-                          final curClass =
-                              classes
-                                  .where(
-                                    (c) => c.schoolClass.id == _selectedClassId,
-                                  )
-                                  .firstOrNull;
-                          final sections = curClass?.sections ?? [];
-
-                          if (_selectedSectionId == null &&
-                              sections.isNotEmpty) {
-                            _selectedSectionId = sections.first.id;
-                          }
-
-                          return AppSearchableSelect<int>(
-                            value: _selectedSectionId,
-                            label: '${AppTranslations.text("section", lang)} *',
-                            hint: 'Select Section',
-                            items:
-                                sections
-                                    .map(
-                                      (s) => SearchableSelectItem<int>(
-                                        value: s.id,
-                                        label: 'Section ${s.name}',
-                                      ),
-                                    )
-                                    .toList(),
-                            onChanged:
-                                (val) =>
-                                    setState(() => _selectedSectionId = val),
-                            validator:
-                                (v) => v == null ? 'Section is required' : null,
-                          );
-                        },
-                        loading: () => const LinearProgressIndicator(),
-                        error: (_, _) => const SizedBox.shrink(),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _rollNumberController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('roll_number', lang),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Facilities Opted Section
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ID Preview Banner
+              if (_previewStudentId != null)
                 Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.shade50.withAlpha(90),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.indigo.shade100),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withValues(
+                      alpha: 0.4,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.room_service,
-                            size: 16,
-                            color: Colors.indigo,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Facilities Opted',
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.indigo.shade900,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        '${AppTranslations.text("student_id", lang)}: $_previewStudentId',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 8,
-                        children: [
-                          FilterChip(
-                            avatar: const Icon(Icons.directions_bus, size: 16),
-                            label: const Text('Transport Facility'),
-                            selected: _hasTransport,
-                            selectedColor: Colors.indigo.shade100,
-                            onSelected:
-                                (val) => setState(() => _hasTransport = val),
-                          ),
-                          FilterChip(
-                            avatar: const Icon(Icons.hotel, size: 16),
-                            label: const Text('Hostel Facility'),
-                            selected: _hasHostel,
-                            selectedColor: Colors.indigo.shade100,
-                            onSelected:
-                                (val) => setState(() => _hasHostel = val),
-                          ),
-                          FilterChip(
-                            avatar: const Icon(Icons.local_library, size: 16),
-                            label: const Text('Library Facility'),
-                            selected: _hasLibrary,
-                            selectedColor: Colors.indigo.shade100,
-                            onSelected:
-                                (val) => setState(() => _hasLibrary = val),
-                          ),
-                        ],
+                      Text(
+                        '${AppTranslations.text("admission_number", lang)}: $_previewAdmissionNumber',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
 
-                // Fee Schedule Section (new admissions only)
-                if (!isEditing)
-                  _buildAdmissionFeeSection(context, theme, feeCategoriesAsync),
-
-                // Section 3: Guardian & Emergency Contacts
-                Text(
-                  AppTranslations.text('guardian_info', lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+              // Photo Picker & Basic Personal Info
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Photo
+                  Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          width: 104,
+                          height: 104,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: theme.dividerColor.withAlpha(120),
+                            ),
+                          ),
+                          child:
+                              ImageStorageHelper.isLocalFile(_photoPath)
+                                  ? Image.file(
+                                    File(_photoPath!),
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Icon(
+                                    Icons.person,
+                                    size: 52,
+                                    color: theme.colorScheme.primary.withAlpha(
+                                      120,
+                                    ),
+                                  ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () async {
+                              try {
+                                final path =
+                                    await ImageStorageHelper.pickAndSaveStudentPhoto(
+                                      studentId:
+                                          widget
+                                              .existingStudent
+                                              ?.student
+                                              .studentId ??
+                                          _previewStudentId,
+                                    );
+                                if (path != null && mounted) {
+                                  setState(() => _photoPath = path);
+                                }
+                              } catch (error) {
+                                if (mounted) {
+                                  context.showSnackbar(
+                                    'Could not select student photo: $error',
+                                    type: MessageType.error,
+                                  );
+                                }
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.camera_alt_outlined,
+                              size: 15,
+                            ),
+                            label: Text(
+                              _photoPath != null
+                                  ? AppTranslations.text('change_photo', lang)
+                                  : AppTranslations.text('select_photo', lang),
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          if (_photoPath != null) ...[
+                            IconButton(
+                              visualDensity: VisualDensity.compact,
+                              tooltip: 'Remove photo',
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.redAccent,
+                                size: 18,
+                              ),
+                              onPressed: () {
+                                setState(() => _photoPath = null);
+                              },
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                const Divider(),
-                const SizedBox(height: 8),
+                  const SizedBox(width: 16),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianNameController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'guardian_name',
-                            lang,
+                  // Name & Gender
+                  Expanded(
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Student Full Name *',
                           ),
+                          validator: (val) {
+                            if (val == null || val.trim().isEmpty) {
+                              return 'Student name is required';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianPhoneController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'guardian_phone',
-                            lang,
-                          ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AppSearchableSelect<String>(
+                                value: _gender,
+                                label: 'Gender *',
+                                hint: 'Select Gender',
+                                items: const [
+                                  SearchableSelectItem(
+                                    value: 'Male',
+                                    label: 'Male',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'Female',
+                                    label: 'Female',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'Other',
+                                    label: 'Other',
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() => _gender = val);
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: AppSearchableSelect<String?>(
+                                value: _bloodGroup,
+                                label: AppTranslations.text(
+                                  'blood_group',
+                                  lang,
+                                ),
+                                hint: 'Select Blood Group',
+                                isClearable: true,
+                                items: const [
+                                  SearchableSelectItem(
+                                    value: null,
+                                    label: 'Unknown',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'A+',
+                                    label: 'A+',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'A-',
+                                    label: 'A-',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'B+',
+                                    label: 'B+',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'B-',
+                                    label: 'B-',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'O+',
+                                    label: 'O+',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'O-',
+                                    label: 'O-',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'AB+',
+                                    label: 'AB+',
+                                  ),
+                                  SearchableSelectItem(
+                                    value: 'AB-',
+                                    label: 'AB-',
+                                  ),
+                                ],
+                                onChanged:
+                                    (val) => setState(() => _bloodGroup = val),
+                              ),
+                            ),
+                          ],
                         ),
-                        keyboardType: TextInputType.phone,
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianRelationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'guardian_relation',
-                            lang,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _guardianOccupationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('occupation', lang),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Emergency Contact Fields
-                Text(
-                  AppTranslations.text('emergency_details', lang),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                const Divider(),
-                const SizedBox(height: 8),
+                ],
+              ),
+              const SizedBox(height: 12),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyNameController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'emergency_contact',
-                            lang,
-                          ),
+              // Date of birth & Address
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate:
+                              _dateOfBirth ??
+                              DateTime(DateTime.now().year - 10),
+                          firstDate: DateTime(1990),
+                          lastDate: DateTime.now(),
+                        );
+                        if (picked != null) {
+                          setState(() => _dateOfBirth = picked);
+                        }
+                      },
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Date of Birth',
+                          suffixIcon: Icon(Icons.calendar_today, size: 18),
+                        ),
+                        child: Text(
+                          _dateOfBirth != null
+                              ? DateFormat('yyyy-MM-dd').format(_dateOfBirth!)
+                              : 'Select DOB',
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyPhoneController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text(
-                            'emergency_phone',
-                            lang,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _addressController,
+                      decoration: const InputDecoration(labelText: 'Address'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Section 2: Academic Enrollment
+              Text(
+                AppTranslations.text('enrollment_info', lang),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Divider(),
+              const SizedBox(height: 8),
+
+              // Academic Year & Class
+              Row(
+                children: [
+                  Expanded(
+                    child: yearsAsync.when(
+                      data: (years) {
+                        _selectedAcademicYearId ??=
+                            years.where((y) => y.isCurrent).firstOrNull?.id ??
+                            (years.isNotEmpty ? years.first.id : null);
+
+                        return AppSearchableSelect<int>(
+                          value: _selectedAcademicYearId,
+                          label:
+                              '${AppTranslations.text("academic_session", lang)} *',
+                          hint: 'Select Session',
+                          items:
+                              years
+                                  .map(
+                                    (y) => SearchableSelectItem<int>(
+                                      value: y.id,
+                                      label:
+                                          '${y.name} ${y.isCurrent ? "(Current)" : ""}',
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged:
+                              (val) =>
+                                  setState(() => _selectedAcademicYearId = val),
+                          validator:
+                              (v) => v == null ? 'Session is required' : null,
+                        );
+                      },
+                      loading: () => const LinearProgressIndicator(),
+                      error: (_, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: classesAsync.when(
+                      data: (classes) {
+                        _selectedClassId ??=
+                            classes.isNotEmpty
+                                ? classes.first.schoolClass.id
+                                : null;
+
+                        return AppSearchableSelect<int>(
+                          value: _selectedClassId,
+                          label: '${AppTranslations.text("class", lang)} *',
+                          hint: 'Select Class',
+                          items:
+                              classes
+                                  .map(
+                                    (c) => SearchableSelectItem<int>(
+                                      value: c.schoolClass.id,
+                                      label: c.schoolClass.displayName,
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedClassId = val;
+                              _selectedSectionId = null;
+                            });
+                          },
+                          validator:
+                              (v) => v == null ? 'Class is required' : null,
+                        );
+                      },
+                      loading: () => const LinearProgressIndicator(),
+                      error: (_, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Section & Roll Number
+              Row(
+                children: [
+                  Expanded(
+                    child: classesAsync.when(
+                      data: (classes) {
+                        final curClass =
+                            classes
+                                .where(
+                                  (c) => c.schoolClass.id == _selectedClassId,
+                                )
+                                .firstOrNull;
+                        final sections = curClass?.sections ?? [];
+
+                        if (_selectedSectionId == null && sections.isNotEmpty) {
+                          _selectedSectionId = sections.first.id;
+                        }
+
+                        return AppSearchableSelect<int>(
+                          value: _selectedSectionId,
+                          label: '${AppTranslations.text("section", lang)} *',
+                          hint: 'Select Section',
+                          items:
+                              sections
+                                  .map(
+                                    (s) => SearchableSelectItem<int>(
+                                      value: s.id,
+                                      label: 'Section ${s.name}',
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged:
+                              (val) => setState(() => _selectedSectionId = val),
+                          validator:
+                              (v) => v == null ? 'Section is required' : null,
+                        );
+                      },
+                      loading: () => const LinearProgressIndicator(),
+                      error: (_, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _rollNumberController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text('roll_number', lang),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Facilities Opted Section
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.shade50.withAlpha(90),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.indigo.shade100),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.room_service,
+                          size: 16,
+                          color: Colors.indigo,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Facilities Opted',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo.shade900,
                           ),
                         ),
-                        keyboardType: TextInputType.phone,
-                      ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 8,
+                      children: [
+                        FilterChip(
+                          avatar: const Icon(Icons.directions_bus, size: 16),
+                          label: const Text('Transport Facility'),
+                          selected: _hasTransport,
+                          selectedColor: Colors.indigo.shade100,
+                          onSelected:
+                              (val) => setState(() => _hasTransport = val),
+                        ),
+                        FilterChip(
+                          avatar: const Icon(Icons.hotel, size: 16),
+                          label: const Text('Hostel Facility'),
+                          selected: _hasHostel,
+                          selectedColor: Colors.indigo.shade100,
+                          onSelected: (val) => setState(() => _hasHostel = val),
+                        ),
+                        FilterChip(
+                          avatar: const Icon(Icons.local_library, size: 16),
+                          label: const Text('Library Facility'),
+                          selected: _hasLibrary,
+                          selectedColor: Colors.indigo.shade100,
+                          onSelected:
+                              (val) => setState(() => _hasLibrary = val),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+              ),
+              const SizedBox(height: 20),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyRelationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('relation', lang),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _emergencyOccupationController,
-                        decoration: InputDecoration(
-                          labelText: AppTranslations.text('occupation', lang),
-                        ),
-                      ),
-                    ),
-                  ],
+              // Fee Schedule Section (new admissions only)
+              if (!isEditing)
+                _buildAdmissionFeeSection(context, theme, feeCategoriesAsync),
+
+              // Section 3: Guardian & Emergency Contacts
+              Text(
+                AppTranslations.text('guardian_info', lang),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
+              ),
+              const Divider(),
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _guardianNameController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text('guardian_name', lang),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _guardianPhoneController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text('guardian_phone', lang),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _guardianRelationController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text(
+                          'guardian_relation',
+                          lang,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _guardianOccupationController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text('occupation', lang),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Emergency Contact Fields
+              Text(
+                AppTranslations.text('emergency_details', lang),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Divider(),
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _emergencyNameController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text(
+                          'emergency_contact',
+                          lang,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _emergencyPhoneController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text(
+                          'emergency_phone',
+                          lang,
+                        ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _emergencyRelationController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text('relation', lang),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _emergencyOccupationController,
+                      decoration: InputDecoration(
+                        labelText: AppTranslations.text('occupation', lang),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
-      actions: [
-        if (widget.existingStudent == null)
-          OutlinedButton.icon(
-            icon: const Icon(Icons.preview_outlined),
-            label: const Text('Preview'),
-            onPressed: _isSaving ? null : _showAdmissionPreview,
-          ),
-        TextButton(
-          onPressed: _isSaving ? null : () => context.pop(),
-          child: Text(AppTranslations.text('cancel', lang)),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          spacing: 8,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (widget.existingStudent == null)
+              OutlinedButton.icon(
+                icon: const Icon(Icons.preview_outlined),
+                label: const Text('Preview'),
+                onPressed: _isSaving ? null : _showAdmissionPreview,
+              ),
+            TextButton(
+              onPressed: _isSaving ? null : () => context.pop(),
+              child: Text(AppTranslations.text('cancel', lang)),
+            ),
+            FilledButton(
+              onPressed: _isSaving ? null : _saveStudent,
+              child:
+                  _isSaving
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                      : Text(AppTranslations.text('save', lang)),
+            ),
+          ],
         ),
-        FilledButton(
-          onPressed: _isSaving ? null : _saveStudent,
-          child:
-              _isSaving
-                  ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                  : Text(AppTranslations.text('save', lang)),
-        ),
-      ],
+      ),
     );
   }
 
@@ -974,7 +967,7 @@ class _StudentAdmissionDialogState
           ),
           if (_assignFees) ...[
             Text(
-              'Create the full academic-year schedule now. Each month or term will have its own pending/paid status.',
+              'Create the full academic-year schedule now. Use the Paid switch on each fee head to record only the fees received today.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -1090,6 +1083,18 @@ class _StudentAdmissionDialogState
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Paid', style: TextStyle(fontSize: 10)),
+                    Switch.adaptive(
+                      value: plan.markAsPaid,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onChanged:
+                          (value) => setState(() => plan.markAsPaid = value),
+                    ),
+                  ],
+                ),
                 IconButton(
                   tooltip: 'Remove fee',
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -1102,18 +1107,24 @@ class _StudentAdmissionDialogState
                 ),
               ],
             ),
-            AppSearchableSelect<String>(
-              value: plan.frequency,
-              label: 'Billing frequency',
-              items: frequencies,
-              onChanged: (value) {
-                if (value != null) setState(() => plan.frequency = value);
-              },
-            ),
             const SizedBox(height: 8),
             Row(
+              spacing: 8,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
+                  flex: 2,
+                  child: AppSearchableSelect<String>(
+                    value: plan.frequency,
+                    label: 'Billing frequency',
+                    items: frequencies,
+                    onChanged: (value) {
+                      if (value != null) setState(() => plan.frequency = value);
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
                   child: TextField(
                     controller: plan.amountController,
                     keyboardType: const TextInputType.numberWithOptions(
@@ -1125,8 +1136,8 @@ class _StudentAdmissionDialogState
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
                 Expanded(
+                  flex: 1,
                   child: TextField(
                     controller: plan.discountController,
                     keyboardType: const TextInputType.numberWithOptions(
@@ -1369,7 +1380,12 @@ class _StudentAdmissionDialogState
           String? feeError;
           if (_assignFees && _feePlans.isNotEmpty) {
             try {
-              await ref
+              final paidCategoryIds =
+                  _feePlans
+                      .where((plan) => plan.markAsPaid)
+                      .map((plan) => plan.category.id)
+                      .toSet();
+              final feeIds = await ref
                   .read(feeControllerProvider.notifier)
                   .assignAdmissionFeeSchedule(
                     studentId: id,
@@ -1380,6 +1396,43 @@ class _StudentAdmissionDialogState
                             .toList(),
                     dueDate: _admissionDate,
                   );
+
+              if (paidCategoryIds.isNotEmpty && feeIds.isNotEmpty) {
+                final assignedFees = await ref
+                    .read(feeServiceProvider)
+                    .getStudentFees(
+                      studentId: id,
+                      academicYearId: _selectedAcademicYearId!,
+                    );
+                final allocations =
+                    assignedFees
+                        .where(
+                          (fee) =>
+                              feeIds.contains(fee.id) &&
+                              paidCategoryIds.contains(fee.feeCategoryId),
+                        )
+                        .map(
+                          (fee) => FeePaymentAllocation(
+                            studentFeeId: fee.id,
+                            amount: fee.remainingAmount,
+                            discountAmount: fee.discountAmount,
+                          ),
+                        )
+                        .where((allocation) => allocation.amount > 0.01)
+                        .toList();
+
+                if (allocations.isNotEmpty) {
+                  await ref
+                      .read(feeControllerProvider.notifier)
+                      .recordMultiplePayments(
+                        studentId: id,
+                        allocations: allocations,
+                        paymentMethod: 'Cash',
+                        remarks: 'Marked paid during admission',
+                        academicYearId: _selectedAcademicYearId!,
+                      );
+                }
+              }
             } catch (error) {
               feeError = error.toString();
             }

@@ -110,7 +110,7 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
                           ),
                         ),
                         FilledButton.icon(
-                          onPressed: () => _showAdmissionDialog(context),
+                          onPressed: () => _openAdmissionPage(context),
                           icon: const Icon(Icons.person_add_rounded, size: 20),
                           label: Text(
                             AppTranslations.text('admit_student', lang),
@@ -269,12 +269,12 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
             StudentsList(
               studentsAsync: studentsAsync,
               languageCode: lang,
-              onAddStudent: () => _showAdmissionDialog(context),
+              onAddStudent: () => _openAdmissionPage(context),
               onOpenProfile:
                   (student) => _showStudentProfileDialog(context, student),
               onEditStudent:
                   (student) =>
-                      _showAdmissionDialog(context, existingStudent: student),
+                      _openAdmissionPage(context, existingStudent: student),
               onDeleteStudent:
                   (student) => _confirmDeleteStudent(context, student),
               onOpenCertificates: (student) {
@@ -484,15 +484,14 @@ class _StudentsScreenState extends ConsumerState<StudentsScreen> {
     );
   }
 
-  void _showAdmissionDialog(
+  void _openAdmissionPage(
     BuildContext context, {
     StudentWithDetails? existingStudent,
   }) async {
-    final result = await showDialog<AdmissionCompletedData>(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => StudentAdmissionDialog(existingStudent: existingStudent),
+    final result = await Navigator.of(context).push<AdmissionCompletedData>(
+      MaterialPageRoute(
+        builder: (_) => StudentAdmissionPage(existingStudent: existingStudent),
+      ),
     );
     if (result != null && context.mounted) {
       _showAdmissionFeeReceiptDialog(context, result);

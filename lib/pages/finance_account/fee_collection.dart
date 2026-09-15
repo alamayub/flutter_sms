@@ -54,6 +54,11 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
     return DateFormat('yyyy-MM-dd').format(date);
   }
 
+  bool _isFeeDueByThisMonth(StudentFeeWithDetails fee) {
+    if (fee.isPaid || fee.academicMonth == null) return true;
+    return fee.academicMonth! <= DateTime.now().month;
+  }
+
   Future<void> _pickCustomDateRange(BuildContext context) async {
     final currentRange = ref.read(feeCustomDateRangeProvider);
     final initialRange = DateTimeRange(
@@ -1022,7 +1027,13 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
               feesAsync.maybeWhen(
                 data: (fees) {
                   final pendingDues =
-                      fees.where((f) => f.remainingAmount > 0.01).toList();
+                      fees
+                          .where(
+                            (f) =>
+                                f.remainingAmount > 0.01 &&
+                                _isFeeDueByThisMonth(f),
+                          )
+                          .toList();
                   if (pendingDues.isEmpty) return const SizedBox.shrink();
                   final allSelected = pendingDues.every(
                     (f) => _selectedFeeIds.contains(f.id),
@@ -1109,11 +1120,22 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                 );
               }
 
+              final visibleFees = fees.where(_isFeeDueByThisMonth).toList();
+
+              if (visibleFees.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No fees are due till this month. Future scheduled fees are hidden.',
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              }
+
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: fees.length,
+                itemCount: visibleFees.length,
                 itemBuilder: (context, index) {
-                  final feeItem = fees[index];
+                  final feeItem = visibleFees[index];
                   return _buildStudentFeeCard(context, feeItem, lang);
                 },
               );
@@ -1516,7 +1538,8 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
                     label: Text(
                       feeItem.isPartial ? 'Pay Balance' : 'Collect Fee',
                     ),
-                    onPressed: () => _showCollectFeeDialog(context, feeItem),
+                    onPressed:
+                        () => _chooseFeePeriodsAndCollect(context, feeItem),
                   )
                 else
                   OutlinedButton.icon(
@@ -2215,6 +2238,125 @@ class _FeeCollectionScreenState extends ConsumerState<FeeCollectionScreen>
   }
 
   // ==================== INTERACTIVE DIALOGS ====================
+
+  /// Lets the cashier choose one, several, or all unpaid periods for a
+  /// recurring fee before entering the payment details.
+  Future<void> _chooseFeePeriodsAndCollect(
+    BuildContext context,
+    StudentFeeWithDetails feeItem,
+  ) async {
+    if (feeItem.frequency.toLowerCase() == 'one_time') {
+      _showCollectFeeDialog(context, feeItem);
+      return;
+    }
+
+    final fees = await ref
+        .read(feeServiceProvider)
+        .getStudentFees(
+          studentId: feeItem.studentId,
+          academicYearId: feeItem.academicYear?.id,
+        );
+    if (!context.mounted) return;
+
+    final periods =
+        fees
+            .where(
+              (fee) =>
+                  fee.feeCategoryId == feeItem.feeCategoryId &&
+                  fee.frequency.toLowerCase() ==
+                      feeItem.frequency.toLowerCase() &&
+                  fee.remainingAmount > 0.01,
+            )
+            .toList()
+          ..sort(
+            (a, b) => (a.academicMonth ?? 0).compareTo(b.academicMonth ?? 0),
+          );
+
+    if (periods.length <= 1) {
+      _showCollectFeeDialog(context, feeItem);
+      return;
+    }
+
+    final selectedIds = await showDialog<Set<int>>(
+      context: context,
+      builder: (dialogContext) {
+        final selected = <int>{feeItem.id};
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            final allSelected = periods.every(
+              (period) => selected.contains(period.id),
+            );
+            return AlertDialog(
+              title: Text(
+                'Select ${feeItem.frequency.replaceAll('_', ' ')} periods',
+              ),
+              content: SizedBox(
+                width: 440,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('All unpaid periods'),
+                      value: allSelected,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          if (value == true) {
+                            selected.addAll(periods.map((period) => period.id));
+                          } else {
+                            selected.clear();
+                          }
+                        });
+                      },
+                    ),
+                    const Divider(),
+                    ...periods.map(
+                      (period) => CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(period.title),
+                        subtitle: Text(
+                          'Due: ${_formatCurrency(period.remainingAmount)}',
+                        ),
+                        value: selected.contains(period.id),
+                        onChanged: (value) {
+                          setDialogState(() {
+                            if (value == true) {
+                              selected.add(period.id);
+                            } else {
+                              selected.remove(period.id);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed:
+                      selected.isEmpty
+                          ? null
+                          : () => Navigator.pop(dialogContext, selected),
+                  child: const Text('Continue'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (selectedIds == null || selectedIds.isEmpty || !context.mounted) return;
+    _showCollectMultipleFeesDialog(
+      context,
+      periods.where((period) => selectedIds.contains(period.id)).toList(),
+    );
+  }
 
   /// Dialog to Collect Fee with partial or full payment support
   void _showCollectFeeDialog(
