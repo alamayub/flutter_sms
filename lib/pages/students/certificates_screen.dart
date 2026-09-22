@@ -2800,23 +2800,6 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
                         Row(
                           children: [
                             if (isProvisional) ...[
-                              OutlinedButton.icon(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFF334155),
-                                  side: BorderSide(color: Colors.grey.shade300),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 10,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                icon: const Icon(Icons.edit_outlined, size: 16),
-                                label: const Text('Back to Edit'),
-                                onPressed: () => Navigator.pop(dialogContext),
-                              ),
-                              const SizedBox(width: 10),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF16A34A),
@@ -2969,7 +2952,7 @@ class _CertificatesScreenState extends ConsumerState<CertificatesScreen> {
                         ),
                       ),
                     ),
-                    child: Row(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
