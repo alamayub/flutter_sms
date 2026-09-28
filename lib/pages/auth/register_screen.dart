@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,6 +8,8 @@ import '../../config/enums.dart';
 import '../../config/extensions.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/app_media_service.dart';
+import '../../widgets/auth/register_group_header.dart';
+import '../../widgets/auth/upload_school_logo.dart';
 
 class RegisterScreen extends HookConsumerWidget {
   final Function(String?) onErrorUpdate;
@@ -18,7 +18,6 @@ class RegisterScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final authState = ref.watch(authStateProvider);
 
     // Registration Form Controllers
@@ -121,142 +120,17 @@ class RegisterScreen extends HookConsumerWidget {
         children: [
           // Section: Institution Details
           // 0. School Logo Upload Section
-          Center(
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: 88,
-                      height: 88,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.colorScheme.surfaceContainerHighest
-                            .withAlpha(90),
-                        border: Border.all(
-                          color: theme.colorScheme.primary.withAlpha(120),
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: theme.colorScheme.primary.withAlpha(30),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child:
-                            logoPath.value != null &&
-                                    File(logoPath.value!).existsSync()
-                                ? Image.file(
-                                  File(logoPath.value!),
-                                  fit: BoxFit.cover,
-                                )
-                                : Center(
-                                  child: Icon(
-                                    Icons.school_rounded,
-                                    size: 42,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: InkWell(
-                        onTap: pickLogo,
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.all(7),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withAlpha(40),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt_rounded,
-                            size: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton.icon(
-                      onPressed: pickLogo,
-                      icon: const Icon(Icons.upload_rounded, size: 15),
-                      label: Text(
-                        logoPath.value == null
-                            ? 'Upload School Logo'
-                            : 'Change Logo',
-                      ),
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                        textStyle: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    if (logoPath.value != null) ...[
-                      const SizedBox(width: 4),
-                      TextButton.icon(
-                        onPressed: removeLogo,
-                        icon: Icon(
-                          Icons.delete_outline_rounded,
-                          size: 15,
-                          color: theme.colorScheme.error,
-                        ),
-                        label: Text(
-                          'Remove',
-                          style: TextStyle(
-                            color: theme.colorScheme.error,
-                            fontSize: 12,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
+          UploadSchoolLogo(
+            logoPath: logoPath.value,
+            onLogoPick: pickLogo,
+            onLogoRemove: removeLogo,
           ),
           const SizedBox(height: 16),
 
           // 1. Institution Details
-          Row(
-            children: [
-              Icon(
-                Icons.account_balance_outlined,
-                size: 16,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'INSTITUTION DETAILS',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ],
+          RegisterGroupHeader(
+            icon: Icons.account_balance_outlined,
+            title: 'INSTITUTION DETAILS',
           ),
           const SizedBox(height: 12),
 
@@ -400,24 +274,9 @@ class RegisterScreen extends HookConsumerWidget {
           const SizedBox(height: 20),
 
           // 2. Contact & Location
-          Row(
-            children: [
-              Icon(
-                Icons.location_on_outlined,
-                size: 16,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'CONTACT & LOCATION',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ],
+          RegisterGroupHeader(
+            icon: Icons.location_on_outlined,
+            title: 'CONTACT & LOCATION',
           ),
           const SizedBox(height: 12),
 
@@ -550,24 +409,9 @@ class RegisterScreen extends HookConsumerWidget {
 
           // Section: Administrator Credentials
           // 3. Branding & ID Configuration
-          Row(
-            children: [
-              Icon(
-                Icons.badge_outlined,
-                size: 16,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'MOTTO & ID CARD SETTINGS',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ],
+          RegisterGroupHeader(
+            icon: Icons.badge_outlined,
+            title: 'MOTTO & ID CARD SETTINGS',
           ),
           const SizedBox(height: 12),
 
@@ -593,24 +437,9 @@ class RegisterScreen extends HookConsumerWidget {
           const SizedBox(height: 20),
 
           // 4. Administrator Credentials & 4-Digit PIN
-          Row(
-            children: [
-              Icon(
-                Icons.admin_panel_settings_outlined,
-                size: 16,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'ADMINISTRATOR ACCESS & 4-DIGIT PIN',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ],
+          RegisterGroupHeader(
+            icon: Icons.admin_panel_settings_outlined,
+            title: 'ADMINISTRATOR ACCESS & 4-DIGIT PIN',
           ),
           const SizedBox(height: 12),
 
@@ -837,7 +666,7 @@ class RegisterScreen extends HookConsumerWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(double.infinity, 48),
-              backgroundColor: theme.colorScheme.primary,
+              backgroundColor: context.theme.colorScheme.primary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: AppRadius.roundedMd),
               elevation: 2,

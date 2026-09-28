@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sms/config/extensions.dart';
 
 import '../config/theme.dart';
@@ -8,7 +10,7 @@ import '../widgets/ui/app_vector_graphics.dart';
 import 'wrapper.dart';
 
 /// Production-grade branded animated splash screen for Mero School
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends HookConsumerWidget {
   final Widget? nextScreen;
   final Duration displayDuration;
 
@@ -19,53 +21,33 @@ class SplashScreen extends StatefulWidget {
   });
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
-  Timer? _navigationTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _animController = AnimationController(
-      vsync: this,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final animController = useAnimationController(
       duration: const Duration(milliseconds: 900),
     );
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _animController,
+    final fadeAnimation = CurvedAnimation(
+      parent: animController,
       curve: Curves.easeOutCubic,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.88, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
+    final scaleAnimation = Tween<double>(begin: 0.88, end: 1.0).animate(
+      CurvedAnimation(parent: animController, curve: Curves.easeOutBack),
     );
 
-    _animController.forward();
+    useEffect(() {
+      animController.forward();
 
-    _navigationTimer = Timer(widget.displayDuration, _navigateToNext);
-  }
+      final timer = Timer(displayDuration, () {
+        if (!context.mounted) return;
 
-  void _navigateToNext() {
-    if (!mounted) return;
-    final target = widget.nextScreen ?? const Wrapper();
-    context.pushReplacementFade(target);
-  }
+        final target = nextScreen ?? const Wrapper();
+        context.pushReplacementFade(target);
+      });
 
-  @override
-  void dispose() {
-    _navigationTimer?.cancel();
-    _animController.dispose();
-    super.dispose();
-  }
+      return timer.cancel;
+    }, [animController, displayDuration, nextScreen]);
 
-  @override
-  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final reduceMotion = MediaQuery.of(context).disableAnimations;
@@ -168,9 +150,9 @@ class _SplashScreenState extends State<SplashScreen>
                 reduceMotion
                     ? content
                     : FadeTransition(
-                      opacity: _fadeAnimation,
+                      opacity: fadeAnimation,
                       child: ScaleTransition(
-                        scale: _scaleAnimation,
+                        scale: scaleAnimation,
                         child: content,
                       ),
                     ),

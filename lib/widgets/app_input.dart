@@ -268,7 +268,7 @@ class AppTextField extends StatelessWidget {
 
     return MouseRegion(
       cursor: enabled ? SystemMouseCursors.text : SystemMouseCursors.forbidden,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         focusNode: focusNode,
         decoration: decoration,
@@ -282,7 +282,7 @@ class AppTextField extends StatelessWidget {
         minLines: minLines,
         maxLength: maxLength,
         onChanged: onChanged,
-        onSubmitted: onSubmitted,
+        onFieldSubmitted: onSubmitted,
         inputFormatters: inputFormatters,
         style: TextStyle(
           fontFeatures: AppTypography.fontFeatures,

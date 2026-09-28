@@ -19,6 +19,10 @@ extension LightColorExtension on Color {
 extension NavigationExtension on BuildContext {
   bool get canPop => Navigator.of(this).canPop();
 
+  ThemeData get theme => Theme.of(this);
+  ColorScheme get color => Theme.of(this).colorScheme;
+  TextTheme get text => Theme.of(this).textTheme;
+
   void pop<T>([T? result]) {
     if (canPop) {
       Navigator.of(this).pop<T>(result);
@@ -174,6 +178,20 @@ extension NavigationExtension on BuildContext {
       },
     ),
   );
+
+  Future<void> showGenericDialogWithChild(Widget child) {
+    return showDialog<void>(
+      context: this,
+      barrierDismissible: false,
+      builder:
+          (_) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: child,
+          ),
+    );
+  }
 }
 
 extension OpacityToAlpha on double {
